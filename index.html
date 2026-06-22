@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MCM SERVICE CI</title>
+<meta name="theme-color" content="#ff6600">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:Arial; background:#1a1a1a; color:white; min-height:100vh; }
+.header { background:linear-gradient(135deg,#ff6600,#cc4400); padding:15px; text-align:center; position:sticky; top:0; z-index:100; box-shadow:0 3px 10px rgba(0,0,0,0.5); }
+.header h1 { font-size:20px; }
+.header p { font-size:11px; color:#ffe; margin-top:2px; }
+.ecran { display:none; padding:15px; padding-bottom:80px; }
+.ecran.actif { display:block; }
+.btn { width:100%; padding:14px; border:none; border-radius:10px; font-size:14px; font-weight:bold; color:white; cursor:pointer; margin-bottom:10px; }
+.btn-orange { background:linear-gradient(135deg,#ff6600,#cc4400); }
+.btn-vert { background:linear-gradient(135deg,#27ae60,#1e8449); }
+.btn-bleu { background:linear-gradient(135deg,#2980b9,#1a5276); }
+.btn-rouge { background:linear-gradient(135deg,#e74c3c,#c0392b); }
+.btn-gris { background:#333; }
+.card { background:#252525; border-radius:12px; padding:12px; margin-bottom:12px; border:1px solid #333; }
+.card-titre { color:#ff6600; font-size:13px; font-weight:bold; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:6px; }
+.input-group { margin-bottom:12px; }
+.input-group label { font-size:11px; color:#aaa; margin-bottom:4px; display:block; }
+.input-group input, .input-group select, .input-group textarea { width:100%; padding:12px; border-radius:8px; border:1px solid #444; background:#333; color:white; font-size:13px; }
+.input-group textarea { height:80px; resize:none; }
+.msg { padding:10px; border-radius:8px; margin-bottom:10px; font-size:12px; text-align:center; }
+.msg.bon { background:#1e8449; }
+.msg.mauvais { background:#c0392b; }
+.msg.info { background:#1a5276; }
+.meca-card { background:#2a2a2a; border-radius:10px; padding:10px; margin-bottom:8px; border-left:4px solid #ff6600; }
+.meca-nom { font-weight:bold; color:#ff6600; font-size:14px; }
+.meca-detail { color:#aaa; font-size:11px; margin-top:3px; }
+.badge { padding:3px 8px; border-radius:8px; font-size:10px; font-weight:bold; }
+.badge-dispo { background:#27ae60; }
+.badge-occupe { background:#e74c3c; }
+.demande-card { background:#2a2a2a; border-radius:10px; padding:10px; margin-bottom:8px; border-left:4px solid #2980b9; }
+#nav-bas { position:fixed; bottom:0; left:0; right:0; background:#252525; border-top:1px solid #333; display:none; justify-content:space-around; padding:8px 0; z-index:100; }
+.nav-btn { display:flex; flex-direction:column; align-items:center; font-size:9px; color:#aaa; cursor:pointer; padding:5px 10px; border:none; background:transparent; }
+.nav-btn.actif { color:#ff6600; }
+.nav-btn span { font-size:22px; margin-bottom:2px; }
+#loading { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); z-index:999; justify-content:center; align-items:center; flex-direction:column; }
+.tabs { display:flex; gap:5px; margin-bottom:12px; }
+.tab { flex:1; padding:8px; border:1px solid #ff6600; border-radius:8px; background:transparent; color:#ff6600; font-size:11px; cursor:pointer; text-align:center; }
+.tab.actif { background:#ff6600; color:white; }
+.statut { padding:4px 10px; border-radius:8px; font-size:10px; font-weight:bold; }
+.statut-attente { background:#e67e22; }
+.statut-accepte { background:#27ae60; }
+.statut-termine { background:#555; }
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div style="font-size:40px;">🔧</div>
+  <div style="margin-top:10px;color:#ff6600;font-size:14px;">Chargement...</div>
+</div>
+
+<div class="header">
+  <h1>🔧 MCM SERVICE CI</h1>
+  <p>Mécanique Camara Maïga • Abidjan, Côte d'Ivoire</p>
+</div>
+
+<div id="nav-bas">
+  <button class="nav-btn actif" id="nav-accueil" onclick="afficherTab('accueil')"><span>🏠</span>Accueil</button>
+  <button class="nav-btn" id="nav-demande" onclick="afficherTab('demande')"><span>🆘</span>Demande</button>
+  <button class="nav-btn" id="nav-mecas" onclick="afficherTab('mecas')"><span>🔧</span>Mécaniciens</button>
+  <button class="nav-btn" id="nav-profil" onclick="afficherTab('profil')"><span>👤</span>Profil</button>
+</div>
+
+<!-- CONNEXION -->
+<div id="ecran-connexion" class="ecran actif">
+  <div style="text-align:center;padding:30px 0 20px;">
+    <div style="font-size:60px;">🚗🔧</div>
+    <h2 style="color:#ff6600;margin:10px 0 5px;">MCM SERVICE CI</h2>
+    <p style="color:#aaa;font-size:12px;">Dépannage rapide à Abidjan</p>
+  </div>
+  <div class="card">
+    <div class="tabs">
+      <button class="tab actif" id="tab-connexion" onclick="switchTab('connexion')">Connexion</button>
+      <button class="tab" id="tab-inscription" onclick="switchTab('inscription')">Inscription</button>
+    </div>
+    <div id="form-connexion">
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="ton@email.com">
+      </div>
+      <div class="input-group">
+        <label>Mot de passe</label>
+        <input type="password" id="login-password" placeholder="••••••••">
+      </div>
+      <button class="btn btn-orange" onclick="seConnecter()">🔑 Se connecter</button>
+    </div>
+    <div id="form-inscription" style="display:none;">
+      <div class="input-group">
+        <label>Nom complet</label>
+        <input type="text" id="reg-nom" placeholder="Ex: Kouassi Jean">
+      </div>
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" id="reg-email" placeholder="ton@email.com">
+      </div>
+      <div class="input-group">
+        <label>Mot de passe</label>
+        <input type="password" id="reg-password" placeholder="Minimum 8 caractères">
+      </div>
+      <div class="input-group">
+        <label>Numéro WhatsApp</label>
+        <input type="tel" id="reg-tel" placeholder="Ex: 0707000000">
+      </div>
+      <div class="input-group">
+        <label>Je suis</label>
+        <select id="reg-role" onchange="toggleMecaFields()">
+          <option value="client">🚗 Un Client</option>
+          <option value="mecanicien">🔧 Un Mécanicien</option>
+        </select>
+      </div>
+      <div id="meca-fields" style="display:none;">
+        <div class="input-group">
+          <label>Spécialité</label>
+          <select id="reg-specialite">
+            <option>Toutes pannes</option>
+            <option>Moteur et Électricité</option>
+            <option>Pneus et Freins</option>
+            <option>Carrosserie</option>
+            <option>Climatisation</option>
+            <option>Injection et Informatique auto</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Quartier principal</label>
+          <select id="reg-quartier">
+            <option>Yopougon</option>
+            <option>Adjamé</option>
+            <option>Plateau</option>
+            <option>Cocody</option>
+            <option>Marcory</option>
+            <option>Treichville</option>
+            <option>Abobo</option>
+            <option>Koumassi</option>
+            <option>Port-Bouët</option>
+            <option>Bingerville</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-vert" onclick="sInscrire()">✅ Créer mon compte</button>
+    </div>
+    <div id="msg-connexion"></div>
+  </div>
+  <div style="text-align:center;font-size:11px;color:#555;margin-top:10px;">
+    Paiement : 📱 Wave • 🟠 Orange Money • 💛 MTN Money
+  </div>
+</div>
+
+<!-- ACCUEIL -->
+<div id="ecran-accueil" class="ecran">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:16px;font-weight:bold;" id="welcome-nom">Bonjour !</div>
+        <div style="font-size:11px;color:#aaa;" id="welcome-role">Client</div>
+      </div>
+      <button class="btn btn-gris" style="width:auto;padding:6px 12px;margin:0;font-size:11px;" onclick="seDeconnecter()">Déconnexion</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-titre">📊 MCM en chiffres</div>
+    <div style="display:flex;justify-content:space-around;text-align:center;">
+      <div><div style="font-size:22px;font-weight:bold;color:#ff6600;" id="stat-mecas">--</div><div style="font-size:10px;color:#aaa;">Mécaniciens</div></div>
+      <div><div style="font-size:22px;font-weight:bold;color:#27ae60;" id="stat-missions">--</div><div style="font-size:10px;color:#aaa;">Missions</div></div>
+      <div><div style="font-size:22px;font-weight:bold;color:#2980b9;">⭐4.8</div><div style="font-size:10px;color:#aaa;">Note</div></div>
+    </div>
+  </div>
+  <div id="section-client" style="display:none;">
+    <button class="btn btn-orange" onclick="afficherTab('demande')">🆘 Je suis en panne — Appeler un mécanicien</button>
+    <button class="btn btn-bleu" onclick="afficherTab('mecas')">🔧 Voir les mécaniciens disponibles</button>
+  </div>
+  <div id="section-meca" style="display:none;">
+    <div class="card">
+      <div class="card-titre">🟢 Mon statut</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-vert" style="margin:0;" onclick="changerDispo(true)">✅ Disponible</button>
+        <button class="btn btn-rouge" style="margin:0;" onclick="changerDispo(false)">❌ Occupé</button>
+      </div>
+    </div>
+    <button class="btn btn-orange" onclick="afficherTab('demande')">📋 Voir les demandes en attente</button>
+  </div>
+</div>
+
+<!-- DEMANDE -->
+<div id="ecran-demande" class="ecran">
+  <div id="form-demande-client">
+    <h2 style="color:#ff6600;margin-bottom:15px;">🆘 Demande de dépannage</h2>
+    <div class="card">
+      <div class="card-titre">📝 Ta situation</div>
+      <div class="input-group">
+        <label>Ton quartier</label>
+        <select id="dem-quartier">
+          <option value="">-- Choisis --</option>
+          <option>Yopougon</option><option>Adjamé</option><option>Plateau</option>
+          <option>Cocody</option><option>Marcory</option><option>Treichville</option>
+          <option>Abobo</option><option>Koumassi</option><option>Port-Bouët</option>
+          <option>Bingerville</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Type de panne</label>
+        <select id="dem-type">
+          <option value="">-- Type de panne --</option>
+          <option>🔋 Batterie / Démarrage</option>
+          <option>🚗 Pneu crevé</option>
+          <option>🌡️ Surchauffe moteur</option>
+          <option>⚡ Problème électrique</option>
+          <option>🛞 Freins</option>
+          <option>⛽ Panne de carburant</option>
+          <option>🔧 Moteur en panne</option>
+          <option>❄️ Climatisation</option>
+          <option>❓ Autre panne</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Description</label>
+        <textarea id="dem-description" placeholder="Décris ta panne..."></textarea>
+      </div>
+      <div class="input-group">
+        <label>Paiement</label>
+        <select id="dem-paiement">
+          <option>📱 Wave</option>
+          <option>🟠 Orange Money</option>
+          <option>💛 MTN Money</option>
+          <option>💵 Cash</option>
+        </select>
+      </div>
+      <button class="btn btn-orange" onclick="envoyerDemande()">🆘 Envoyer ma demande</button>
+    </div>
+    <div id="msg-demande"></div>
+    <div class="card">
+      <div class="card-titre">📋 Mes demandes</div>
+      <div id="mes-demandes-liste"><div style="color:#aaa;font-size:12px;text-align:center;padding:10px;">Chargement...</div></div>
+      <button class="btn btn-gris" style="margin-top:8px;" onclick="chargerMesDemandes()">🔄 Actualiser</button>
+    </div>
+  </div>
+  <div id="form-demande-meca" style="display:none;">
+    <h2 style="color:#ff6600;margin-bottom:15px;">📋 Demandes en attente</h2>
+    <div id="demandes-meca-liste"><div style="color:#aaa;font-size:12px;text-align:center;padding:10px;">Chargement...</div></div>
+    <button class="btn btn-bleu" onclick="chargerDemandesMeca()">🔄 Actualiser</button>
+  </div>
+</div>
+
+<!-- MÉCANICIENS -->
+<div id="ecran-mecas" class="ecran">
+  <h2 style="color:#ff6600;margin-bottom:15px;">🔧 Mécaniciens disponibles</h2>
+  <div class="input-group">
+    <select id="filtre-quartier" onchange="chargerMecas()">
+      <option value="">Tous les quartiers</option>
+      <option>Yopougon</option><option>Adjamé</option><option>Plateau</option>
+      <option>Cocody</option><option>Marcory</option><option>Treichville</option>
+      <option>Abobo</option><option>Koumassi</option><option>Port-Bouët</option>
+      <option>Bingerville</option>
+    </select>
+  </div>
+  <div id="liste-mecas"><div style="color:#aaa;font-size:12px;text-align:center;padding:20px;">Chargement...</div></div>
+</div>
+
+<!-- PROFIL -->
+<div id="ecran-profil" class="ecran">
+  <h2 style="color:#ff6600;margin-bottom:15px;">👤 Mon profil</h2>
+  <div class="card" id="profil-info"><div style="color:#aaa;font-size:12px;text-align:center;">Chargement...</div></div>
+  <button class="btn btn-rouge" onclick="seDeconnecter()">🚪 Déconnexion</button>
+</div>
+
+<script>
+const PB_URL = 'https://mcm-backend-5ox3.onrender.com';
+let userActuel = null;
+let profilActuel = null;
+
+async function pbReq(path, method, body) {
+  let opts = { method: method || 'GET', headers: { 'Content-Type': 'application/json' } };
+  if (userActuel?.token) opts.headers['Authorization'] = userActuel.token;
+  if (body) opts.body = JSON.stringify(body);
+  let res = await fetch(PB_URL + path, opts);
+  let data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Erreur');
+  return data;
+}
+
+function afficherLoading(show) {
+  document.getElementById('loading').style.display = show ? 'flex' : 'none';
+}
+
+function afficherMsg(id, texte, type) {
+  document.getElementById(id).innerHTML = `<div class="msg ${type}">${texte}</div>`;
+}
+
+function toggleMecaFields() {
+  let role = document.getElementById('reg-role').value;
+  document.getElementById('meca-fields').style.display = role === 'mecanicien' ? 'block' : 'none';
+}
+
+function switchTab(tab) {
+  document.getElementById('form-connexion').style.display = tab === 'connexion' ? 'block' : 'none';
+  document.getElementById('form-inscription').style.display = tab === 'inscription' ? 'block' : 'none';
+  document.getElementById('tab-connexion').className = 'tab' + (tab === 'connexion' ? ' actif' : '');
+  document.getElementById('tab-inscription').className = 'tab' + (tab === 'inscription' ? ' actif' : '');
+}
+
+async function seConnecter() {
+  let email = document.getElementById('login-email').value.trim();
+  let password = document.getElementById('login-password').value;
+  if (!email || !password) { afficherMsg('msg-connexion', '❌ Remplis tous les champs !', 'mauvais'); return; }
+  afficherLoading(true);
+  try {
+    let data = await pbReq('/api/collections/profiles/auth-with-password', 'POST', { identity: email, password });
+    userActuel = { token: data.token, id: data.record.id };
+    profilActuel = data.record;
+    afficherAppPrincipale();
+  } catch(e) {
+    afficherMsg('msg-connexion', '❌ Email ou mot de passe incorrect !', 'mauvais');
+  }
+  afficherLoading(false);
+}
+
+async function sInscrire() {
+  let nom = document.getElementById('reg-nom').value.trim();
+  let email = document.getElementById('reg-email').value.trim();
+  let password = document.getElementById('reg-password').value;
+  let tel = document.getElementById('reg-tel').value.trim();
+  let role = document.getElementById('reg-role').value;
+  let specialite = document.getElementById('reg-specialite')?.value || '';
+  let quartier = document.getElementById('reg-quartier')?.value || '';
+  if (!nom || !email || !password || !tel) { afficherMsg('msg-connexion', '❌ Remplis tous les champs !', 'mauvais'); return; }
+  afficherLoading(true);
+  try {
+    await pbReq('/api/collections/profiles/records', 'POST', {
+      nom, email, password, passwordConfirm: password,
+      role, telephone: tel, specialite, quartier,
+      disponible: true, note: 5, nombre_missions: 0
+    });
+    afficherMsg('msg-connexion', '✅ Compte créé ! Connecte-toi maintenant.', 'bon');
+    switchTab('connexion');
+  } catch(e) {
+    afficherMsg('msg-connexion', '❌ Erreur : ' + e.message, 'mauvais');
+  }
+  afficherLoading(false);
+}
+
+async function seDeconnecter() {
+  userActuel = null; profilActuel = null;
+  document.getElementById('nav-bas').style.display = 'none';
+  afficherEcran('ecran-connexion');
+}
+
+function afficherEcran(id) {
+  document.querySelectorAll('.ecran').forEach(e => e.classList.remove('actif'));
+  document.getElementById(id).classList.add('actif');
+  window.scrollTo(0, 0);
+}
+
+function afficherAppPrincipale() {
+  document.getElementById('nav-bas').style.display = 'flex';
+  afficherEcran('ecran-accueil');
+  document.getElementById('welcome-nom').textContent = '👋 Bonjour, ' + profilActuel.nom + ' !';
+  document.getElementById('welcome-role').textContent = profilActuel.role === 'mecanicien' ? '🔧 Mécanicien MCM' : '🚗 Client';
+  document.getElementById('section-client').style.display = profilActuel.role === 'client' ? 'block' : 'none';
+  document.getElementById('section-meca').style.display = profilActuel.role === 'mecanicien' ? 'block' : 'none';
+  chargerStats();
+  chargerMecas();
+}
+
+function afficherTab(tab) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('actif'));
+  let navEl = document.getElementById('nav-' + tab);
+  if (navEl) navEl.classList.add('actif');
+  if (tab === 'accueil') afficherEcran('ecran-accueil');
+  else if (tab === 'demande') {
+    afficherEcran('ecran-demande');
+    if (profilActuel?.role === 'mecanicien') {
+      document.getElementById('form-demande-client').style.display = 'none';
+      document.getElementById('form-demande-meca').style.display = 'block';
+      chargerDemandesMeca();
+    } else {
+      document.getElementById('form-demande-client').style.display = 'block';
+      document.getElementById('form-demande-meca').style.display = 'none';
+      chargerMesDemandes();
+    }
+  }
+  else if (tab === 'mecas') { afficherEcran('ecran-mecas'); chargerMecas(); }
+  else if (tab === 'profil') { afficherEcran('ecran-profil'); afficherProfil(); }
+}
+
+async function chargerStats() {
+  try {
+    let mecas = await pbReq('/api/collections/profiles/records?filter=role="mecanicien"');
+    let missions = await pbReq('/api/collections/demandes/records');
+    document.getElementById('stat-mecas').textContent = mecas.totalItems || 0;
+    document.getElementById('stat-missions').textContent = missions.totalItems || 0;
+  } catch(e) {}
+}
+
+async function chargerMecas() {
+  let quartier = document.getElementById('filtre-quartier')?.value || '';
+  let filter = 'role="mecanicien"&&disponible=true';
+  if (quartier) filter += '&&quartier="' + quartier + '"';
+  try {
+    let data = await pbReq('/api/collections/profiles/records?filter=' + encodeURIComponent(filter));
+    let html = '';
+    if (data.items && data.items.length > 0) {
+      data.items.forEach(m => {
+        html += `<div class="meca-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="meca-nom">🔧 ${m.nom}</div>
+            <span class="badge badge-dispo">Disponible</span>
+          </div>
+          <div class="meca-detail">📍 ${m.quartier} • ${m.specialite || 'Toutes pannes'}</div>
+          <div class="meca-detail">⭐ ${m.note}/5 • ${m.nombre_missions} missions</div>
+          <div style="margin-top:8px;">
+            <a href="https://wa.me/225${(m.telephone||'').replace(/\D/g,'')}" target="_blank">
+              <button class="btn btn-vert" style="margin:0;padding:8px;font-size:12px;">📱 Contacter sur WhatsApp</button>
+            </a>
+          </div>
+        </div>`;
+      });
+    } else {
+      html = '<div style="color:#aaa;font-size:12px;text-align:center;padding:20px;">Aucun mécanicien disponible.</div>';
+    }
+    document.getElementById('liste-mecas').innerHTML = html;
+  } catch(e) {}
+}
+
+async function changerDispo(dispo) {
+  if (!profilActuel) return;
+  await pbReq('/api/collections/profiles/records/' + profilActuel.id, 'PATCH', { disponible: dispo });
+  profilActuel.disponible = dispo;
+  alert(dispo ? '✅ Tu es maintenant disponible !' : '❌ Tu es marqué comme occupé.');
+}
+
+async function envoyerDemande() {
+  let quartier = document.getElementById('dem-quartier').value;
+  let type = document.getElementById('dem-type').value;
+  let description = document.getElementById('dem-description').value.trim();
+  let paiement = document.getElementById('dem-paiement').value;
+  if (!quartier || !type) { afficherMsg('msg-demande', '❌ Choisis ton quartier et le type de panne !', 'mauvais'); return; }
+  afficherLoading(true);
+  try {
+    await pbReq('/api/collections/demandes/records', 'POST', {
+      client_id: userActuel.id,
+      client_nom: profilActuel.nom,
+      client_tel: profilActuel.telephone,
+      description_panne: type + (description ? ' — ' + description : ''),
+      quartier_panne: quartier,
+      paiement_methode: paiement,
+      statut: 'en_attente'
+    });
+    afficherMsg('msg-demande', '✅ Demande envoyée ! Les mécaniciens de ' + quartier + ' ont été notifiés !', 'bon');
+    chargerMesDemandes();
+  } catch(e) {
+    afficherMsg('msg-demande', '❌ Erreur : ' + e.message, 'mauvais');
+  }
+  afficherLoading(false);
+}
+
+async function chargerMesDemandes() {
+  if (!userActuel) return;
+  try {
+    let data = await pbReq('/api/collections/demandes/records?filter=' + encodeURIComponent('client_id="' + userActuel.id + '"') + '&sort=-created');
+    let html = '';
+    if (data.items && data.items.length > 0) {
+      data.items.forEach(d => {
+        let date = new Date(d.created).toLocaleDateString('fr-FR');
+        html += `<div class="demande-card">
+          <div style="display:flex;justify-content:space-between;">
+            <div style="font-weight:bold;font-size:12px;">${d.description_panne}</div>
+            <span class="statut statut-${d.statut === 'en_attente' ? 'attente' : d.statut === 'accepte' ? 'accepte' : 'termine'}">${d.statut}</span>
+          </div>
+          <div style="color:#aaa;font-size:11px;margin-top:4px;">📍 ${d.quartier_panne} • ${date}</div>
+          <div style="color:#aaa;font-size:11px;">💳 ${d.paiement_methode}</div>
+        </div>`;
+      });
+    } else {
+      html = '<div style="color:#aaa;font-size:12px;text-align:center;padding:10px;">Aucune demande.</div>';
+    }
+    document.getElementById('mes-demandes-liste').innerHTML = html;
+  } catch(e) {}
+}
+
+async function chargerDemandesMeca() {
+  if (!profilActuel) return;
+  try {
+    let filter = 'quartier_panne="' + profilActuel.quartier + '"&&statut="en_attente"';
+    let data = await pbReq('/api/collections/demandes/records?filter=' + encodeURIComponent(filter) + '&sort=-created');
+    let html = '';
+    if (data.items && data.items.length > 0) {
+      data.items.forEach(d => {
+        html += `<div class="demande-card">
+          <div style="font-weight:bold;font-size:13px;">🚗 ${d.description_panne}</div>
+          <div style="color:#aaa;font-size:11px;margin-top:4px;">📍 ${d.quartier_panne}</div>
+          <div style="color:#aaa;font-size:11px;">👤 ${d.client_nom} • 📱 ${d.client_tel}</div>
+          <div style="color:#aaa;font-size:11px;">💳 ${d.paiement_methode}</div>
+          <div style="display:flex;gap:6px;margin-top:8px;">
+            <a href="https://wa.me/225${(d.client_tel||'').replace(/\D/g,'')}" target="_blank" style="flex:1;">
+              <button class="btn btn-vert" style="margin:0;padding:8px;font-size:11px;">📱 WhatsApp</button>
+            </a>
+            <button class="btn btn-orange" style="flex:1;margin:0;padding:8px;font-size:11px;" onclick="accepterMission('${d.id}')">✅ Accepter</button>
+          </div>
+        </div>`;
+      });
+    } else {
+      html = '<div style="color:#aaa;font-size:12px;text-align:center;padding:20px;">Aucune demande en attente.</div>';
+    }
+    document.getElementById('demandes-meca-liste').innerHTML = html;
+  } catch(e) {}
+}
+
+async function accepterMission(demandeId) {
+  afficherLoading(true);
+  await pbReq('/api/collections/demandes/records/' + demandeId, 'PATCH', { mecanicien_id: userActuel.id, statut: 'accepte' });
+  await pbReq('/api/collections/profiles/records/' + profilActuel.id, 'PATCH', { disponible: false, nombre_missions: (profilActuel.nombre_missions || 0) + 1 });
+  profilActuel.nombre_missions = (profilActuel.nombre_missions || 0) + 1;
+  afficherLoading(false);
+  alert('✅ Mission acceptée ! Contacte le client sur WhatsApp.');
+  chargerDemandesMeca();
+}
+
+function afficherProfil() {
+  if (!profilActuel) return;
+  document.getElementById('profil-info').innerHTML = `
+    <div class="card-titre">👤 ${profilActuel.nom}</div>
+    <div style="font-size:12px;color:#eee;line-height:2;">
+      <div>📧 ${profilActuel.email || ''}</div>
+      <div>📱 ${profilActuel.telephone}</div>
+      <div>🎭 Rôle : <strong style="color:#ff6600;">${profilActuel.role === 'mecanicien' ? '🔧 Mécanicien' : '🚗 Client'}</strong></div>
+      ${profilActuel.role === 'mecanicien' ? `
+      <div>🔧 Spécialité : ${profilActuel.specialite}</div>
+      <div>📍 Quartier : ${profilActuel.quartier}</div>
+      <div>⭐ Note : ${profilActuel.note}/5</div>
+      <div>✅ Missions : ${profilActuel.nombre_missions}</div>
+      <div>Statut : <span class="badge ${profilActuel.disponible ? 'badge-dispo' : 'badge-occupe'}">${profilActuel.disponible ? 'Disponible' : 'Occupé'}</span></div>
+      ` : ''}
+    </div>`;
+}
+</script>
+</body>
+</html>
