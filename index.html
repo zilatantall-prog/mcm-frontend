@@ -4,39 +4,55 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>MCM SERVICE CI</title>
-<link rel="manifest" href="/manifest.json">
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
 <meta name="theme-color" content="#ff6600">
+<link rel="manifest" href="/manifest.json">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:Arial; background:#1a1a1a; color:white; min-height:100vh; }
-.header { background:linear-gradient(135deg,#ff6600,#cc4400); padding:15px; text-align:center; position:sticky; top:0; z-index:100; }
-.header h1 { font-size:20px; }
-.header p { font-size:11px; color:#ffe; margin-top:2px; }
-.ecran { display:none; padding:15px; padding-bottom:80px; }
-.ecran.actif { display:block; }
-.btn { width:100%; padding:14px; border:none; border-radius:10px; font-size:14px; font-weight:bold; color:white; cursor:pointer; margin-bottom:10px; }
-.btn-orange { background:linear-gradient(135deg,#ff6600,#cc4400); }
-.btn-vert { background:linear-gradient(135deg,#27ae60,#1e8449); }
-.btn-rouge { background:linear-gradient(135deg,#e74c3c,#c0392b); }
-.btn-gris { background:#333; }
-.card { background:#252525; border-radius:12px; padding:12px; margin-bottom:12px; border:1px solid #333; }
-.card-titre { color:#ff6600; font-size:13px; font-weight:bold; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:6px; }
-.input-group { margin-bottom:12px; }
-.input-group label { font-size:11px; color:#aaa; margin-bottom:4px; display:block; }
-.input-group input, .input-group select, .input-group textarea { width:100%; padding:12px; border-radius:8px; border:1px solid #444; background:#333; color:white; font-size:13px; }
-.input-group textarea { height:80px; resize:none; }
-.msg { padding:10px; border-radius:8px; margin-bottom:10px; font-size:12px; text-align:center; }
-.msg.bon { background:#1e8449; }
-.msg.mauvais { background:#c0392b; }
-.demande-card { background:#2a2a2a; border-radius:10px; padding:10px; margin-bottom:8px; border-left:4px solid #2980b9; }
-.tabs { display:flex; gap:5px; margin-bottom:12px; }
-.tab { flex:1; padding:8px; border:1px solid #ff6600; border-radius:8px; background:transparent; color:#ff6600; font-size:11px; cursor:pointer; text-align:center; }
-.tab.actif { background:#ff6600; color:white; }
-.logo-zone { text-align:center; padding:20px 0 10px; }
-.logo-zone .emoji { font-size:50px; }
-.logo-zone h2 { color:#ff6600; font-size:22px; font-weight:bold; margin-top:5px; }
-.logo-zone p { color:#aaa; font-size:12px; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Arial;background:#1a1a1a;color:white;min-height:100vh;}
+.header{background:linear-gradient(135deg,#ff6600,#cc4400);padding:15px;text-align:center;position:sticky;top:0;z-index:100;}
+.header h1{font-size:20px;}
+.header p{font-size:11px;color:#ffe;margin-top:2px;}
+.ecran{display:none;padding:15px;padding-bottom:80px;}
+.ecran.actif{display:block;}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:14px;font-weight:bold;color:white;cursor:pointer;margin-bottom:10px;}
+.btn-orange{background:linear-gradient(135deg,#ff6600,#cc4400);}
+.btn-vert{background:linear-gradient(135deg,#27ae60,#1e8449);}
+.btn-rouge{background:linear-gradient(135deg,#e74c3c,#c0392b);}
+.btn-bleu{background:linear-gradient(135deg,#2980b9,#1a5276);}
+.btn-violet{background:linear-gradient(135deg,#8e44ad,#6c3483);}
+.btn-gris{background:#333;}
+.card{background:#252525;border-radius:12px;padding:12px;margin-bottom:12px;border:1px solid #333;}
+.card-titre{color:#ff6600;font-size:13px;font-weight:bold;margin-bottom:10px;border-bottom:1px solid #333;padding-bottom:6px;}
+.input-group{margin-bottom:12px;}
+.input-group label{font-size:11px;color:#aaa;margin-bottom:4px;display:block;}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:12px;border-radius:8px;border:1px solid #444;background:#333;color:white;font-size:13px;}
+.input-group textarea{height:80px;resize:none;}
+.msg{padding:10px;border-radius:8px;margin-bottom:10px;font-size:12px;text-align:center;}
+.msg.bon{background:#1e8449;}
+.msg.mauvais{background:#c0392b;}
+.msg.info{background:#1a5276;}
+.badge{padding:3px 8px;border-radius:8px;font-size:10px;font-weight:bold;display:inline-block;}
+.badge-attente{background:#e67e22;}
+.badge-certifie{background:#27ae60;}
+.badge-refuse{background:#e74c3c;}
+.badge-client{background:#2980b9;}
+.badge-admin{background:#8e44ad;}
+.badge-superadmin{background:#c0392b;}
+.meca-card{background:#2a2a2a;border-radius:10px;padding:10px;margin-bottom:8px;border-left:4px solid #ff6600;}
+.demande-card{background:#2a2a2a;border-radius:10px;padding:10px;margin-bottom:8px;border-left:4px solid #2980b9;}
+.user-card{background:#2a2a2a;border-radius:10px;padding:10px;margin-bottom:8px;border-left:4px solid #8e44ad;}
+.tabs{display:flex;gap:5px;margin-bottom:12px;}
+.tab{flex:1;padding:8px;border:1px solid #ff6600;border-radius:8px;background:transparent;color:#ff6600;font-size:11px;cursor:pointer;text-align:center;}
+.tab.actif{background:#ff6600;color:white;}
+.logo-zone{text-align:center;padding:20px 0 10px;}
+.logo-zone .emoji{font-size:50px;}
+.logo-zone h2{color:#ff6600;font-size:22px;font-weight:bold;margin-top:5px;}
+.logo-zone p{color:#aaa;font-size:12px;}
+.statut-bar{background:#252525;border-radius:8px;padding:8px;margin-bottom:10px;font-size:11px;color:#aaa;text-align:center;}
+.nav-bas{position:fixed;bottom:0;left:0;right:0;background:#252525;border-top:1px solid #333;display:flex;justify-content:space-around;padding:8px 0;z-index:100;}
+.nav-btn{display:flex;flex-direction:column;align-items:center;font-size:9px;color:#aaa;cursor:pointer;padding:5px 10px;border:none;background:transparent;}
+.nav-btn.actif{color:#ff6600;}
+.nav-btn span{font-size:22px;margin-bottom:2px;}
 </style>
 </head>
 <body>
@@ -44,6 +60,8 @@ body { font-family:Arial; background:#1a1a1a; color:white; min-height:100vh; }
   <h1>🔧 MCM SERVICE CI</h1>
   <p>Mécanique Camara Maïga • Abidjan, Côte d'Ivoire</p>
 </div>
+
+<!-- ACCUEIL -->
 <div id="ecran-accueil" class="ecran actif">
   <div class="logo-zone">
     <div class="emoji">🚗🔧</div>
@@ -52,16 +70,16 @@ body { font-family:Arial; background:#1a1a1a; color:white; min-height:100vh; }
   </div>
   <div class="card">
     <div class="tabs">
-      <div class="tab" onclick="switchTab('connexion',this)">Connexion</div>
-      <div class="tab actif" onclick="switchTab('inscription',this)">Inscription</div>
+      <div class="tab actif" onclick="switchTab('connexion',this)">Connexion</div>
+      <div class="tab" onclick="switchTab('inscription',this)">Inscription</div>
     </div>
-    <div id="tab-connexion" style="display:none">
+    <div id="tab-connexion">
       <div class="input-group"><label>Email</label><input type="email" id="login-email" placeholder="ton@email.com"></div>
       <div class="input-group"><label>Mot de passe</label><input type="password" id="login-mdp" placeholder="••••••••"></div>
       <button class="btn btn-orange" onclick="seConnecter()">🔑 Se connecter</button>
       <div id="msg-login"></div>
     </div>
-    <div id="tab-inscription">
+    <div id="tab-inscription" style="display:none">
       <div class="input-group"><label>Nom complet</label><input type="text" id="reg-nom" placeholder="Ton nom complet"></div>
       <div class="input-group"><label>Email</label><input type="email" id="reg-email" placeholder="ton@email.com"></div>
       <div class="input-group"><label>Mot de passe</label><input type="password" id="reg-mdp" placeholder="••••••••"></div>
@@ -69,11 +87,11 @@ body { font-family:Arial; background:#1a1a1a; color:white; min-height:100vh; }
       <div class="input-group"><label>Je suis</label>
         <select id="reg-role" onchange="toggleQuartier()">
           <option value="client">🚗 Un Client</option>
-          <option value="mecanicien">🔧 Un Mécanicien</option>
+          <option value="mecanicien_en_attente">🔧 Un Mécanicien</option>
         </select>
       </div>
       <div class="input-group" id="groupe-quartier" style="display:none">
-        <label>Votre quartier</label>
+        <label>Votre quartier d'intervention</label>
         <select id="reg-quartier">
           <option value="">Choisir...</option>
           <option value="Yopougon">Yopougon</option>
@@ -88,35 +106,91 @@ body { font-family:Arial; background:#1a1a1a; color:white; min-height:100vh; }
           <option value="Attécoubé">Attécoubé</option>
         </select>
       </div>
+      <div class="input-group" id="groupe-specialite" style="display:none">
+        <label>Votre spécialité</label>
+        <select id="reg-specialite">
+          <option value="">Choisir...</option>
+          <option value="Panne moteur">Panne moteur</option>
+          <option value="Pneus et roues">Pneus et roues</option>
+          <option value="Batterie et électricité">Batterie et électricité</option>
+          <option value="Freins">Freins</option>
+          <option value="Carrosserie">Carrosserie</option>
+          <option value="Général">Mécanique générale</option>
+        </select>
+      </div>
       <button class="btn btn-vert" onclick="sInscrire()">✅ Créer mon compte</button>
       <div id="msg-register"></div>
     </div>
     <p style="text-align:center;font-size:10px;color:#555;margin-top:10px;">Paiement : 📱 Wave • 🟠 Orange Money • 💛 MTN Money</p>
   </div>
 </div>
+
+<!-- CLIENT -->
 <div id="ecran-client" class="ecran">
   <div class="card">
-    <div class="card-titre">🚗 Tableau de bord Client</div>
+    <div class="card-titre">🚗 Espace Client</div>
     <p id="client-bienvenue" style="color:#aaa;font-size:12px;margin-bottom:10px;"></p>
     <button class="btn btn-orange" onclick="afficherEcran('ecran-demande')">🆘 Demander un mécanicien</button>
+    <button class="btn btn-bleu" onclick="chargerMesDemandes()">📋 Mes demandes</button>
+    <button class="btn btn-rouge" onclick="seDeconnecter()">🚪 Déconnexion</button>
+  </div>
+  <div id="mes-demandes-client"></div>
+</div>
+
+<!-- MÉCANICIEN EN ATTENTE -->
+<div id="ecran-meca-attente" class="ecran">
+  <div class="card">
+    <div class="card-titre">⏳ Dossier en cours d'examen</div>
+    <div class="statut-bar">Votre dossier est en cours de vérification par notre équipe. Nous vous contacterons sur WhatsApp.</div>
+    <p style="color:#aaa;font-size:12px;margin-bottom:15px;">Notre équipe va se déplacer pour évaluer vos compétences avant de vous certifier.</p>
     <button class="btn btn-rouge" onclick="seDeconnecter()">🚪 Déconnexion</button>
   </div>
 </div>
+
+<!-- MÉCANICIEN CERTIFIÉ -->
 <div id="ecran-mecanicien" class="ecran">
   <div class="card">
-    <div class="card-titre">🔧 Tableau de bord Mécanicien</div>
-    <p id="meca-bienvenue" style="color:#aaa;font-size:12px;margin-bottom:10px;"></p>
+    <div class="card-titre">🔧 Espace Mécanicien Certifié</div>
+    <p id="meca-bienvenue" style="color:#aaa;font-size:12px;margin-bottom:5px;"></p>
+    <p id="meca-secteur" style="color:#ff6600;font-size:11px;margin-bottom:10px;"></p>
     <button class="btn btn-orange" onclick="chargerDemandes()">📋 Voir les demandes</button>
     <button class="btn btn-rouge" onclick="seDeconnecter()">🚪 Déconnexion</button>
   </div>
   <div id="liste-demandes"></div>
 </div>
+
+<!-- ADMIN -->
+<div id="ecran-admin" class="ecran">
+  <div class="card">
+    <div class="card-titre">🛡️ Espace Admin</div>
+    <p id="admin-bienvenue" style="color:#aaa;font-size:12px;margin-bottom:10px;"></p>
+    <button class="btn btn-violet" onclick="chargerMecaniciensAttente()">⏳ Mécaniciens en attente</button>
+    <button class="btn btn-bleu" onclick="chargerTousUtilisateurs()">👥 Tous les utilisateurs</button>
+    <button class="btn btn-rouge" onclick="seDeconnecter()">🚪 Déconnexion</button>
+  </div>
+  <div id="liste-admin"></div>
+</div>
+
+<!-- SUPER ADMIN -->
+<div id="ecran-superadmin" class="ecran">
+  <div class="card">
+    <div class="card-titre">👑 Super Admin</div>
+    <p id="superadmin-bienvenue" style="color:#aaa;font-size:12px;margin-bottom:10px;"></p>
+    <button class="btn btn-violet" onclick="chargerMecaniciensAttente()">⏳ Mécaniciens en attente</button>
+    <button class="btn btn-bleu" onclick="chargerTousUtilisateurs()">👥 Tous les utilisateurs</button>
+    <button class="btn btn-orange" onclick="chargerAdmins()">🛡️ Gérer les admins</button>
+    <button class="btn btn-rouge" onclick="seDeconnecter()">🚪 Déconnexion</button>
+  </div>
+  <div id="liste-superadmin"></div>
+</div>
+
+<!-- DEMANDE -->
 <div id="ecran-demande" class="ecran">
   <div class="card">
-    <div class="card-titre">🆘 Nouvelle demande</div>
-    <div class="input-group"><label>Votre quartier</label>
+    <div class="card-titre">🆘 Nouvelle demande de dépannage</div>
+    <div class="input-group"><label>Votre quartier actuel</label>
       <select id="dem-quartier">
-        <option value="">Choisir...</option>
+        <option value="">Choisir votre quartier...</option>
         <option value="Yopougon">Yopougon</option>
         <option value="Cocody">Cocody</option>
         <option value="Abobo">Abobo</option>
@@ -129,17 +203,29 @@ body { font-family:Arial; background:#1a1a1a; color:white; min-height:100vh; }
         <option value="Attécoubé">Attécoubé</option>
       </select>
     </div>
-    <div class="input-group"><label>Description du problème</label><textarea id="dem-description" placeholder="Ex: Ma voiture ne démarre plus..."></textarea></div>
-    <button class="btn btn-vert" onclick="envoyerDemande()">📤 Envoyer</button>
+    <div class="input-group"><label>Type de panne</label>
+      <select id="dem-type">
+        <option value="">Choisir...</option>
+        <option value="Panne moteur">Panne moteur</option>
+        <option value="Pneu crevé">Pneu crevé</option>
+        <option value="Batterie">Problème batterie</option>
+        <option value="Freins">Problème freins</option>
+        <option value="Autre">Autre panne</option>
+      </select>
+    </div>
+    <div class="input-group"><label>Description détaillée</label><textarea id="dem-description" placeholder="Décrivez votre panne en détail..."></textarea></div>
+    <button class="btn btn-vert" onclick="envoyerDemande()">📤 Envoyer la demande</button>
     <button class="btn btn-gris" onclick="afficherEcran('ecran-client')">⬅ Retour</button>
     <div id="msg-demande"></div>
   </div>
 </div>
+
 <script>
-const SB_URL = 'https://ddpedkjmuslcrzqjjfoi.supabase.co';
-const SB_KEY = 'sb_publishable_IiH75oXzI79hsqW3zMar8w_skKQtqIl';
-const HEADERS = {'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
-let userConnecte = null;
+const SB_URL='https://ddpedkjmuslcrzqjjfoi.supabase.co';
+const SB_KEY='sb_publishable_IiH75oXzI79hsqW3zMar8w_skKQtqIl';
+const H={'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
+const SUPERADMINS=['adamomaiga225m@gmail.com','camaraabou6066@gmail.com'];
+let userConnecte=null;
 
 function afficherEcran(id){document.querySelectorAll('.ecran').forEach(e=>e.classList.remove('actif'));document.getElementById(id).classList.add('actif');window.scrollTo(0,0);}
 
@@ -150,39 +236,67 @@ function switchTab(tab,el){
   document.getElementById('tab-inscription').style.display=tab==='inscription'?'block':'none';
 }
 
-function toggleQuartier(){document.getElementById('groupe-quartier').style.display=document.getElementById('reg-role').value==='mecanicien'?'block':'none';}
+function toggleQuartier(){
+  const r=document.getElementById('reg-role').value;
+  document.getElementById('groupe-quartier').style.display=r==='mecanicien_en_attente'?'block':'none';
+  document.getElementById('groupe-specialite').style.display=r==='mecanicien_en_attente'?'block':'none';
+}
 
-function afficherMsg(id,texte,type){document.getElementById(id).innerHTML='<div class="msg '+type+'">'+texte+'</div>';setTimeout(()=>document.getElementById(id).innerHTML='',4000);}
+function afficherMsg(id,texte,type){
+  document.getElementById(id).innerHTML='<div class="msg '+type+'">'+texte+'</div>';
+  setTimeout(()=>{if(document.getElementById(id))document.getElementById(id).innerHTML=''},5000);
+}
+
+function getBadge(role){
+  const badges={superadmin:'<span class="badge badge-superadmin">👑 Super Admin</span>',admin:'<span class="badge badge-admin">🛡️ Admin</span>',mecanicien_certifie:'<span class="badge badge-certifie">✅ Certifié</span>',mecanicien_en_attente:'<span class="badge badge-attente">⏳ En attente</span>',client:'<span class="badge badge-client">🚗 Client</span>'};
+  return badges[role]||role;
+}
+
+function redirigerSelonRole(user){
+  if(user.role==='superadmin'){document.getElementById('superadmin-bienvenue').textContent='Bonjour '+user.nom+' 👑';afficherEcran('ecran-superadmin');}
+  else if(user.role==='admin'){document.getElementById('admin-bienvenue').textContent='Bonjour '+user.nom+' 🛡️';afficherEcran('ecran-admin');}
+  else if(user.role==='mecanicien_certifie'){document.getElementById('meca-bienvenue').textContent='Bonjour '+user.nom+' 👋';document.getElementById('meca-secteur').textContent='📍 Secteur: '+user.quartier+' | 🔧 '+user.specialite;afficherEcran('ecran-mecanicien');}
+  else if(user.role==='mecanicien_en_attente'){afficherEcran('ecran-meca-attente');}
+  else{document.getElementById('client-bienvenue').textContent='Bonjour '+user.nom+' 👋';afficherEcran('ecran-client');}
+}
 
 async function sInscrire(){
   const nom=document.getElementById('reg-nom').value.trim();
-  const email=document.getElementById('reg-email').value.trim();
+  const email=document.getElementById('reg-email').value.trim().toLowerCase();
   const mdp=document.getElementById('reg-mdp').value;
   const tel=document.getElementById('reg-tel').value.trim();
-  const role=document.getElementById('reg-role').value;
+  let role=document.getElementById('reg-role').value;
   const quartier=document.getElementById('reg-quartier').value;
+  const specialite=document.getElementById('reg-specialite').value;
   if(!nom||!email||!mdp||!tel){afficherMsg('msg-register','❌ Remplis tous les champs !','mauvais');return;}
+  if(SUPERADMINS.includes(email))role='superadmin';
   try{
-    const res=await fetch(SB_URL+'/rest/v1/profiles',{method:'POST',headers:{...HEADERS,'Prefer':'return=minimal'},body:JSON.stringify({nom,email,telephone:tel,mot_de_passe:mdp,role,quartier,disponible:true})});
-    if(res.ok||res.status===201){afficherMsg('msg-register','✅ Compte créé ! Connecte-toi.','bon');switchTab('connexion',document.querySelector('.tab'));}
-    else{const d=await res.json();afficherMsg('msg-register','❌ Erreur: '+(d.message||d.details||'Réessaie'),'mauvais');}
+    const res=await fetch(SB_URL+'/rest/v1/profiles',{method:'POST',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({nom,email,telephone:tel,mot_de_passe:mdp,role,quartier,specialite,disponible:true})});
+    if(res.ok||res.status===201){
+      if(role==='mecanicien_en_attente'){afficherMsg('msg-register','✅ Dossier envoyé ! Notre équipe vous contactera.','bon');}
+      else{afficherMsg('msg-register','✅ Compte créé ! Connecte-toi.','bon');}
+      switchTab('connexion',document.querySelector('.tab'));
+    }else{const d=await res.json();afficherMsg('msg-register','❌ '+(d.message||d.details||'Erreur'),'mauvais');}
   }catch(e){afficherMsg('msg-register','❌ Connexion impossible','mauvais');}
 }
 
 async function seConnecter(){
-  const email=document.getElementById('login-email').value.trim();
+  const email=document.getElementById('login-email').value.trim().toLowerCase();
   const mdp=document.getElementById('login-mdp').value;
   if(!email||!mdp){afficherMsg('msg-login','❌ Remplis tous les champs !','mauvais');return;}
   try{
-    const res=await fetch(SB_URL+'/rest/v1/profiles?email=eq.'+encodeURIComponent(email)+'&select=*',{headers:HEADERS});
+    const res=await fetch(SB_URL+'/rest/v1/profiles?email=eq.'+encodeURIComponent(email)+'&select=*',{headers:H});
     const data=await res.json();
     if(data&&data.length>0){
       const user=data[0];
       if(user.mot_de_passe===mdp){
+        if(SUPERADMINS.includes(email)&&user.role!=='superadmin'){
+          await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+user.id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'superadmin'})});
+          user.role='superadmin';
+        }
         userConnecte=user;
         localStorage.setItem('mcm_user',JSON.stringify(user));
-        if(user.role==='mecanicien'){document.getElementById('meca-bienvenue').textContent='Bonjour '+user.nom+' 👋';afficherEcran('ecran-mecanicien');}
-        else{document.getElementById('client-bienvenue').textContent='Bonjour '+user.nom+' 👋';afficherEcran('ecran-client');}
+        redirigerSelonRole(user);
       }else{afficherMsg('msg-login','❌ Mot de passe incorrect !','mauvais');}
     }else{afficherMsg('msg-login','❌ Email introuvable !','mauvais');}
   }catch(e){afficherMsg('msg-login','❌ Connexion impossible','mauvais');}
@@ -190,38 +304,135 @@ async function seConnecter(){
 
 async function envoyerDemande(){
   const quartier=document.getElementById('dem-quartier').value;
+  const type=document.getElementById('dem-type').value;
   const description=document.getElementById('dem-description').value.trim();
-  if(!quartier||!description){afficherMsg('msg-demande','❌ Remplis tous les champs !','mauvais');return;}
+  if(!quartier||!type||!description){afficherMsg('msg-demande','❌ Remplis tous les champs !','mauvais');return;}
   try{
-    const res=await fetch(SB_URL+'/rest/v1/demandes',{method:'POST',headers:{...HEADERS,'Prefer':'return=minimal'},body:JSON.stringify({client_nom:userConnecte.nom,client_telephone:userConnecte.telephone,quartier,description,statut:'attente',mecanicien_id:''})});
-    if(res.ok||res.status===201){afficherMsg('msg-demande','✅ Demande envoyée !','bon');document.getElementById('dem-quartier').value='';document.getElementById('dem-description').value='';}
-    else{afficherMsg('msg-demande','❌ Erreur envoi','mauvais');}
+    const res=await fetch(SB_URL+'/rest/v1/demandes',{method:'POST',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({client_nom:userConnecte.nom,client_telephone:userConnecte.telephone,client_id:userConnecte.id,quartier,type_panne:type,description,statut:'attente',mecanicien_id:''})});
+    if(res.ok||res.status===201){
+      afficherMsg('msg-demande','✅ Demande envoyée ! Un mécanicien va vous contacter.','bon');
+      document.getElementById('dem-quartier').value='';
+      document.getElementById('dem-type').value='';
+      document.getElementById('dem-description').value='';
+    }else{afficherMsg('msg-demande','❌ Erreur envoi','mauvais');}
   }catch(e){afficherMsg('msg-demande','❌ Connexion impossible','mauvais');}
+}
+
+async function chargerMesDemandes(){
+  try{
+    const res=await fetch(SB_URL+'/rest/v1/demandes?client_id=eq.'+userConnecte.id+'&order=created_at.desc',{headers:H});
+    const data=await res.json();
+    const el=document.getElementById('mes-demandes-client');
+    if(data&&data.length>0){
+      el.innerHTML='<div class="card"><div class="card-titre">📋 Mes demandes</div>'+data.map(d=>{
+        const s=d.statut==='attente'?'⏳ En attente':d.statut==='accepte'?'✅ Acceptée':'🏁 Terminée';
+        const c=d.statut==='attente'?'#e67e22':d.statut==='accepte'?'#27ae60':'#aaa';
+        return '<div class="demande-card"><div style="font-weight:bold;color:#2980b9">'+d.type_panne+'</div><div style="color:#aaa;font-size:11px">📍 '+d.quartier+'</div><div style="color:white;font-size:12px;margin-top:5px">'+d.description+'</div><div style="color:'+c+';font-size:11px;margin-top:5px;font-weight:bold">'+s+'</div>'+(d.mecanicien_nom?'<div style="color:#27ae60;font-size:11px">🔧 '+d.mecanicien_nom+' • 📞 '+d.mecanicien_tel+'</div>':'')+'</div>';
+      }).join('')+'</div>';
+    }else{el.innerHTML='<div class="card"><p style="color:#aaa;text-align:center">Aucune demande</p></div>';}
+  }catch(e){console.error(e);}
 }
 
 async function chargerDemandes(){
   try{
-    const res=await fetch(SB_URL+'/rest/v1/demandes?statut=eq.attente&order=created_at.desc',{headers:HEADERS});
+    const res=await fetch(SB_URL+'/rest/v1/demandes?statut=eq.attente&order=created_at.desc',{headers:H});
     const data=await res.json();
-    const liste=document.getElementById('liste-demandes');
+    const el=document.getElementById('liste-demandes');
     if(data&&data.length>0){
-      liste.innerHTML=data.map(d=>'<div class="demande-card"><div style="font-weight:bold;color:#2980b9">'+d.client_nom+'</div><div style="color:#aaa;font-size:11px">📍 '+d.quartier+' • 📞 '+d.client_telephone+'</div><div style="color:white;font-size:12px;margin-top:5px">'+d.description+'</div><button class="btn btn-vert" style="margin-top:8px;padding:8px" onclick="accepterDemande(\''+d.id+'\',\''+d.client_nom+'\',\''+d.client_telephone+'\')">✅ Accepter</button></div>').join('');
-    }else{liste.innerHTML='<div class="card"><p style="color:#aaa;text-align:center">Aucune demande en attente</p></div>';}
+      el.innerHTML=data.map(d=>'<div class="demande-card"><div style="font-weight:bold;color:#2980b9">'+d.type_panne+'</div><div style="color:#aaa;font-size:11px">📍 '+d.quartier+' • 👤 '+d.client_nom+' • 📞 '+d.client_telephone+'</div><div style="color:white;font-size:12px;margin-top:5px">'+d.description+'</div><button class="btn btn-vert" style="margin-top:8px;padding:8px" onclick="accepterDemande(\''+d.id+'\',\''+d.client_nom+'\',\''+d.client_telephone+'\')">✅ Accepter cette demande</button></div>').join('');
+    }else{el.innerHTML='<div class="card"><p style="color:#aaa;text-align:center">✅ Aucune demande en attente</p></div>';}
   }catch(e){console.error(e);}
 }
 
 async function accepterDemande(id,nom,tel){
   try{
-    await fetch(SB_URL+'/rest/v1/demandes?id=eq.'+id,{method:'PATCH',headers:{...HEADERS,'Prefer':'return=minimal'},body:JSON.stringify({statut:'accepte',mecanicien_id:userConnecte.id})});
-    alert('✅ Demande acceptée ! Contactez '+nom+' au '+tel);
+    await fetch(SB_URL+'/rest/v1/demandes?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({statut:'accepte',mecanicien_id:userConnecte.id,mecanicien_nom:userConnecte.nom,mecanicien_tel:userConnecte.telephone})});
+    alert('✅ Demande acceptée !\nContactez '+nom+' au '+tel);
     chargerDemandes();
+  }catch(e){alert('Erreur');}
+}
+
+async function chargerMecaniciensAttente(){
+  const el=document.getElementById(userConnecte.role==='superadmin'?'liste-superadmin':'liste-admin');
+  try{
+    const res=await fetch(SB_URL+'/rest/v1/profiles?role=eq.mecanicien_en_attente&order=created_at.desc',{headers:H});
+    const data=await res.json();
+    if(data&&data.length>0){
+      el.innerHTML='<div class="card"><div class="card-titre">⏳ Mécaniciens en attente ('+data.length+')</div>'+data.map(u=>'<div class="user-card"><div style="font-weight:bold;color:#ff6600">'+u.nom+'</div><div style="color:#aaa;font-size:11px">📧 '+u.email+' • 📞 '+u.telephone+'</div><div style="color:#aaa;font-size:11px">📍 '+u.quartier+' • 🔧 '+(u.specialite||'Non précisé')+'</div><div style="margin-top:8px;display:flex;gap:5px"><button style="flex:1;padding:8px;background:#27ae60;border:none;border-radius:8px;color:white;font-weight:bold;cursor:pointer" onclick="validerMecanicien(\''+u.id+'\',\''+u.nom+'\')">✅ Certifier</button><button style="flex:1;padding:8px;background:#e74c3c;border:none;border-radius:8px;color:white;font-weight:bold;cursor:pointer" onclick="refuserMecanicien(\''+u.id+'\',\''+u.nom+'\')">❌ Refuser</button></div></div>').join('')+'</div>';
+    }else{el.innerHTML='<div class="card"><p style="color:#aaa;text-align:center">✅ Aucun mécanicien en attente</p></div>';}
+  }catch(e){console.error(e);}
+}
+
+async function validerMecanicien(id,nom){
+  if(!confirm('Certifier '+nom+' comme mécanicien ?'))return;
+  try{
+    await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'mecanicien_certifie'})});
+    alert('✅ '+nom+' est maintenant certifié !');
+    chargerMecaniciensAttente();
+  }catch(e){alert('Erreur');}
+}
+
+async function refuserMecanicien(id,nom){
+  if(!confirm('Refuser la demande de '+nom+' ?'))return;
+  try{
+    await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'refuse'})});
+    alert('❌ Demande de '+nom+' refusée.');
+    chargerMecaniciensAttente();
+  }catch(e){alert('Erreur');}
+}
+
+async function chargerTousUtilisateurs(){
+  const el=document.getElementById(userConnecte.role==='superadmin'?'liste-superadmin':'liste-admin');
+  try{
+    const res=await fetch(SB_URL+'/rest/v1/profiles?order=created_at.desc',{headers:H});
+    const data=await res.json();
+    if(data&&data.length>0){
+      el.innerHTML='<div class="card"><div class="card-titre">👥 Tous les utilisateurs ('+data.length+')</div>'+data.map(u=>'<div class="user-card"><div style="font-weight:bold">'+u.nom+' '+getBadge(u.role)+'</div><div style="color:#aaa;font-size:11px">📧 '+u.email+' • 📞 '+u.telephone+'</div>'+(u.quartier?'<div style="color:#aaa;font-size:11px">📍 '+u.quartier+'</div>':'')+'</div>').join('')+'</div>';
+    }
+  }catch(e){console.error(e);}
+}
+
+async function chargerAdmins(){
+  const el=document.getElementById('liste-superadmin');
+  try{
+    const res=await fetch(SB_URL+'/rest/v1/profiles?role=in.(admin,superadmin)&order=created_at.desc',{headers:H});
+    const data=await res.json();
+    el.innerHTML='<div class="card"><div class="card-titre">🛡️ Admins ('+data.length+'/10)</div>'+data.map(u=>'<div class="user-card"><div style="font-weight:bold">'+u.nom+' '+getBadge(u.role)+'</div><div style="color:#aaa;font-size:11px">📧 '+u.email+'</div>'+(u.role==='admin'?'<button style="margin-top:5px;padding:6px 12px;background:#e74c3c;border:none;border-radius:6px;color:white;font-size:11px;cursor:pointer" onclick="retirerAdmin(\''+u.id+'\',\''+u.nom+'\')">Retirer admin</button>':'<span style="color:#aaa;font-size:10px">Super Admin protégé</span>')+'</div>').join('')+'</div>';
+    const res2=await fetch(SB_URL+'/rest/v1/profiles?role=eq.mecanicien_certifie&order=nom',{headers:H});
+    const mecs=await res2.json();
+    if(mecs&&mecs.length>0&&data.length<10){
+      el.innerHTML+='<div class="card"><div class="card-titre">➕ Nommer un admin</div>'+mecs.map(u=>'<div class="user-card"><div style="font-weight:bold">'+u.nom+'</div><div style="color:#aaa;font-size:11px">📧 '+u.email+'</div><button style="margin-top:5px;padding:6px 12px;background:#8e44ad;border:none;border-radius:6px;color:white;font-size:11px;cursor:pointer" onclick="nommerAdmin(\''+u.id+'\',\''+u.nom+'\')">🛡️ Nommer admin</button></div>').join('')+'</div>';
+    }
+  }catch(e){console.error(e);}
+}
+
+async function nommerAdmin(id,nom){
+  if(!confirm('Nommer '+nom+' comme admin ?'))return;
+  try{
+    await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'admin'})});
+    alert('✅ '+nom+' est maintenant admin !');
+    chargerAdmins();
+  }catch(e){alert('Erreur');}
+}
+
+async function retirerAdmin(id,nom){
+  if(!confirm('Retirer les droits admin de '+nom+' ?'))return;
+  try{
+    await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'mecanicien_certifie'})});
+    alert('✅ Droits admin retirés à '+nom);
+    chargerAdmins();
   }catch(e){alert('Erreur');}
 }
 
 function seDeconnecter(){userConnecte=null;localStorage.removeItem('mcm_user');afficherEcran('ecran-accueil');}
 
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js');}
+
 const saved=localStorage.getItem('mcm_user');
-if(saved){userConnecte=JSON.parse(saved);if(userConnecte.role==='mecanicien'){document.getElementById('meca-bienvenue').textContent='Bonjour '+userConnecte.nom+' 👋';afficherEcran('ecran-mecanicien');}else{document.getElementById('client-bienvenue').textContent='Bonjour '+userConnecte.nom+' 👋';afficherEcran('ecran-client');}}
+if(saved){
+  userConnecte=JSON.parse(saved);
+  redirigerSelonRole(userConnecte);
+}
 </script>
 </body>
 </html>
