@@ -31,10 +31,9 @@ body{font-family:Arial;background:#1a1a1a;color:white;min-height:100vh;}
 .msg.bon{background:#1e8449;}
 .msg.mauvais{background:#c0392b;}
 .msg.info{background:#1a5276;}
-.badge{padding:3px 8px;border-radius:8px;font-size:10px;font-weight:bold;display:inline-block;}
+.badge{padding:3px 8px;border-radius:8px;font-size:10px;font-weight:bold;display:inline-block;margin-left:5px;}
 .badge-attente{background:#e67e22;}
 .badge-certifie{background:#27ae60;}
-.badge-refuse{background:#e74c3c;}
 .badge-client{background:#2980b9;}
 .badge-admin{background:#8e44ad;}
 .badge-superadmin{background:#c0392b;}
@@ -48,11 +47,14 @@ body{font-family:Arial;background:#1a1a1a;color:white;min-height:100vh;}
 .logo-zone .emoji{font-size:50px;}
 .logo-zone h2{color:#ff6600;font-size:22px;font-weight:bold;margin-top:5px;}
 .logo-zone p{color:#aaa;font-size:12px;}
-.statut-bar{background:#252525;border-radius:8px;padding:8px;margin-bottom:10px;font-size:11px;color:#aaa;text-align:center;}
-.nav-bas{position:fixed;bottom:0;left:0;right:0;background:#252525;border-top:1px solid #333;display:flex;justify-content:space-around;padding:8px 0;z-index:100;}
-.nav-btn{display:flex;flex-direction:column;align-items:center;font-size:9px;color:#aaa;cursor:pointer;padding:5px 10px;border:none;background:transparent;}
-.nav-btn.actif{color:#ff6600;}
-.nav-btn span{font-size:22px;margin-bottom:2px;}
+.statut-bar{background:#1a5276;border-radius:8px;padding:10px;margin-bottom:10px;font-size:12px;text-align:center;}
+.prix-box{background:#1e3a1e;border:1px solid #27ae60;border-radius:10px;padding:12px;margin:10px 0;text-align:center;}
+.prix-box .prix{font-size:28px;font-weight:bold;color:#27ae60;}
+.prix-box .detail{font-size:11px;color:#aaa;margin-top:4px;}
+.minuteur{background:#2a1a00;border:2px solid #ff6600;border-radius:12px;padding:15px;text-align:center;margin:10px 0;}
+.minuteur .temps{font-size:36px;font-weight:bold;color:#ff6600;}
+.minuteur .label{font-size:11px;color:#aaa;}
+.geo-box{background:#1a2a1a;border:1px solid #27ae60;border-radius:8px;padding:8px;margin-bottom:10px;font-size:11px;color:#27ae60;text-align:center;}
 </style>
 </head>
 <body>
@@ -61,7 +63,6 @@ body{font-family:Arial;background:#1a1a1a;color:white;min-height:100vh;}
   <p>Mécanique Camara Maïga • Abidjan, Côte d'Ivoire</p>
 </div>
 
-<!-- ACCUEIL -->
 <div id="ecran-accueil" class="ecran actif">
   <div class="logo-zone">
     <div class="emoji">🚗🔧</div>
@@ -85,38 +86,44 @@ body{font-family:Arial;background:#1a1a1a;color:white;min-height:100vh;}
       <div class="input-group"><label>Mot de passe</label><input type="password" id="reg-mdp" placeholder="••••••••"></div>
       <div class="input-group"><label>Numéro WhatsApp</label><input type="tel" id="reg-tel" placeholder="07XXXXXXXX"></div>
       <div class="input-group"><label>Je suis</label>
-        <select id="reg-role" onchange="toggleQuartier()">
+        <select id="reg-role" onchange="toggleChampsMeca()">
           <option value="client">🚗 Un Client</option>
           <option value="mecanicien_en_attente">🔧 Un Mécanicien</option>
         </select>
       </div>
-      <div class="input-group" id="groupe-quartier" style="display:none">
-        <label>Votre quartier d'intervention</label>
-        <select id="reg-quartier">
-          <option value="">Choisir...</option>
-          <option value="Yopougon">Yopougon</option>
-          <option value="Cocody">Cocody</option>
-          <option value="Abobo">Abobo</option>
-          <option value="Adjamé">Adjamé</option>
-          <option value="Plateau">Plateau</option>
-          <option value="Marcory">Marcory</option>
-          <option value="Koumassi">Koumassi</option>
-          <option value="Port-Bouët">Port-Bouët</option>
-          <option value="Treichville">Treichville</option>
-          <option value="Attécoubé">Attécoubé</option>
-        </select>
-      </div>
-      <div class="input-group" id="groupe-specialite" style="display:none">
-        <label>Votre spécialité</label>
-        <select id="reg-specialite">
-          <option value="">Choisir...</option>
-          <option value="Panne moteur">Panne moteur</option>
-          <option value="Pneus et roues">Pneus et roues</option>
-          <option value="Batterie et électricité">Batterie et électricité</option>
-          <option value="Freins">Freins</option>
-          <option value="Carrosserie">Carrosserie</option>
-          <option value="Général">Mécanique générale</option>
-        </select>
+      <div id="champs-meca" style="display:none">
+        <div class="input-group"><label>Quartier d'intervention</label>
+          <select id="reg-quartier">
+            <option value="">Choisir...</option>
+            <option value="Yopougon">Yopougon</option>
+            <option value="Cocody">Cocody</option>
+            <option value="Abobo">Abobo</option>
+            <option value="Adjamé">Adjamé</option>
+            <option value="Plateau">Plateau</option>
+            <option value="Marcory">Marcory</option>
+            <option value="Koumassi">Koumassi</option>
+            <option value="Port-Bouët">Port-Bouët</option>
+            <option value="Treichville">Treichville</option>
+            <option value="Attécoubé">Attécoubé</option>
+          </select>
+        </div>
+        <div class="input-group"><label>Spécialité</label>
+          <select id="reg-specialite">
+            <option value="">Choisir...</option>
+            <option value="Panne moteur">Panne moteur</option>
+            <option value="Pneus et roues">Pneus et roues</option>
+            <option value="Batterie et électricité">Batterie et électricité</option>
+            <option value="Freins">Freins</option>
+            <option value="Carrosserie">Carrosserie</option>
+            <option value="Mécanique générale">Mécanique générale</option>
+          </select>
+        </div>
+        <div class="input-group"><label>Moyen de déplacement</label>
+          <select id="reg-transport">
+            <option value="moto">🏍️ Moto</option>
+            <option value="velo">🚲 Vélo</option>
+          </select>
+        </div>
       </div>
       <button class="btn btn-vert" onclick="sInscrire()">✅ Créer mon compte</button>
       <div id="msg-register"></div>
@@ -125,7 +132,6 @@ body{font-family:Arial;background:#1a1a1a;color:white;min-height:100vh;}
   </div>
 </div>
 
-<!-- CLIENT -->
 <div id="ecran-client" class="ecran">
   <div class="card">
     <div class="card-titre">🚗 Espace Client</div>
@@ -137,41 +143,26 @@ body{font-family:Arial;background:#1a1a1a;color:white;min-height:100vh;}
   <div id="mes-demandes-client"></div>
 </div>
 
-<!-- MÉCANICIEN EN ATTENTE -->
 <div id="ecran-meca-attente" class="ecran">
   <div class="card">
     <div class="card-titre">⏳ Dossier en cours d'examen</div>
-    <div class="statut-bar">Votre dossier est en cours de vérification par notre équipe. Nous vous contacterons sur WhatsApp.</div>
-    <p style="color:#aaa;font-size:12px;margin-bottom:15px;">Notre équipe va se déplacer pour évaluer vos compétences avant de vous certifier.</p>
+    <div class="statut-bar">📋 Votre dossier est en cours de vérification. Notre équipe va vous contacter sur WhatsApp pour évaluer vos compétences.</div>
     <button class="btn btn-rouge" onclick="seDeconnecter()">🚪 Déconnexion</button>
   </div>
 </div>
 
-<!-- MÉCANICIEN CERTIFIÉ -->
 <div id="ecran-mecanicien" class="ecran">
   <div class="card">
     <div class="card-titre">🔧 Espace Mécanicien Certifié</div>
     <p id="meca-bienvenue" style="color:#aaa;font-size:12px;margin-bottom:5px;"></p>
-    <p id="meca-secteur" style="color:#ff6600;font-size:11px;margin-bottom:10px;"></p>
-    <button class="btn btn-orange" onclick="chargerDemandes()">📋 Voir les demandes</button>
+    <p id="meca-info" style="color:#ff6600;font-size:11px;margin-bottom:10px;"></p>
+    <div id="meca-geo" class="geo-box">📍 Position non capturée</div>
+    <button class="btn btn-orange" onclick="chargerDemandes()">📋 Voir les demandes disponibles</button>
     <button class="btn btn-rouge" onclick="seDeconnecter()">🚪 Déconnexion</button>
   </div>
   <div id="liste-demandes"></div>
 </div>
 
-<!-- ADMIN -->
-<div id="ecran-admin" class="ecran">
-  <div class="card">
-    <div class="card-titre">🛡️ Espace Admin</div>
-    <p id="admin-bienvenue" style="color:#aaa;font-size:12px;margin-bottom:10px;"></p>
-    <button class="btn btn-violet" onclick="chargerMecaniciensAttente()">⏳ Mécaniciens en attente</button>
-    <button class="btn btn-bleu" onclick="chargerTousUtilisateurs()">👥 Tous les utilisateurs</button>
-    <button class="btn btn-rouge" onclick="seDeconnecter()">🚪 Déconnexion</button>
-  </div>
-  <div id="liste-admin"></div>
-</div>
-
-<!-- SUPER ADMIN -->
 <div id="ecran-superadmin" class="ecran">
   <div class="card">
     <div class="card-titre">👑 Super Admin</div>
@@ -184,13 +175,24 @@ body{font-family:Arial;background:#1a1a1a;color:white;min-height:100vh;}
   <div id="liste-superadmin"></div>
 </div>
 
-<!-- DEMANDE -->
+<div id="ecran-admin" class="ecran">
+  <div class="card">
+    <div class="card-titre">🛡️ Espace Admin</div>
+    <p id="admin-bienvenue" style="color:#aaa;font-size:12px;margin-bottom:10px;"></p>
+    <button class="btn btn-violet" onclick="chargerMecaniciensAttente()">⏳ Mécaniciens en attente</button>
+    <button class="btn btn-bleu" onclick="chargerTousUtilisateurs()">👥 Tous les utilisateurs</button>
+    <button class="btn btn-rouge" onclick="seDeconnecter()">🚪 Déconnexion</button>
+  </div>
+  <div id="liste-admin"></div>
+</div>
+
 <div id="ecran-demande" class="ecran">
   <div class="card">
     <div class="card-titre">🆘 Nouvelle demande de dépannage</div>
-    <div class="input-group"><label>Votre quartier actuel</label>
+    <div id="client-geo" class="geo-box">📍 Cliquez pour capturer votre position</div>
+    <div class="input-group"><label>Quartier actuel</label>
       <select id="dem-quartier">
-        <option value="">Choisir votre quartier...</option>
+        <option value="">Choisir...</option>
         <option value="Yopougon">Yopougon</option>
         <option value="Cocody">Cocody</option>
         <option value="Abobo">Abobo</option>
@@ -204,16 +206,24 @@ body{font-family:Arial;background:#1a1a1a;color:white;min-height:100vh;}
       </select>
     </div>
     <div class="input-group"><label>Type de panne</label>
-      <select id="dem-type">
+      <select id="dem-type" onchange="calculerPrix()">
         <option value="">Choisir...</option>
-        <option value="Panne moteur">Panne moteur</option>
-        <option value="Pneu crevé">Pneu crevé</option>
-        <option value="Batterie">Problème batterie</option>
-        <option value="Freins">Problème freins</option>
-        <option value="Autre">Autre panne</option>
+        <option value="Pneu crevé">🔧 Pneu crevé</option>
+        <option value="Panne moteur">⚙️ Panne moteur</option>
+        <option value="Batterie">🔋 Problème batterie</option>
+        <option value="Freins">🛑 Problème freins</option>
+        <option value="Carrosserie">🚗 Carrosserie</option>
+        <option value="Autre">❓ Autre panne</option>
       </select>
     </div>
-    <div class="input-group"><label>Description détaillée</label><textarea id="dem-description" placeholder="Décrivez votre panne en détail..."></textarea></div>
+    <div class="input-group"><label>Description</label><textarea id="dem-description" placeholder="Décrivez votre panne..."></textarea></div>
+    <div id="prix-estime" style="display:none">
+      <div class="prix-box">
+        <div class="prix" id="prix-valeur">0 FCFA</div>
+        <div class="detail" id="prix-detail">Prix estimé selon la panne et l'heure</div>
+      </div>
+    </div>
+    <button class="btn btn-bleu" onclick="capturerPosition()">📍 Capturer ma position GPS</button>
     <button class="btn btn-vert" onclick="envoyerDemande()">📤 Envoyer la demande</button>
     <button class="btn btn-gris" onclick="afficherEcran('ecran-client')">⬅ Retour</button>
     <div id="msg-demande"></div>
@@ -226,6 +236,94 @@ const SB_KEY='sb_publishable_IiH75oXzI79hsqW3zMar8w_skKQtqIl';
 const H={'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
 const SUPERADMINS=['adamomaiga225m@gmail.com','camaraabou6066@gmail.com'];
 let userConnecte=null;
+let clientLat=null, clientLng=null;
+let mecaLat=null, mecaLng=null;
+
+// PRIX PAR TYPE DE PANNE
+const PRIX_BASE={
+  'Pneu crevé':3000,
+  'Panne moteur':8000,
+  'Batterie':4000,
+  'Freins':6000,
+  'Carrosserie':5000,
+  'Autre':4000
+};
+
+function getPrixDynamique(type){
+  const base=PRIX_BASE[type]||4000;
+  const h=new Date().getHours();
+  let multi=1;
+  let periode='journée';
+  if(h>=6&&h<12){multi=0.9;periode='matin (tarif réduit)';}
+  else if(h>=12&&h<18){multi=1;periode='journée (tarif normal)';}
+  else if(h>=18&&h<22){multi=1.3;periode='soirée (tarif majoré)';}
+  else{multi=1.6;periode='nuit (tarif nuit)';}
+  return{prix:Math.round(base*multi/500)*500,periode};
+}
+
+function calculerPrix(){
+  const type=document.getElementById('dem-type').value;
+  if(!type){document.getElementById('prix-estime').style.display='none';return;}
+  const{prix,periode}=getPrixDynamique(type);
+  document.getElementById('prix-valeur').textContent=prix.toLocaleString()+' FCFA';
+  document.getElementById('prix-detail').textContent='Tarif '+periode;
+  document.getElementById('prix-estime').style.display='block';
+}
+
+function calculerDistance(lat1,lng1,lat2,lng2){
+  const R=6371;
+  const dLat=(lat2-lat1)*Math.PI/180;
+  const dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function estimerTemps(distanceKm,transport){
+  const vitesse=transport==='velo'?15:30;
+  const minutes=Math.round((distanceKm/vitesse)*60);
+  if(minutes<1)return'Moins de 1 min';
+  if(minutes<60)return minutes+' min';
+  return Math.floor(minutes/60)+'h'+String(minutes%60).padStart(2,'0');
+}
+
+function demarrerMinuteur(minutes,elementId){
+  let secondes=minutes*60;
+  const el=document.getElementById(elementId);
+  if(!el)return;
+  const interval=setInterval(()=>{
+    if(secondes<=0){clearInterval(interval);el.textContent='00:00';return;}
+    secondes--;
+    const m=Math.floor(secondes/60);
+    const s=secondes%60;
+    el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  },1000);
+}
+
+function capturerPosition(){
+  if(!navigator.geolocation){afficherMsg('msg-demande','❌ GPS non disponible','mauvais');return;}
+  document.getElementById('client-geo').textContent='📍 Capture en cours...';
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      clientLat=pos.coords.latitude;
+      clientLng=pos.coords.longitude;
+      document.getElementById('client-geo').textContent='✅ Position capturée ('+clientLat.toFixed(4)+', '+clientLng.toFixed(4)+')';
+    },
+    ()=>{document.getElementById('client-geo').textContent='❌ GPS refusé - continuez sans position';}
+  );
+}
+
+function capturerPositionMeca(){
+  if(!navigator.geolocation)return;
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      mecaLat=pos.coords.latitude;
+      mecaLng=pos.coords.longitude;
+      document.getElementById('meca-geo').textContent='✅ Position: '+mecaLat.toFixed(4)+', '+mecaLng.toFixed(4);
+      fetch(SB_URL+'/rest/v1/profiles?id=eq.'+userConnecte.id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({latitude:mecaLat,longitude:mecaLng})});
+    },
+    ()=>{document.getElementById('meca-geo').textContent='❌ GPS refusé';}
+  );
+}
 
 function afficherEcran(id){document.querySelectorAll('.ecran').forEach(e=>e.classList.remove('actif'));document.getElementById(id).classList.add('actif');window.scrollTo(0,0);}
 
@@ -236,26 +334,30 @@ function switchTab(tab,el){
   document.getElementById('tab-inscription').style.display=tab==='inscription'?'block':'none';
 }
 
-function toggleQuartier(){
-  const r=document.getElementById('reg-role').value;
-  document.getElementById('groupe-quartier').style.display=r==='mecanicien_en_attente'?'block':'none';
-  document.getElementById('groupe-specialite').style.display=r==='mecanicien_en_attente'?'block':'none';
+function toggleChampsMeca(){
+  document.getElementById('champs-meca').style.display=document.getElementById('reg-role').value==='mecanicien_en_attente'?'block':'none';
 }
 
 function afficherMsg(id,texte,type){
-  document.getElementById(id).innerHTML='<div class="msg '+type+'">'+texte+'</div>';
+  const el=document.getElementById(id);
+  if(el)el.innerHTML='<div class="msg '+type+'">'+texte+'</div>';
   setTimeout(()=>{if(document.getElementById(id))document.getElementById(id).innerHTML=''},5000);
 }
 
 function getBadge(role){
-  const badges={superadmin:'<span class="badge badge-superadmin">👑 Super Admin</span>',admin:'<span class="badge badge-admin">🛡️ Admin</span>',mecanicien_certifie:'<span class="badge badge-certifie">✅ Certifié</span>',mecanicien_en_attente:'<span class="badge badge-attente">⏳ En attente</span>',client:'<span class="badge badge-client">🚗 Client</span>'};
-  return badges[role]||role;
+  const b={superadmin:'<span class="badge badge-superadmin">👑 Super Admin</span>',admin:'<span class="badge badge-admin">🛡️ Admin</span>',mecanicien_certifie:'<span class="badge badge-certifie">✅ Certifié</span>',mecanicien_en_attente:'<span class="badge badge-attente">⏳ En attente</span>',client:'<span class="badge badge-client">🚗 Client</span>'};
+  return b[role]||role;
 }
 
 function redirigerSelonRole(user){
   if(user.role==='superadmin'){document.getElementById('superadmin-bienvenue').textContent='Bonjour '+user.nom+' 👑';afficherEcran('ecran-superadmin');}
   else if(user.role==='admin'){document.getElementById('admin-bienvenue').textContent='Bonjour '+user.nom+' 🛡️';afficherEcran('ecran-admin');}
-  else if(user.role==='mecanicien_certifie'){document.getElementById('meca-bienvenue').textContent='Bonjour '+user.nom+' 👋';document.getElementById('meca-secteur').textContent='📍 Secteur: '+user.quartier+' | 🔧 '+user.specialite;afficherEcran('ecran-mecanicien');}
+  else if(user.role==='mecanicien_certifie'){
+    document.getElementById('meca-bienvenue').textContent='Bonjour '+user.nom+' 👋';
+    document.getElementById('meca-info').textContent='📍 '+user.quartier+' | 🔧 '+(user.specialite||'Général')+' | '+(user.transport==='velo'?'🚲 Vélo':'🏍️ Moto');
+    afficherEcran('ecran-mecanicien');
+    capturerPositionMeca();
+  }
   else if(user.role==='mecanicien_en_attente'){afficherEcran('ecran-meca-attente');}
   else{document.getElementById('client-bienvenue').textContent='Bonjour '+user.nom+' 👋';afficherEcran('ecran-client');}
 }
@@ -268,13 +370,13 @@ async function sInscrire(){
   let role=document.getElementById('reg-role').value;
   const quartier=document.getElementById('reg-quartier').value;
   const specialite=document.getElementById('reg-specialite').value;
+  const transport=document.getElementById('reg-transport').value;
   if(!nom||!email||!mdp||!tel){afficherMsg('msg-register','❌ Remplis tous les champs !','mauvais');return;}
   if(SUPERADMINS.includes(email))role='superadmin';
   try{
-    const res=await fetch(SB_URL+'/rest/v1/profiles',{method:'POST',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({nom,email,telephone:tel,mot_de_passe:mdp,role,quartier,specialite,disponible:true})});
+    const res=await fetch(SB_URL+'/rest/v1/profiles',{method:'POST',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({nom,email,telephone:tel,mot_de_passe:mdp,role,quartier,specialite,transport,disponible:true})});
     if(res.ok||res.status===201){
-      if(role==='mecanicien_en_attente'){afficherMsg('msg-register','✅ Dossier envoyé ! Notre équipe vous contactera.','bon');}
-      else{afficherMsg('msg-register','✅ Compte créé ! Connecte-toi.','bon');}
+      afficherMsg('msg-register',role==='mecanicien_en_attente'?'✅ Dossier envoyé ! Notre équipe vous contactera.':'✅ Compte créé ! Connecte-toi.','bon');
       switchTab('connexion',document.querySelector('.tab'));
     }else{const d=await res.json();afficherMsg('msg-register','❌ '+(d.message||d.details||'Erreur'),'mauvais');}
   }catch(e){afficherMsg('msg-register','❌ Connexion impossible','mauvais');}
@@ -307,13 +409,16 @@ async function envoyerDemande(){
   const type=document.getElementById('dem-type').value;
   const description=document.getElementById('dem-description').value.trim();
   if(!quartier||!type||!description){afficherMsg('msg-demande','❌ Remplis tous les champs !','mauvais');return;}
+  const{prix}=getPrixDynamique(type);
   try{
-    const res=await fetch(SB_URL+'/rest/v1/demandes',{method:'POST',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({client_nom:userConnecte.nom,client_telephone:userConnecte.telephone,client_id:userConnecte.id,quartier,type_panne:type,description,statut:'attente',mecanicien_id:''})});
+    const res=await fetch(SB_URL+'/rest/v1/demandes',{method:'POST',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({client_nom:userConnecte.nom,client_telephone:userConnecte.telephone,client_id:userConnecte.id,quartier,type_panne:type,description,statut:'attente',mecanicien_id:'',prix_estime:prix,client_lat:clientLat,client_lng:clientLng})});
     if(res.ok||res.status===201){
-      afficherMsg('msg-demande','✅ Demande envoyée ! Un mécanicien va vous contacter.','bon');
+      afficherMsg('msg-demande','✅ Demande envoyée ! Prix estimé: '+prix.toLocaleString()+' FCFA','bon');
       document.getElementById('dem-quartier').value='';
       document.getElementById('dem-type').value='';
       document.getElementById('dem-description').value='';
+      document.getElementById('prix-estime').style.display='none';
+      clientLat=null;clientLng=null;
     }else{afficherMsg('msg-demande','❌ Erreur envoi','mauvais');}
   }catch(e){afficherMsg('msg-demande','❌ Connexion impossible','mauvais');}
 }
@@ -325,11 +430,28 @@ async function chargerMesDemandes(){
     const el=document.getElementById('mes-demandes-client');
     if(data&&data.length>0){
       el.innerHTML='<div class="card"><div class="card-titre">📋 Mes demandes</div>'+data.map(d=>{
-        const s=d.statut==='attente'?'⏳ En attente':d.statut==='accepte'?'✅ Acceptée':'🏁 Terminée';
-        const c=d.statut==='attente'?'#e67e22':d.statut==='accepte'?'#27ae60':'#aaa';
-        return '<div class="demande-card"><div style="font-weight:bold;color:#2980b9">'+d.type_panne+'</div><div style="color:#aaa;font-size:11px">📍 '+d.quartier+'</div><div style="color:white;font-size:12px;margin-top:5px">'+d.description+'</div><div style="color:'+c+';font-size:11px;margin-top:5px;font-weight:bold">'+s+'</div>'+(d.mecanicien_nom?'<div style="color:#27ae60;font-size:11px">🔧 '+d.mecanicien_nom+' • 📞 '+d.mecanicien_tel+'</div>':'')+'</div>';
+        const statuts={'attente':'⏳ En attente d\'un mécanicien','accepte':'✅ Mécanicien en route !','termine':'🏁 Terminée'};
+        const couleurs={'attente':'#e67e22','accepte':'#27ae60','termine':'#aaa'};
+        let html='<div class="demande-card">';
+        html+='<div style="font-weight:bold;color:#2980b9">'+d.type_panne+'</div>';
+        html+='<div style="color:#aaa;font-size:11px">📍 '+d.quartier+' • 💰 '+( d.prix_estime||0).toLocaleString()+' FCFA</div>';
+        html+='<div style="color:white;font-size:12px;margin-top:5px">'+d.description+'</div>';
+        html+='<div style="color:'+couleurs[d.statut]+';font-size:12px;font-weight:bold;margin-top:8px">'+statuts[d.statut]+'</div>';
+        if(d.statut==='accepte'&&d.mecanicien_nom){
+          html+='<div style="background:#1e3a1e;border-radius:8px;padding:8px;margin-top:8px">';
+          html+='<div style="color:#27ae60;font-weight:bold">🔧 '+d.mecanicien_nom+'</div>';
+          html+='<div style="color:#aaa;font-size:11px">📞 '+d.mecanicien_tel+'</div>';
+          if(d.distance_km){
+            html+='<div style="color:#ff6600;font-size:12px;margin-top:5px">📍 Distance: '+d.distance_km.toFixed(1)+' km</div>';
+            html+='<div class="minuteur"><div class="label">⏱️ Temps d\'arrivée estimé</div><div class="temps" id="timer-'+d.id+'">--:--</div></div>';
+          }
+          html+='</div>';
+          if(d.temps_minutes){setTimeout(()=>demarrerMinuteur(d.temps_minutes,'timer-'+d.id),500);}
+        }
+        html+='</div>';
+        return html;
       }).join('')+'</div>';
-    }else{el.innerHTML='<div class="card"><p style="color:#aaa;text-align:center">Aucune demande</p></div>';}
+    }else{el.innerHTML='<div class="card"><p style="color:#aaa;text-align:center;padding:10px">Aucune demande pour le moment</p></div>';}
   }catch(e){console.error(e);}
 }
 
@@ -339,56 +461,68 @@ async function chargerDemandes(){
     const data=await res.json();
     const el=document.getElementById('liste-demandes');
     if(data&&data.length>0){
-      el.innerHTML=data.map(d=>'<div class="demande-card"><div style="font-weight:bold;color:#2980b9">'+d.type_panne+'</div><div style="color:#aaa;font-size:11px">📍 '+d.quartier+' • 👤 '+d.client_nom+' • 📞 '+d.client_telephone+'</div><div style="color:white;font-size:12px;margin-top:5px">'+d.description+'</div><button class="btn btn-vert" style="margin-top:8px;padding:8px" onclick="accepterDemande(\''+d.id+'\',\''+d.client_nom+'\',\''+d.client_telephone+'\')">✅ Accepter cette demande</button></div>').join('');
+      el.innerHTML=data.map(d=>{
+        let distInfo='';
+        if(mecaLat&&mecaLng&&d.client_lat&&d.client_lng){
+          const dist=calculerDistance(mecaLat,mecaLng,d.client_lat,d.client_lng);
+          const temps=estimerTemps(dist,userConnecte.transport||'moto');
+          distInfo='<div style="color:#ff6600;font-size:11px;margin-top:5px">📍 '+dist.toFixed(1)+' km • ⏱️ '+temps+'</div>';
+        }
+        return '<div class="demande-card"><div style="font-weight:bold;color:#2980b9">'+d.type_panne+'</div><div style="color:#aaa;font-size:11px">📍 '+d.quartier+' • 👤 '+d.client_nom+' • 📞 '+d.client_telephone+'</div><div style="color:white;font-size:12px;margin-top:5px">'+d.description+'</div><div style="color:#27ae60;font-size:12px;font-weight:bold">💰 Prix estimé: '+(d.prix_estime||0).toLocaleString()+' FCFA</div>'+distInfo+'<button class="btn btn-vert" style="margin-top:8px;padding:8px" onclick="accepterDemande(\''+d.id+'\',\''+d.client_nom+'\',\''+d.client_telephone+'\','+(d.client_lat||null)+','+(d.client_lng||null)+')">✅ Accepter</button></div>';
+      }).join('');
     }else{el.innerHTML='<div class="card"><p style="color:#aaa;text-align:center">✅ Aucune demande en attente</p></div>';}
   }catch(e){console.error(e);}
 }
 
-async function accepterDemande(id,nom,tel){
+async function accepterDemande(id,nom,tel,cLat,cLng){
+  let distKm=null, tempsMin=null;
+  if(mecaLat&&mecaLng&&cLat&&cLng){
+    distKm=calculerDistance(mecaLat,mecaLng,cLat,cLng);
+    const vitesse=userConnecte.transport==='velo'?15:30;
+    tempsMin=Math.round((distKm/vitesse)*60);
+  }
   try{
-    await fetch(SB_URL+'/rest/v1/demandes?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({statut:'accepte',mecanicien_id:userConnecte.id,mecanicien_nom:userConnecte.nom,mecanicien_tel:userConnecte.telephone})});
-    alert('✅ Demande acceptée !\nContactez '+nom+' au '+tel);
+    await fetch(SB_URL+'/rest/v1/demandes?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({statut:'accepte',mecanicien_id:userConnecte.id,mecanicien_nom:userConnecte.nom,mecanicien_tel:userConnecte.telephone,distance_km:distKm,temps_minutes:tempsMin})});
+    let msg='✅ Demande acceptée !\nClient: '+nom+'\n📞 '+tel;
+    if(distKm)msg+='\n📍 Distance: '+distKm.toFixed(1)+' km\n⏱️ Temps estimé: '+estimerTemps(distKm,userConnecte.transport||'moto');
+    alert(msg);
     chargerDemandes();
   }catch(e){alert('Erreur');}
 }
 
 async function chargerMecaniciensAttente(){
-  const el=document.getElementById(userConnecte.role==='superadmin'?'liste-superadmin':'liste-admin');
+  const elId=userConnecte.role==='superadmin'?'liste-superadmin':'liste-admin';
+  const el=document.getElementById(elId);
   try{
     const res=await fetch(SB_URL+'/rest/v1/profiles?role=eq.mecanicien_en_attente&order=created_at.desc',{headers:H});
     const data=await res.json();
     if(data&&data.length>0){
-      el.innerHTML='<div class="card"><div class="card-titre">⏳ Mécaniciens en attente ('+data.length+')</div>'+data.map(u=>'<div class="user-card"><div style="font-weight:bold;color:#ff6600">'+u.nom+'</div><div style="color:#aaa;font-size:11px">📧 '+u.email+' • 📞 '+u.telephone+'</div><div style="color:#aaa;font-size:11px">📍 '+u.quartier+' • 🔧 '+(u.specialite||'Non précisé')+'</div><div style="margin-top:8px;display:flex;gap:5px"><button style="flex:1;padding:8px;background:#27ae60;border:none;border-radius:8px;color:white;font-weight:bold;cursor:pointer" onclick="validerMecanicien(\''+u.id+'\',\''+u.nom+'\')">✅ Certifier</button><button style="flex:1;padding:8px;background:#e74c3c;border:none;border-radius:8px;color:white;font-weight:bold;cursor:pointer" onclick="refuserMecanicien(\''+u.id+'\',\''+u.nom+'\')">❌ Refuser</button></div></div>').join('')+'</div>';
+      el.innerHTML='<div class="card"><div class="card-titre">⏳ Mécaniciens en attente ('+data.length+')</div>'+data.map(u=>'<div class="user-card"><div style="font-weight:bold;color:#ff6600">'+u.nom+'</div><div style="color:#aaa;font-size:11px">📧 '+u.email+' • 📞 '+u.telephone+'</div><div style="color:#aaa;font-size:11px">📍 '+( u.quartier||'?')+' • 🔧 '+(u.specialite||'?')+' • '+(u.transport==='velo'?'🚲 Vélo':'🏍️ Moto')+'</div><div style="margin-top:8px;display:flex;gap:5px"><button style="flex:1;padding:8px;background:#27ae60;border:none;border-radius:8px;color:white;font-weight:bold;cursor:pointer" onclick="validerMecanicien(\''+u.id+'\',\''+u.nom+'\')">✅ Certifier</button><button style="flex:1;padding:8px;background:#e74c3c;border:none;border-radius:8px;color:white;font-weight:bold;cursor:pointer" onclick="refuserMecanicien(\''+u.id+'\',\''+u.nom+'\')">❌ Refuser</button></div></div>').join('')+'</div>';
     }else{el.innerHTML='<div class="card"><p style="color:#aaa;text-align:center">✅ Aucun mécanicien en attente</p></div>';}
   }catch(e){console.error(e);}
 }
 
 async function validerMecanicien(id,nom){
-  if(!confirm('Certifier '+nom+' comme mécanicien ?'))return;
-  try{
-    await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'mecanicien_certifie'})});
-    alert('✅ '+nom+' est maintenant certifié !');
-    chargerMecaniciensAttente();
-  }catch(e){alert('Erreur');}
+  if(!confirm('Certifier '+nom+' ?'))return;
+  await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'mecanicien_certifie'})});
+  alert('✅ '+nom+' est certifié !');
+  chargerMecaniciensAttente();
 }
 
 async function refuserMecanicien(id,nom){
-  if(!confirm('Refuser la demande de '+nom+' ?'))return;
-  try{
-    await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'refuse'})});
-    alert('❌ Demande de '+nom+' refusée.');
-    chargerMecaniciensAttente();
-  }catch(e){alert('Erreur');}
+  if(!confirm('Refuser '+nom+' ?'))return;
+  await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'refuse'})});
+  alert('❌ Demande de '+nom+' refusée.');
+  chargerMecaniciensAttente();
 }
 
 async function chargerTousUtilisateurs(){
-  const el=document.getElementById(userConnecte.role==='superadmin'?'liste-superadmin':'liste-admin');
+  const elId=userConnecte.role==='superadmin'?'liste-superadmin':'liste-admin';
+  const el=document.getElementById(elId);
   try{
     const res=await fetch(SB_URL+'/rest/v1/profiles?order=created_at.desc',{headers:H});
     const data=await res.json();
-    if(data&&data.length>0){
-      el.innerHTML='<div class="card"><div class="card-titre">👥 Tous les utilisateurs ('+data.length+')</div>'+data.map(u=>'<div class="user-card"><div style="font-weight:bold">'+u.nom+' '+getBadge(u.role)+'</div><div style="color:#aaa;font-size:11px">📧 '+u.email+' • 📞 '+u.telephone+'</div>'+(u.quartier?'<div style="color:#aaa;font-size:11px">📍 '+u.quartier+'</div>':'')+'</div>').join('')+'</div>';
-    }
+    el.innerHTML='<div class="card"><div class="card-titre">👥 Utilisateurs ('+data.length+')</div>'+data.map(u=>'<div class="user-card"><div style="font-weight:bold">'+u.nom+getBadge(u.role)+'</div><div style="color:#aaa;font-size:11px">📧 '+u.email+' • 📞 '+u.telephone+'</div>'+(u.quartier?'<div style="color:#aaa;font-size:11px">📍 '+u.quartier+(u.specialite?' • 🔧 '+u.specialite:'')+(u.transport?' • '+(u.transport==='velo'?'🚲':'🏍️'):'')+'</div>':'')+'</div>').join('')+'</div>';
   }catch(e){console.error(e);}
 }
 
@@ -397,31 +531,27 @@ async function chargerAdmins(){
   try{
     const res=await fetch(SB_URL+'/rest/v1/profiles?role=in.(admin,superadmin)&order=created_at.desc',{headers:H});
     const data=await res.json();
-    el.innerHTML='<div class="card"><div class="card-titre">🛡️ Admins ('+data.length+'/10)</div>'+data.map(u=>'<div class="user-card"><div style="font-weight:bold">'+u.nom+' '+getBadge(u.role)+'</div><div style="color:#aaa;font-size:11px">📧 '+u.email+'</div>'+(u.role==='admin'?'<button style="margin-top:5px;padding:6px 12px;background:#e74c3c;border:none;border-radius:6px;color:white;font-size:11px;cursor:pointer" onclick="retirerAdmin(\''+u.id+'\',\''+u.nom+'\')">Retirer admin</button>':'<span style="color:#aaa;font-size:10px">Super Admin protégé</span>')+'</div>').join('')+'</div>';
-    const res2=await fetch(SB_URL+'/rest/v1/profiles?role=eq.mecanicien_certifie&order=nom',{headers:H});
-    const mecs=await res2.json();
-    if(mecs&&mecs.length>0&&data.length<10){
-      el.innerHTML+='<div class="card"><div class="card-titre">➕ Nommer un admin</div>'+mecs.map(u=>'<div class="user-card"><div style="font-weight:bold">'+u.nom+'</div><div style="color:#aaa;font-size:11px">📧 '+u.email+'</div><button style="margin-top:5px;padding:6px 12px;background:#8e44ad;border:none;border-radius:6px;color:white;font-size:11px;cursor:pointer" onclick="nommerAdmin(\''+u.id+'\',\''+u.nom+'\')">🛡️ Nommer admin</button></div>').join('')+'</div>';
+    el.innerHTML='<div class="card"><div class="card-titre">🛡️ Admins ('+data.length+'/10)</div>'+data.map(u=>'<div class="user-card"><div style="font-weight:bold">'+u.nom+getBadge(u.role)+'</div><div style="color:#aaa;font-size:11px">📧 '+u.email+'</div>'+(u.role==='admin'?'<button style="margin-top:5px;padding:6px 12px;background:#e74c3c;border:none;border-radius:6px;color:white;font-size:11px;cursor:pointer" onclick="retirerAdmin(\''+u.id+'\',\''+u.nom+'\')">Retirer admin</button>':'<span style="color:#555;font-size:10px">Super Admin protégé</span>')+'</div>').join('')+'</div>';
+    if(data.length<10){
+      const res2=await fetch(SB_URL+'/rest/v1/profiles?role=eq.mecanicien_certifie&order=nom',{headers:H});
+      const mecs=await res2.json();
+      if(mecs&&mecs.length>0){
+        el.innerHTML+='<div class="card"><div class="card-titre">➕ Nommer un admin</div>'+mecs.map(u=>'<div class="user-card"><div style="font-weight:bold">'+u.nom+'</div><div style="color:#aaa;font-size:11px">📧 '+u.email+'</div><button style="margin-top:5px;padding:6px 12px;background:#8e44ad;border:none;border-radius:6px;color:white;font-size:11px;cursor:pointer" onclick="nommerAdmin(\''+u.id+'\',\''+u.nom+'\')">🛡️ Nommer admin</button></div>').join('')+'</div>';
+      }
     }
   }catch(e){console.error(e);}
 }
 
 async function nommerAdmin(id,nom){
-  if(!confirm('Nommer '+nom+' comme admin ?'))return;
-  try{
-    await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'admin'})});
-    alert('✅ '+nom+' est maintenant admin !');
-    chargerAdmins();
-  }catch(e){alert('Erreur');}
+  if(!confirm('Nommer '+nom+' admin ?'))return;
+  await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'admin'})});
+  alert('✅ '+nom+' est admin !');chargerAdmins();
 }
 
 async function retirerAdmin(id,nom){
-  if(!confirm('Retirer les droits admin de '+nom+' ?'))return;
-  try{
-    await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'mecanicien_certifie'})});
-    alert('✅ Droits admin retirés à '+nom);
-    chargerAdmins();
-  }catch(e){alert('Erreur');}
+  if(!confirm('Retirer admin à '+nom+' ?'))return;
+  await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'mecanicien_certifie'})});
+  alert('✅ Admin retiré à '+nom);chargerAdmins();
 }
 
 function seDeconnecter(){userConnecte=null;localStorage.removeItem('mcm_user');afficherEcran('ecran-accueil');}
@@ -429,10 +559,7 @@ function seDeconnecter(){userConnecte=null;localStorage.removeItem('mcm_user');a
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js');}
 
 const saved=localStorage.getItem('mcm_user');
-if(saved){
-  userConnecte=JSON.parse(saved);
-  redirigerSelonRole(userConnecte);
-}
+if(saved){userConnecte=JSON.parse(saved);redirigerSelonRole(userConnecte);}
 </script>
 </body>
 </html>
