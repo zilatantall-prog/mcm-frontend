@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MCM SERVICE CI</title>
+<meta name="theme-color" content="#ff6600">
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Arial',sans-serif;background:#0f0f0f;color:white;min-height:100vh;}
+.header{background:linear-gradient(135deg,#ff6600,#cc4400);padding:15px 20px;text-align:center;position:sticky;top:0;z-index:1000;box-shadow:0 3px 15px rgba(255,102,0,0.4);}
+.header h1{font-size:22px;letter-spacing:1px;}
+.header p{font-size:11px;color:#ffe;margin-top:3px;opacity:0.9;}
+.ecran{display:none;padding:15px;padding-bottom:90px;max-width:500px;margin:0 auto;}
+.ecran.actif{display:block;}
+.btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:14px;font-weight:bold;color:white;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform 0.1s;}
+.btn:active{transform:scale(0.98);}
+.btn-orange{background:linear-gradient(135deg,#ff6600,#cc4400);box-shadow:0 4px 15px rgba(255,102,0,0.3);}
+.btn-vert{background:linear-gradient(135deg,#27ae60,#1e8449);box-shadow:0 4px 15px rgba(39,174,96,0.3);}
+.btn-rouge{background:linear-gradient(135deg,#e74c3c,#c0392b);}
+.btn-bleu{background:linear-gradient(135deg,#2980b9,#1a5276);}
+.btn-violet{background:linear-gradient(135deg,#8e44ad,#6c3483);}
+.btn-gris{background:#2a2a2a;border:1px solid #333;}
+.btn-sm{padding:7px 12px;font-size:11px;border-radius:8px;border:none;color:white;cursor:pointer;font-weight:bold;}
+.card{background:#1a1a1a;border-radius:16px;padding:15px;margin-bottom:15px;border:1px solid #252525;box-shadow:0 4px 20px rgba(0,0,0,0.3);}
+.card-titre{color:#ff6600;font-size:14px;font-weight:bold;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #252525;display:flex;align-items:center;gap:6px;}
+.input-group{margin-bottom:14px;}
+.input-group label{font-size:11px;color:#777;margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:0.5px;}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:13px 15px;border-radius:10px;border:1px solid #252525;background:#222;color:white;font-size:14px;transition:border-color 0.2s;}
+.input-group input:focus,.input-group select:focus{border-color:#ff6600;outline:none;background:#252525;}
+.input-group textarea{height:85px;resize:none;}
+.msg{padding:12px 15px;border-radius:10px;margin-bottom:12px;font-size:13px;text-align:center;font-weight:bold;}
+.msg.bon{background:rgba(39,174,96,0.15);border:1px solid #27ae60;color:#2ecc71;}
+.msg.mauvais{background:rgba(231,76,60,0.15);border:1px solid #e74c3c;color:#e74c3c;}
+.msg.info{background:rgba(41,128,185,0.15);border:1px solid #2980b9;color:#3498db;}
+.badge{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:bold;display:inline-block;margin-left:5px;}
+.badge-attente{background:rgba(230,126,34,0.2);color:#e67e22;border:1px solid rgba(230,126,34,0.4);}
+.badge-certifie{background:rgba(39,174,96,0.2);color:#27ae60;border:1px solid rgba(39,174,96,0.4);}
+.badge-client{background:rgba(41,128,185,0.2);color:#3498db;border:1px solid rgba(41,128,185,0.4);}
+.badge-admin{background:rgba(142,68,173,0.2);color:#9b59b6;border:1px solid rgba(142,68,173,0.4);}
+.badge-superadmin{background:rgba(231,76,60,0.2);color:#e74c3c;border:1px solid rgba(231,76,60,0.4);}
+.badge-refuse{background:rgba(100,100,100,0.2);color:#777;border:1px solid #444;}
+.user-card{background:#1e1e1e;border-radius:12px;padding:12px;margin-bottom:10px;border-left:4px solid #8e44ad;}
+.demande-card{background:#1e1e1e;border-radius:12px;padding:12px;margin-bottom:10px;border-left:4px solid #2980b9;}
+.meca-card{background:#1e1e1e;border-radius:12px;padding:12px;margin-bottom:10px;border-left:4px solid #ff6600;}
+.tabs{display:flex;gap:8px;margin-bottom:15px;}
+.tab{flex:1;padding:10px;border:2px solid #ff6600;border-radius:10px;background:transparent;color:#ff6600;font-size:12px;cursor:pointer;text-align:center;font-weight:bold;transition:all 0.2s;}
+.tab.actif{background:#ff6600;color:white;}
+.logo-zone{text-align:center;padding:20px 0 10px;}
+.logo-emoji{font-size:65px;display:block;margin-bottom:8px;}
+.logo-titre{color:#ff6600;font-size:28px;font-weight:bold;letter-spacing:2px;}
+.logo-sub{color:#555;font-size:13px;margin-top:5px;}
+.statut-bar{background:rgba(41,128,185,0.1);border:1px solid rgba(41,128,185,0.3);border-radius:10px;padding:12px;margin-bottom:12px;font-size:12px;text-align:center;color:#3498db;}
+.prix-box{background:rgba(39,174,96,0.08);border:2px solid rgba(39,174,96,0.4);border-radius:12px;padding:15px;margin:12px 0;text-align:center;}
+.prix-montant{font-size:34px;font-weight:bold;color:#2ecc71;}
+.prix-detail{font-size:11px;color:#666;margin-top:5px;}
+.minuteur-box{background:rgba(255,102,0,0.08);border:2px solid rgba(255,102,0,0.4);border-radius:12px;padding:15px;text-align:center;margin:10px 0;}
+.minuteur-temps{font-size:42px;font-weight:bold;color:#ff6600;font-family:monospace;letter-spacing:3px;}
+.minuteur-label{font-size:11px;color:#666;margin-top:5px;}
+.geo-box{background:rgba(39,174,96,0.08);border:1px solid rgba(39,174,96,0.3);border-radius:8px;padding:10px;margin-bottom:12px;font-size:12px;color:#27ae60;text-align:center;cursor:pointer;}
+.geo-box.erreur{background:rgba(231,76,60,0.08);border-color:rgba(231,76,60,0.3);color:#e74c3c;}
+.geo-box.en-cours{background:rgba(255,102,0,0.08);border-color:rgba(255,102,0,0.3);color:#ff6600;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;}
+.stat-box{background:#1e1e1e;border-radius:12px;padding:12px;text-align:center;border:1px solid #252525;}
+.stat-num{font-size:30px;font-weight:bold;color:#ff6600;}
+.stat-lbl{font-size:11px;color:#555;margin-top:3px;}
+.info-row{display:flex;align-items:center;gap:6px;font-size:12px;color:#666;margin-top:4px;}
+.divider{height:1px;background:#1e1e1e;margin:12px 0;}
+#carte-conteneur{width:100%;height:280px;border-radius:12px;overflow:hidden;margin:12px 0;border:2px solid #252525;z-index:1;}
+.carte-info{background:#1e1e1e;border-radius:10px;padding:10px;margin-top:8px;}
+.carte-info-ligne{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #252525;font-size:12px;}
+.carte-info-ligne:last-child{border-bottom:none;}
+.meca-accepte-box{background:rgba(39,174,96,0.08);border:2px solid rgba(39,174,96,0.3);border-radius:12px;padding:12px;margin-top:10px;}
+.pulse{animation:pulse 2s infinite;}
+@keyframes pulse{0%{opacity:1;}50%{opacity:0.5;}100%{opacity:1;}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🔧 MCM SERVICE CI</h1>
+  <p>Mécanique Camara Maïga • Abidjan, Côte d'Ivoire</p>
+</div>
+
+<div id="ecran-accueil" class="ecran actif">
+  <div class="logo-zone">
+    <span class="logo-emoji">🚗🔧</span>
+    <div class="logo-titre">MCM SERVICE CI</div>
+    <div class="logo-sub">Dépannage rapide à Abidjan</div>
+  </div>
+  <div class="card">
+    <div class="tabs">
+      <div class="tab actif" onclick="switchTab('connexion',this)">🔑 Connexion</div>
+      <div class="tab" onclick="switchTab('inscription',this)">✍️ Inscription</div>
+    </div>
+    <div id="tab-connexion">
+      <div class="input-group"><label>Email</label><input type="email" id="login-email" placeholder="votre@email.com"></div>
+      <div class="input-group"><label>Mot de passe</label><input type="password" id="login-mdp" placeholder="••••••••"></div>
+      <button class="btn btn-orange" onclick="seConnecter()">🔑 Se connecter</button>
+      <div id="msg-login"></div>
+    </div>
+    <div id="tab-inscription" style="display:none">
+      <div class="input-group"><label>Nom complet</label><input type="text" id="reg-nom" placeholder="Votre nom complet"></div>
+      <div class="input-group"><label>Email</label><input type="email" id="reg-email" placeholder="votre@email.com"></div>
+      <div class="input-group"><label>Mot de passe</label><input type="password" id="reg-mdp" placeholder="Minimum 6 caractères"></div>
+      <div class="input-group"><label>Numéro WhatsApp</label><input type="tel" id="reg-tel" placeholder="07XXXXXXXX"></div>
+      <div class="input-group"><label>Je suis</label>
+        <select id="reg-role" onchange="toggleChampsMeca()">
+          <option value="client">🚗 Un Client</option>
+          <option value="mecanicien_en_attente">🔧 Un Mécanicien</option>
+        </select>
+      </div>
+      <div id="champs-meca" style="display:none">
+        <div class="divider"></div>
+        <div class="input-group"><label>Quartier d'intervention</label>
+          <select id="reg-quartier">
+            <option value="">Choisir...</option>
+            <option>Yopougon</option><option>Cocody</option><option>Abobo</option>
+            <option>Adjamé</option><option>Plateau</option><option>Marcory</option>
+            <option>Koumassi</option><option>Port-Bouët</option><option>Treichville</option><option>Attécoubé</option>
+          </select>
+        </div>
+        <div class="input-group"><label>Spécialité</label>
+          <select id="reg-specialite">
+            <option value="">Choisir...</option>
+            <option>Panne moteur</option><option>Pneus et roues</option>
+            <option>Batterie et électricité</option><option>Freins</option>
+            <option>Carrosserie</option><option>Mécanique générale</option>
+          </select>
+        </div>
+        <div class="input-group"><label>Moyen de déplacement</label>
+          <select id="reg-transport">
+            <option value="moto">🏍️ Moto</option>
+            <option value="velo">🚲 Vélo</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-vert" onclick="sInscrire()">✅ Créer mon compte</button>
+      <div id="msg-register"></div>
+    </div>
+    <div class="divider"></div>
+    <p style="text-align:center;font-size:11px;color:#444;">📱 Wave &nbsp;•&nbsp; 🟠 Orange Money &nbsp;•&nbsp; 💛 MTN Money</p>
+  </div>
+</div>
+
+<div id="ecran-client" class="ecran">
+  <div class="card">
+    <div class="card-titre">🚗 Espace Client</div>
+    <p id="client-bienvenue" style="color:#666;font-size:13px;margin-bottom:15px;"></p>
+    <button class="btn btn-orange" onclick="afficherEcran('ecran-demande')">🆘 Demander un mécanicien</button>
+    <button class="btn btn-bleu" onclick="chargerMesDemandes()">📋 Suivre mes demandes</button>
+    <button class="btn btn-gris" onclick="seDeconnecter()">🚪 Déconnexion</button>
+  </div>
+  <div id="mes-demandes-client"></div>
+</div>
+
+<div id="ecran-meca-attente" class="ecran">
+  <div class="card">
+    <div class="card-titre">⏳ Dossier en cours d'examen</div>
+    <div class="statut-bar">📋 Votre dossier est en cours de vérification. Notre équipe vous contactera sous 24-48h sur WhatsApp.</div>
+    <p style="color:#555;font-size:12px;margin:10px 0 15px;line-height:1.5;">Notre équipe va évaluer vos compétences avant de vous certifier comme mécanicien MCM SERVICE CI.</p>
+    <button class="btn btn-gris" onclick="seDeconnecter()">🚪 Déconnexion</button>
+  </div>
+</div>
+
+<div id="ecran-mecanicien" class="ecran">
+  <div class="card">
+    <div class="card-titre">🔧 Mécanicien Certifié ✅</div>
+    <p id="meca-bienvenue" style="color:#666;font-size:13px;margin-bottom:4px;"></p>
+    <p id="meca-info" style="color:#ff6600;font-size:12px;margin-bottom:12px;"></p>
+    <div id="meca-geo" class="geo-box en-cours pulse">📍 Capture de votre position GPS...</div>
+    <button class="btn btn-orange" onclick="chargerDemandes()">📋 Voir les demandes disponibles</button>
+    <button class="btn btn-gris" onclick="seDeconnecter()">🚪 Déconnexion</button>
+  </div>
+  <div id="liste-demandes"></div>
+</div>
+
+<div id="ecran-superadmin" class="ecran">
+  <div class="card">
+    <div class="card-titre">👑 Super Admin</div>
+    <p id="superadmin-bienvenue" style="color:#666;font-size:13px;margin-bottom:12px;"></p>
+    <div id="stats-admin" class="stat-grid"></div>
+    <button class="btn btn-violet" onclick="chargerMecaniciensAttente('superadmin')">⏳ Mécaniciens en attente</button>
+    <button class="btn btn-bleu" onclick="chargerTousUtilisateurs('superadmin')">👥 Tous les utilisateurs</button>
+    <button class="btn btn-orange" onclick="chargerAdmins()">🛡️ Gérer les admins</button>
+    <button class="btn btn-gris" onclick="seDeconnecter()">🚪 Déconnexion</button>
+  </div>
+  <div id="liste-superadmin"></div>
+</div>
+
+<div id="ecran-admin" class="ecran">
+  <div class="card">
+    <div class="card-titre">🛡️ Espace Admin</div>
+    <p id="admin-bienvenue" style="color:#666;font-size:13px;margin-bottom:12px;"></p>
+    <button class="btn btn-violet" onclick="chargerMecaniciensAttente('admin')">⏳ Mécaniciens en attente</button>
+    <button class="btn btn-bleu" onclick="chargerTousUtilisateurs('admin')">👥 Tous les utilisateurs</button>
+    <button class="btn btn-gris" onclick="seDeconnecter()">🚪 Déconnexion</button>
+  </div>
+  <div id="liste-admin"></div>
+</div>
+
+<div id="ecran-demande" class="ecran">
+  <div class="card">
+    <div class="card-titre">🆘 Nouvelle demande de dépannage</div>
+    <div id="client-geo" class="geo-box" onclick="capturerPosition()">📍 Appuyez ici pour capturer votre position GPS</div>
+    <div id="carte-client" style="display:none">
+      <div id="carte-conteneur"></div>
+    </div>
+    <div class="input-group"><label>Votre quartier actuel</label>
+      <select id="dem-quartier">
+        <option value="">Choisir votre quartier...</option>
+        <option>Yopougon</option><option>Cocody</option><option>Abobo</option>
+        <option>Adjamé</option><option>Plateau</option><option>Marcory</option>
+        <option>Koumassi</option><option>Port-Bouët</option><option>Treichville</option><option>Attécoubé</option>
+      </select>
+    </div>
+    <div class="input-group"><label>Type de panne</label>
+      <select id="dem-type" onchange="calculerPrix()">
+        <option value="">Choisir le type de panne...</option>
+        <option value="Pneu crevé">🔧 Pneu crevé</option>
+        <option value="Panne moteur">⚙️ Panne moteur</option>
+        <option value="Batterie">🔋 Problème batterie</option>
+        <option value="Freins">🛑 Problème freins</option>
+        <option value="Carrosserie">🚗 Carrosserie</option>
+        <option value="Autre">❓ Autre panne</option>
+      </select>
+    </div>
+    <div id="prix-estime" style="display:none">
+      <div class="prix-box">
+        <div class="prix-montant" id="prix-valeur">0 FCFA</div>
+        <div class="prix-detail" id="prix-detail">Prix estimé</div>
+      </div>
+    </div>
+    <div class="input-group"><label>Description détaillée</label>
+      <textarea id="dem-description" placeholder="Décrivez votre panne pour aider le mécanicien..."></textarea>
+    </div>
+    <button class="btn btn-vert" onclick="envoyerDemande()">📤 Envoyer la demande</button>
+    <button class="btn btn-gris" onclick="afficherEcran('ecran-client')">⬅ Retour</button>
+    <div id="msg-demande"></div>
+  </div>
+</div>
+<script>
+const SB_URL='https://ddpedkjmuslcrzqjjfoi.supabase.co';
+const SB_KEY='sb_publishable_IiH75oXzI79hsqW3zMar8w_skKQtqIl';
+const H={'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
+const SUPERADMINS=['adamomaiga225m@gmail.com','camaraabou6066@gmail.com'];
+let userConnecte=null,clientLat=null,clientLng=null,mecaLat=null,mecaLng=null;
+let carteClient=null,carteTracking=null;
+
+const PRIX_BASE={'Pneu crevé':3000,'Panne moteur':8000,'Batterie':4000,'Freins':6000,'Carrosserie':5000,'Autre':4000};
+
+function getPrix(type){
+  const base=PRIX_BASE[type]||4000,h=new Date().getHours();
+  let m=1,p='journée (tarif normal)';
+  if(h>=6&&h<12){m=0.9;p='matin (tarif réduit -10%)';}
+  else if(h>=18&&h<22){m=1.3;p='soirée (+30%)';}
+  else if(h>=22||h<6){m=1.6;p='nuit (+60%)';}
+  return{prix:Math.round(base*m/500)*500,periode:p};
+}
+
+function distKm(lat1,lng1,lat2,lng2){
+  const R=6371,dL=(lat2-lat1)*Math.PI/180,dG=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dL/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dG/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function tempsStr(km,tr){
+  const v=tr==='velo'?15:30,m=Math.round(km/v*60);
+  return m<1?'< 1 min':m<60?m+' min':Math.floor(m/60)+'h'+String(m%60).padStart(2,'0');
+}
+
+function demarrerTimer(minutes,id){
+  let s=minutes*60;
+  const el=document.getElementById(id);
+  if(!el)return;
+  const iv=setInterval(()=>{
+    if(s<=0){clearInterval(iv);if(el)el.textContent='Arrivé !';return;}
+    s--;
+    if(el)el.textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+  },1000);
+}
+
+function initCarte(containerId,lat,lng,label,color){
+  const el=document.getElementById(containerId);
+  if(!el)return null;
+  const carte=L.map(containerId).setView([lat,lng],14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(carte);
+  const icon=L.divIcon({html:'<div style="background:'+color+';width:30px;height:30px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.5)">'+label+'</div>',iconSize:[30,30],iconAnchor:[15,15],className:''});
+  L.marker([lat,lng],{icon}).addTo(carte);
+  return carte;
+}
+
+function afficherCarteTracking(cLat,cLng,mLat,mLng,mNom,dist,temps){
+  const conteneur=document.getElementById('carte-tracking');
+  if(!conteneur)return;
+  conteneur.style.display='block';
+  if(carteTracking){carteTracking.remove();carteTracking=null;}
+  carteTracking=L.map('carte-tracking-map').setView([(cLat+mLat)/2,(cLng+mLng)/2],13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(carteTracking);
+  const iconClient=L.divIcon({html:'<div style="background:#2980b9;width:32px;height:32px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,0.5)">🚗</div>',iconSize:[32,32],iconAnchor:[16,16],className:''});
+  const iconMeca=L.divIcon({html:'<div style="background:#ff6600;width:32px;height:32px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,0.5)">🔧</div>',iconSize:[32,32],iconAnchor:[16,16],className:''});
+  L.marker([cLat,cLng],{icon:iconClient}).addTo(carteTracking).bindPopup('📍 Votre position').openPopup();
+  L.marker([mLat,mLng],{icon:iconMeca}).addTo(carteTracking).bindPopup('🔧 '+mNom);
+  L.polyline([[cLat,cLng],[mLat,mLng]],{color:'#ff6600',weight:3,dashArray:'8,6'}).addTo(carteTracking);
+  carteTracking.fitBounds([[cLat,cLng],[mLat,mLng]],{padding:[20,20]});
+}
+
+function calculerPrix(){
+  const type=document.getElementById('dem-type').value;
+  if(!type){document.getElementById('prix-estime').style.display='none';return;}
+  const{prix,periode}=getPrix(type);
+  document.getElementById('prix-valeur').textContent=prix.toLocaleString()+' FCFA';
+  document.getElementById('prix-detail').textContent='Tarif '+periode;
+  document.getElementById('prix-estime').style.display='block';
+}
+
+function capturerPosition(){
+  const el=document.getElementById('client-geo');
+  if(!navigator.geolocation){el.textContent='❌ GPS non disponible';el.className='geo-box erreur';return;}
+  el.textContent='📍 Capture en cours...';el.className='geo-box en-cours pulse';
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      clientLat=pos.coords.latitude;clientLng=pos.coords.longitude;
+      el.textContent='✅ Position GPS capturée !';el.className='geo-box';
+      document.getElementById('carte-client').style.display='block';
+      if(carteClient){carteClient.remove();}
+      carteClient=initCarte('carte-conteneur',clientLat,clientLng,'🚗','#2980b9');
+    },
+    ()=>{el.textContent='⚠️ GPS refusé — continuez sans position';el.className='geo-box erreur';}
+  );
+}
+
+function capturerPositionMeca(){
+  const el=document.getElementById('meca-geo');
+  if(!navigator.geolocation){if(el){el.textContent='❌ GPS non disponible';el.className='geo-box erreur';}return;}
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      mecaLat=pos.coords.latitude;mecaLng=pos.coords.longitude;
+      if(el){el.textContent='✅ Position GPS: '+mecaLat.toFixed(4)+', '+mecaLng.toFixed(4);el.className='geo-box';}
+      fetch(SB_URL+'/rest/v1/profiles?id=eq.'+userConnecte.id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({latitude:mecaLat,longitude:mecaLng})});
+    },
+    ()=>{if(el){el.textContent='⚠️ GPS refusé — activez la localisation';el.className='geo-box erreur';}}
+  );
+}
+
+function afficherEcran(id){document.querySelectorAll('.ecran').forEach(e=>e.classList.remove('actif'));document.getElementById(id).classList.add('actif');window.scrollTo(0,0);}
+
+function switchTab(tab,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('actif'));el.classList.add('actif');
+  document.getElementById('tab-connexion').style.display=tab==='connexion'?'block':'none';
+  document.getElementById('tab-inscription').style.display=tab==='inscription'?'block':'none';
+}
+
+function toggleChampsMeca(){document.getElementById('champs-meca').style.display=document.getElementById('reg-role').value==='mecanicien_en_attente'?'block':'none';}
+
+function affMsg(id,txt,type){
+  const el=document.getElementById(id);
+  if(el){el.innerHTML='<div class="msg '+type+'">'+txt+'</div>';setTimeout(()=>{if(document.getElementById(id))document.getElementById(id).innerHTML=''},5000);}
+}
+
+function getBadge(r){
+  const b={superadmin:'<span class="badge badge-superadmin">👑 Super Admin</span>',admin:'<span class="badge badge-admin">🛡️ Admin</span>',mecanicien_certifie:'<span class="badge badge-certifie">✅ Certifié</span>',mecanicien_en_attente:'<span class="badge badge-attente">⏳ En attente</span>',client:'<span class="badge badge-client">🚗 Client</span>',refuse:'<span class="badge badge-refuse">❌ Refusé</span>',suspendu:'<span class="badge badge-refuse">⛔ Suspendu</span>'};
+  return b[r]||r;
+}
+
+async function chargerStats(){
+  try{
+    const r=await fetch(SB_URL+'/rest/v1/profiles?select=role',{headers:H});
+    const d=await r.json();
+    const s={c:0,m:0,a:0,p:0};
+    d.forEach(u=>{if(u.role==='client')s.c++;else if(u.role==='mecanicien_certifie')s.m++;else if(u.role==='admin'||u.role==='superadmin')s.a++;else if(u.role==='mecanicien_en_attente')s.p++;});
+    document.getElementById('stats-admin').innerHTML='<div class="stat-box"><div class="stat-num">'+s.c+'</div><div class="stat-lbl">🚗 Clients</div></div><div class="stat-box"><div class="stat-num">'+s.m+'</div><div class="stat-lbl">🔧 Mécaniciens</div></div><div class="stat-box"><div class="stat-num">'+s.p+'</div><div class="stat-lbl">⏳ En attente</div></div><div class="stat-box"><div class="stat-num">'+s.a+'</div><div class="stat-lbl">🛡️ Admins</div></div>';
+  }catch(e){}
+}
+
+function redirigerSelonRole(user){
+  if(user.role==='superadmin'){document.getElementById('superadmin-bienvenue').textContent='Bonjour '+user.nom+' 👑';afficherEcran('ecran-superadmin');chargerStats();}
+  else if(user.role==='admin'){document.getElementById('admin-bienvenue').textContent='Bonjour '+user.nom+' 🛡️';afficherEcran('ecran-admin');}
+  else if(user.role==='mecanicien_certifie'){document.getElementById('meca-bienvenue').textContent='Bonjour '+user.nom+' 👋';document.getElementById('meca-info').textContent='📍 '+user.quartier+' | 🔧 '+(user.specialite||'Général')+' | '+(user.transport==='velo'?'🚲 Vélo':'🏍️ Moto');afficherEcran('ecran-mecanicien');capturerPositionMeca();}
+  else if(user.role==='mecanicien_en_attente'){afficherEcran('ecran-meca-attente');}
+  else{document.getElementById('client-bienvenue').textContent='Bonjour '+user.nom+' 👋';afficherEcran('ecran-client');}
+}
+
+async function sInscrire(){
+  const nom=document.getElementById('reg-nom').value.trim();
+  const email=document.getElementById('reg-email').value.trim().toLowerCase();
+  const mdp=document.getElementById('reg-mdp').value;
+  const tel=document.getElementById('reg-tel').value.trim();
+  let role=document.getElementById('reg-role').value;
+  const quartier=document.getElementById('reg-quartier').value;
+  const specialite=document.getElementById('reg-specialite').value;
+  const transport=document.getElementById('reg-transport').value||'moto';
+  if(!nom||!email||!mdp||!tel){affMsg('msg-register','❌ Remplissez tous les champs !','mauvais');return;}
+  if(mdp.length<6){affMsg('msg-register','❌ Mot de passe minimum 6 caractères','mauvais');return;}
+  if(SUPERADMINS.includes(email))role='superadmin';
+  try{
+    const res=await fetch(SB_URL+'/rest/v1/profiles',{method:'POST',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({nom,email,telephone:tel,mot_de_passe:mdp,role,quartier,specialite,transport,disponible:true})});
+    if(res.ok||res.status===201){affMsg('msg-register',role==='mecanicien_en_attente'?'✅ Dossier envoyé ! Nous vous contacterons sous 24-48h.':'✅ Compte créé ! Connectez-vous maintenant.','bon');switchTab('connexion',document.querySelector('.tab'));}
+    else{const d=await res.json();affMsg('msg-register','❌ '+(d.message||d.details||'Erreur'),'mauvais');}
+  }catch(e){affMsg('msg-register','❌ Connexion impossible','mauvais');}
+}
+
+async function seConnecter(){
+  const email=document.getElementById('login-email').value.trim().toLowerCase();
+  const mdp=document.getElementById('login-mdp').value;
+  if(!email||!mdp){affMsg('msg-login','❌ Remplissez tous les champs !','mauvais');return;}
+  try{
+    const res=await fetch(SB_URL+'/rest/v1/profiles?email=eq.'+encodeURIComponent(email)+'&select=*',{headers:H});
+    const data=await res.json();
+    if(data&&data.length>0){
+      const user=data[0];
+      if(user.mot_de_passe===mdp){
+        if(SUPERADMINS.includes(email)&&user.role!=='superadmin'){await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+user.id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'superadmin'})});user.role='superadmin';}
+        userConnecte=user;localStorage.setItem('mcm_user',JSON.stringify(user));redirigerSelonRole(user);
+      }else{affMsg('msg-login','❌ Mot de passe incorrect !','mauvais');}
+    }else{affMsg('msg-login','❌ Aucun compte trouvé avec cet email','mauvais');}
+  }catch(e){affMsg('msg-login','❌ Connexion impossible','mauvais');}
+}
+
+async function envoyerDemande(){
+  const quartier=document.getElementById('dem-quartier').value;
+  const type=document.getElementById('dem-type').value;
+  const description=document.getElementById('dem-description').value.trim();
+  if(!quartier||!type||!description){affMsg('msg-demande','❌ Remplissez tous les champs !','mauvais');return;}
+  const{prix}=getPrix(type);
+  try{
+    const res=await fetch(SB_URL+'/rest/v1/demandes',{method:'POST',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({client_nom:userConnecte.nom,client_telephone:userConnecte.telephone,client_id:userConnecte.id,quartier,type_panne:type,description,statut:'attente',mecanicien_id:'',prix_estime:prix,client_lat:clientLat,client_lng:clientLng})});
+    if(res.ok||res.status===201){affMsg('msg-demande','✅ Demande envoyée ! Prix estimé: '+prix.toLocaleString()+' FCFA','bon');setTimeout(()=>{afficherEcran('ecran-client');chargerMesDemandes();},2000);}
+    else{affMsg('msg-demande','❌ Erreur lors de l\'envoi','mauvais');}
+  }catch(e){affMsg('msg-demande','❌ Connexion impossible','mauvais');}
+}
+
+async function chargerMesDemandes(){
+  try{
+    const res=await fetch(SB_URL+'/rest/v1/demandes?client_id=eq.'+userConnecte.id+'&order=created_at.desc',{headers:H});
+    const data=await res.json();
+    const el=document.getElementById('mes-demandes-client');
+    if(data&&data.length>0){
+      el.innerHTML='<div class="card"><div class="card-titre">📋 Mes demandes ('+data.length+')</div>'+
+        data.map((d,i)=>{
+          const s={'attente':'⏳ En attente...','accepte':'✅ Mécanicien en route !','termine':'🏁 Terminée'};
+          const c={'attente':'#e67e22','accepte':'#27ae60','termine':'#555'};
+          let h='<div class="demande-card">';
+          h+='<div style="font-weight:bold;color:#3498db;font-size:14px">'+d.type_panne+'</div>';
+          h+='<div class="info-row">📍 '+d.quartier+' &nbsp;•&nbsp; 💰 '+(d.prix_estime||0).toLocaleString()+' FCFA</div>';
+          h+='<div style="color:#aaa;font-size:12px;margin-top:6px;line-height:1.4">'+d.description+'</div>';
+          h+='<div style="color:'+c[d.statut]+';font-size:13px;font-weight:bold;margin-top:8px">'+s[d.statut]+'</div>';
+          if(d.statut==='accepte'&&d.mecanicien_nom){
+            h+='<div class="meca-accepte-box">';
+            h+='<div style="color:#2ecc71;font-weight:bold;font-size:15px">🔧 '+d.mecanicien_nom+'</div>';
+            h+='<div class="info-row">📞 '+d.mecanicien_tel+'</div>';
+            if(d.distance_km){
+              h+='<div class="info-row" style="color:#ff6600;margin-top:4px">📍 Distance: '+d.distance_km.toFixed(1)+' km &nbsp;•&nbsp; ⏱️ '+tempsStr(d.distance_km,userConnecte.transport||'moto')+'</div>';
+              h+='<div class="minuteur-box"><div class="minuteur-label">⏱️ Temps d\'arrivée estimé</div><div class="minuteur-temps" id="timer-'+d.id+'">--:--</div></div>';
+            }
+            if(d.client_lat&&d.meca_lat){
+              h+='<div id="carte-tracking-'+d.id+'" style="display:none"><div id="carte-map-'+d.id+'" style="width:100%;height:220px;border-radius:10px;margin-top:8px;border:1px solid #333;"></div></div>';
+              h+='<button class="btn btn-bleu" style="margin-top:8px;padding:10px" onclick="toggleCarte(\''+d.id+'\','+d.client_lat+','+d.client_lng+','+d.meca_lat+','+d.meca_lng+',\''+d.mecanicien_nom+'\')">🗺️ Voir sur la carte</button>';
+            }
+            h+='</div>';
+            if(d.temps_minutes){setTimeout(()=>demarrerTimer(d.temps_minutes,'timer-'+d.id),300+i*100);}
+          }
+          h+='</div>';
+          return h;
+        }).join('')+'</div>';
+    }else{el.innerHTML='<div class="card"><p style="color:#555;text-align:center;padding:15px">Aucune demande pour le moment</p></div>';}
+  }catch(e){console.error(e);}
+}
+
+function toggleCarte(id,cLat,cLng,mLat,mLng,nom){
+  const cont=document.getElementById('carte-tracking-'+id);
+  if(!cont)return;
+  if(cont.style.display==='none'){
+    cont.style.display='block';
+    setTimeout(()=>{
+      const c=L.map('carte-map-'+id).setView([(cLat+mLat)/2,(cLng+mLng)/2],13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(c);
+      const iC=L.divIcon({html:'<div style="background:#2980b9;width:32px;height:32px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,0.4)">🚗</div>',iconSize:[32,32],iconAnchor:[16,16],className:''});
+      const iM=L.divIcon({html:'<div style="background:#ff6600;width:32px;height:32px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,0.4)">🔧</div>',iconSize:[32,32],iconAnchor:[16,16],className:''});
+      L.marker([cLat,cLng],{icon:iC}).addTo(c).bindPopup('📍 Votre position').openPopup();
+      L.marker([mLat,mLng],{icon:iM}).addTo(c).bindPopup('🔧 '+nom);
+      L.polyline([[cLat,cLng],[mLat,mLng]],{color:'#ff6600',weight:3,dashArray:'8,6'}).addTo(c);
+      c.fitBounds([[cLat,cLng],[mLat,mLng]],{padding:[25,25]});
+    },100);
+  }else{cont.style.display='none';}
+}
+
+async function chargerDemandes(){
+  try{
+    const res=await fetch(SB_URL+'/rest/v1/demandes?statut=eq.attente&order=created_at.desc',{headers:H});
+    const data=await res.json();
+    const el=document.getElementById('liste-demandes');
+    if(data&&data.length>0){
+      el.innerHTML=data.map(d=>{
+        let di='';
+        if(mecaLat&&mecaLng&&d.client_lat&&d.client_lng){
+          const km=distKm(mecaLat,mecaLng,d.client_lat,d.client_lng);
+          di='<div class="info-row" style="color:#ff6600">📍 '+km.toFixed(1)+' km &nbsp;•&nbsp; ⏱️ '+tempsStr(km,userConnecte.transport||'moto')+' estimé</div>';
+        }
+        return '<div class="demande-card"><div style="font-weight:bold;color:#3498db;font-size:14px">'+d.type_panne+'</div><div class="info-row">📍 '+d.quartier+'</div><div class="info-row">👤 '+d.client_nom+' &nbsp;•&nbsp; 📞 '+d.client_telephone+'</div><div style="color:#aaa;font-size:12px;margin-top:6px">'+d.description+'</div><div style="color:#2ecc71;font-weight:bold;margin-top:5px">💰 '+(d.prix_estime||0).toLocaleString()+' FCFA</div>'+di+'<button class="btn btn-vert" style="margin-top:10px;padding:10px" onclick="accepterDemande(\''+d.id+'\',\''+d.client_nom+'\',\''+d.client_telephone+'\','+(d.client_lat||'null')+','+(d.client_lng||'null')+')">✅ Accepter cette demande</button></div>';
+      }).join('');
+    }else{el.innerHTML='<div class="card"><p style="color:#555;text-align:center;padding:15px">✅ Aucune demande en attente</p></div>';}
+  }catch(e){console.error(e);}
+}
+
+async function accepterDemande(id,nom,tel,cLat,cLng){
+  let km=null,tm=null;
+  if(mecaLat&&mecaLng&&cLat&&cLng){km=distKm(mecaLat,mecaLng,cLat,cLng);const v=userConnecte.transport==='velo'?15:30;tm=Math.round(km/v*60);}
+  try{
+    await fetch(SB_URL+'/rest/v1/demandes?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({statut:'accepte',mecanicien_id:userConnecte.id,mecanicien_nom:userConnecte.nom,mecanicien_tel:userConnecte.telephone,meca_lat:mecaLat,meca_lng:mecaLng,distance_km:km,temps_minutes:tm})});
+    let msg='✅ Demande acceptée !\n👤 '+nom+'\n📞 '+tel;
+    if(km)msg+='\n📍 '+km.toFixed(1)+' km — ⏱️ '+tempsStr(km,userConnecte.transport||'moto');
+    alert(msg);chargerDemandes();
+  }catch(e){alert('Erreur');}
+}
+
+async function chargerMecaniciensAttente(role){
+  const elId=role==='superadmin'?'liste-superadmin':'liste-admin';
+  const el=document.getElementById(elId);
+  try{
+    const res=await fetch(SB_URL+'/rest/v1/profiles?role=eq.mecanicien_en_attente&order=created_at.desc',{headers:H});
+    const data=await res.json();
+    el.innerHTML=data&&data.length>0?'<div class="card"><div class="card-titre">⏳ En attente ('+data.length+')</div>'+data.map(u=>'<div class="meca-card"><div style="font-weight:bold;font-size:14px">'+u.nom+'</div><div class="info-row">📧 '+u.email+'</div><div class="info-row">📞 '+u.telephone+'</div><div class="info-row">📍 '+(u.quartier||'?')+' • 🔧 '+(u.specialite||'?')+' • '+(u.transport==='velo'?'🚲':'🏍️')+'</div><div style="display:flex;gap:8px;margin-top:10px"><button class="btn-sm" style="background:#27ae60;flex:1" onclick="validerMeca(\''+u.id+'\',\''+u.nom+'\')">✅ Certifier</button><button class="btn-sm" style="background:#e74c3c;flex:1" onclick="refuserMeca(\''+u.id+'\',\''+u.nom+'\')">❌ Refuser</button></div></div>').join('')+'</div>':'<div class="card"><p style="color:#555;text-align:center;padding:15px">✅ Aucun mécanicien en attente</p></div>';
+  }catch(e){console.error(e);}
+}
+
+async function validerMeca(id,nom){
+  if(!confirm('Certifier '+nom+' ?'))return;
+  await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'mecanicien_certifie'})});
+  alert('✅ '+nom+' certifié !');chargerMecaniciensAttente(userConnecte.role);
+}
+
+async function refuserMeca(id,nom){
+  if(!confirm('Refuser '+nom+' ?'))return;
+  await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'refuse'})});
+  alert('Refusé.');chargerMecaniciensAttente(userConnecte.role);
+}
+
+async function chargerTousUtilisateurs(role){
+  const elId=role==='superadmin'?'liste-superadmin':'liste-admin';
+  const el=document.getElementById(elId);
+  try{
+    const res=await fetch(SB_URL+'/rest/v1/profiles?order=created_at.desc',{headers:H});
+    const data=await res.json();
+    el.innerHTML='<div class="card"><div class="card-titre">👥 Utilisateurs ('+data.length+')</div>'+
+      data.map(u=>'<div class="user-card"><div style="font-weight:bold">'+u.nom+getBadge(u.role)+'</div><div class="info-row">📧 '+u.email+'</div><div class="info-row">📞 '+u.telephone+'</div>'+(u.quartier?'<div class="info-row">📍 '+u.quartier+(u.specialite?' • '+u.specialite:'')+'</div>':'')+
+      (u.role!=='superadmin'?'<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn-sm" style="background:#e74c3c" onclick="supprimerCompte(\''+u.id+'\',\''+u.nom+'\')">🗑️ Supprimer</button><button class="btn-sm" style="background:#e67e22" onclick="suspendreCompte(\''+u.id+'\',\''+u.nom+'\')">⛔ Suspendre</button>'+(u.role==='mecanicien_certifie'?'<button class="btn-sm" style="background:#2980b9" onclick="reactiverCompte(\''+u.id+'\',\''+u.nom+'\')">✅ Réactiver</button>':'')+'</div>':'<div style="color:#444;font-size:11px;margin-top:4px">Super Admin — protégé</div>')+
+      '</div>').join('')+'</div>';
+  }catch(e){console.error(e);}
+}
+
+async function supprimerCompte(id,nom){
+  if(!confirm('⚠️ Supprimer définitivement le compte de '+nom+' ?\n\nCette action est IRRÉVERSIBLE !'))return;
+  try{
+    await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'DELETE',headers:H});
+    alert('✅ Compte de '+nom+' supprimé définitivement.');
+    chargerTousUtilisateurs(userConnecte.role);
+  }catch(e){alert('Erreur lors de la suppression');}
+}
+
+async function suspendreCompte(id,nom){
+  if(!confirm('Suspendre le compte de '+nom+' ?'))return;
+  await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'suspendu'})});
+  alert('⛔ Compte de '+nom+' suspendu.');chargerTousUtilisateurs(userConnecte.role);
+}
+
+async function reactiverCompte(id,nom){
+  if(!confirm('Réactiver le compte de '+nom+' ?'))return;
+  await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'mecanicien_certifie'})});
+  alert('✅ Compte de '+nom+' réactivé.');chargerTousUtilisateurs(userConnecte.role);
+}
+
+async function chargerAdmins(){
+  const el=document.getElementById('liste-superadmin');
+  try{
+    const r=await fetch(SB_URL+'/rest/v1/profiles?role=in.(admin,superadmin)&order=created_at.desc',{headers:H});
+    const data=await r.json();
+    el.innerHTML='<div class="card"><div class="card-titre">🛡️ Admins ('+data.length+'/10)</div>'+
+      data.map(u=>'<div class="user-card"><div style="font-weight:bold">'+u.nom+getBadge(u.role)+'</div><div class="info-row">📧 '+u.email+'</div>'+
+      (u.role==='admin'?'<button class="btn-sm" style="background:#e74c3c;margin-top:6px" onclick="retirerAdmin(\''+u.id+'\',\''+u.nom+'\')">Retirer admin</button>':'<div style="color:#444;font-size:11px;margin-top:4px">Super Admin protégé</div>')+
+      '</div>').join('')+'</div>';
+    if(data.length<10){
+      const r2=await fetch(SB_URL+'/rest/v1/profiles?role=eq.mecanicien_certifie&order=nom',{headers:H});
+      const mecs=await r2.json();
+      if(mecs&&mecs.length>0){
+        el.innerHTML+='<div class="card"><div class="card-titre">➕ Nommer un admin</div>'+
+          mecs.map(u=>'<div class="meca-card"><div style="font-weight:bold">'+u.nom+'</div><div class="info-row">📧 '+u.email+'</div><button class="btn-sm" style="background:#8e44ad;margin-top:6px" onclick="nommerAdmin(\''+u.id+'\',\''+u.nom+'\')">🛡️ Nommer admin</button></div>').join('')+'</div>';
+      }
+    }
+  }catch(e){console.error(e);}
+}
+
+async function nommerAdmin(id,nom){
+  if(!confirm('Nommer '+nom+' admin ?'))return;
+  await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'admin'})});
+  alert('✅ '+nom+' est admin !');chargerAdmins();
+}
+
+async function retirerAdmin(id,nom){
+  if(!confirm('Retirer admin à '+nom+' ?'))return;
+  await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'mecanicien_certifie'})});
+  alert('✅ Admin retiré à '+nom);chargerAdmins();
+}
+
+function seDeconnecter(){userConnecte=null;localStorage.removeItem('mcm_user');afficherEcran('ecran-accueil');}
+
+let nouveauSW=null;if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(reg=>{if(reg.waiting){afficherBanniere(reg.waiting);}reg.addEventListener('updatefound',()=>{const sw=reg.installing;sw.addEventListener('statechange',()=>{if(sw.state==='installed'&&navigator.serviceWorker.controller){afficherBanniere(sw);}});});});navigator.serviceWorker.addEventListener('controllerchange',()=>window.location.reload());}function afficherBanniere(sw){nouveauSW=sw;document.getElementById('pwa-update-banner').style.display='flex';}function activerMiseAJour(){if(nouveauSW)nouveauSW.postMessage({type:'SKIP_WAITING'});fermerBanniere();}function fermerBanniere(){document.getElementById('pwa-update-banner').style.display='none';}
+
+const saved=localStorage.getItem('mcm_user');
+if(saved){userConnecte=JSON.parse(saved);redirigerSelonRole(userConnecte);}
+</script>
+<div id="pwa-update-banner" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:14px 20px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.4);z-index:9999;font-size:14px;align-items:center;gap:12px;max-width:320px;width:90%;"><span>🔄 Nouvelle version disponible</span><button onclick="activerMiseAJour()" style="background:#e63946;color:white;border:none;padding:8px 14px;border-radius:8px;font-weight:bold;cursor:pointer;">Mettre à jour</button><button onclick="fermerBanniere()" style="background:transparent;color:#aaa;border:none;cursor:pointer;font-size:18px;">✕</button></div></body>
+</html>
