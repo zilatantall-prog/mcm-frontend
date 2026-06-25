@@ -607,10 +607,10 @@ async function retirerAdmin(id,nom){
 
 function seDeconnecter(){userConnecte=null;localStorage.removeItem('mcm_user');afficherEcran('ecran-accueil');}
 
-if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js');}
+let nouveauSW=null;if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(reg=>{if(reg.waiting){afficherBanniere(reg.waiting);}reg.addEventListener('updatefound',()=>{const sw=reg.installing;sw.addEventListener('statechange',()=>{if(sw.state==='installed'&&navigator.serviceWorker.controller){afficherBanniere(sw);}});});});navigator.serviceWorker.addEventListener('controllerchange',()=>window.location.reload());}function afficherBanniere(sw){nouveauSW=sw;document.getElementById('pwa-update-banner').style.display='flex';}function activerMiseAJour(){if(nouveauSW)nouveauSW.postMessage({type:'SKIP_WAITING'});fermerBanniere();}function fermerBanniere(){document.getElementById('pwa-update-banner').style.display='none';}
 
 const saved=localStorage.getItem('mcm_user');
 if(saved){userConnecte=JSON.parse(saved);redirigerSelonRole(userConnecte);}
 </script>
-</body>
+<div id="pwa-update-banner" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:14px 20px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.4);z-index:9999;font-size:14px;align-items:center;gap:12px;max-width:320px;width:90%;"><span>🔄 Nouvelle version disponible</span><button onclick="activerMiseAJour()" style="background:#e63946;color:white;border:none;padding:8px 14px;border-radius:8px;font-weight:bold;cursor:pointer;">Mettre à jour</button><button onclick="fermerBanniere()" style="background:transparent;color:#aaa;border:none;cursor:pointer;font-size:18px;">✕</button></div></body>
 </html>
