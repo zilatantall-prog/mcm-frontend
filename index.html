@@ -320,3 +320,47 @@ setTimeout(()=>{
   }
 },1000);
 </script>
+<script>
+const VAPID_PUBLIC='BK7WcRlvj1FTyaaSW_LtLUAE0S8aG3aI9O130lXSbwuI5va5xDojo9XYDwXI7iyH7JkMNQdKBhiCJILvQJuDNuY';
+
+function urlBase64ToUint8Array(base64String){
+  const padding='='.repeat((4-base64String.length%4)%4);
+  const base64=(base64String+padding).replace(/-/g,'+').replace(/_/g,'/');
+  const rawData=window.atob(base64);
+  const outputArray=new Uint8Array(rawData.length);
+  for(let i=0;i<rawData.length;++i)outputArray[i]=rawData.charCodeAt(i);
+  return outputArray;
+}
+
+async function activerNotificationsPush(){
+  if(!('serviceWorker' in navigator)||!('PushManager' in window))return;
+  try{
+    const reg=await navigator.serviceWorker.ready;
+    const sub=await reg.pushManager.subscribe({
+      userVisibleOnly:true,
+      applicationServerKey:urlBase64ToUint8Array(VAPID_PUBLIC)
+    });
+    const subStr=JSON.stringify(sub);
+    await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+userConnecte.id,{
+      method:'PATCH',
+      headers:{...H,'Prefer':'return=minimal'},
+      body:JSON.stringify({push_subscription:subStr})
+    });
+    console.log('Push activé');
+  }catch(e){console.log('Push erreur:',e);}
+}
+
+async function envoyerNotificationClient(clientId,titre,message){
+  try{
+    const res=await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+clientId+'&select=push_subscription',{headers:H});
+    const data=await res.json();
+    if(!data||!data[0]||!data[0].push_subscription)return;
+    const sub=JSON.parse(data[0].push_subscription);
+    await fetch('/api/notify',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({subscription:sub,titre,message})
+    });
+  }catch(e){console.log('Notif erreur:',e);}
+}
+</script>
