@@ -291,3 +291,32 @@ async function verifierNouvellesDemandes(){if(!userConnecte||userConnecte.role!=
 setInterval(verifierChangements,10000);
 setInterval(verifierNouvellesDemandes,10000);
 </script>
+<script>
+window.ancienStatut={};
+async function verifierChangements(){
+  if(!userConnecte||userConnecte.role!=="client")return;
+  try{
+    const res=await fetch(SB_URL+"/rest/v1/demandes?client_id=eq."+userConnecte.id+"&order=created_at.desc",{headers:H});
+    const data=await res.json();
+    if(!data||data.length===0)return;
+    data.forEach(d=>{
+      const ancien=window.ancienStatut[d.id];
+      if(ancien&&ancien!=="accepte"&&d.statut==="accepte"){
+        const b=document.createElement("div");
+        b.style="position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#00c853;color:white;padding:16px 24px;border-radius:14px;z-index:9999;font-weight:bold;font-size:16px;box-shadow:0 4px 20px rgba(0,200,83,0.5);text-align:center;";
+        b.innerHTML="🔧 Mecanicien en route !<br><small style='font-weight:normal;font-size:12px'>"+d.mecanicien_nom+" arrive bientot</small>";
+        document.body.appendChild(b);
+        setTimeout(()=>b.remove(),6000);
+      }
+      window.ancienStatut[d.id]=d.statut;
+    });
+    chargerMesDemandes();
+  }catch(e){}
+}
+setInterval(verifierChangements,8000);
+setTimeout(()=>{
+  if(userConnecte&&userConnecte.role==="client"){
+    const res2=fetch(SB_URL+"/rest/v1/demandes?client_id=eq."+userConnecte.id,{headers:H}).then(r=>r.json()).then(data=>{data.forEach(d=>{window.ancienStatut[d.id]=d.statut;});});
+  }
+},1000);
+</script>
