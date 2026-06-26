@@ -283,3 +283,11 @@ if(saved){userConnecte=JSON.parse(saved);redirigerSelonRole(userConnecte);}
 </script>
 </body>
 </html>
+<script>
+window.ancienStatut={};
+function alerteMeca(){const b=document.createElement("div");b.style="position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#00c853;color:white;padding:14px 20px;border-radius:12px;z-index:9999;font-weight:bold;font-size:15px;";b.textContent="🔧 Mecanicien en route !";document.body.appendChild(b);setTimeout(()=>b.remove(),5000);}
+async function verifierChangements(){if(!userConnecte||userConnecte.role!=="client")return;try{const res=await fetch(SB_URL+"/rest/v1/demandes?client_id=eq."+userConnecte.id,{headers:H});const data=await res.json();const el=document.getElementById("mes-demandes-client");if(el)chargerMesDemandes();data.forEach(d=>{if(window.ancienStatut[d.id]&&window.ancienStatut[d.id]!=="accepte"&&d.statut==="accepte")alerteMeca();window.ancienStatut[d.id]=d.statut;});}catch(e){}}
+async function verifierNouvellesDemandes(){if(!userConnecte||userConnecte.role!=="mecanicien_certifie")return;try{const res=await fetch(SB_URL+"/rest/v1/demandes?statut=eq.attente",{headers:H});const data=await res.json();const el=document.getElementById("liste-demandes");if(el&&el.innerHTML.includes("Aucune")&&data.length>0)chargerDemandes();}catch(e){}}
+setInterval(verifierChangements,10000);
+setInterval(verifierNouvellesDemandes,10000);
+</script>
