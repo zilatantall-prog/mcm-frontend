@@ -348,3 +348,16 @@ if(saved){userConnecte=JSON.parse(saved);redirigerSelonRole(userConnecte);}
 </script>
 </body>
 </html>
+<script>
+const _oldAccepter=accepterDemande;
+accepterDemande=async function(id,nom,tel,cLat,cLng,clientId){
+  const btn=event.target;
+  if(btn){btn.textContent='⏳ En cours...';btn.disabled=true;}
+  await _oldAccepter(id,nom,tel,cLat,cLng,clientId);
+  const b=document.createElement('div');
+  b.style='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#00695c;color:white;padding:16px 24px;border-radius:14px;z-index:9999;font-weight:bold;font-size:16px;box-shadow:0 4px 20px rgba(0,105,92,0.4);';
+  b.textContent='✅ Demande acceptée - '+nom;
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(),4000);
+};
+</script>
