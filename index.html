@@ -364,3 +364,31 @@ async function envoyerNotificationClient(clientId,titre,message){
   }catch(e){console.log('Notif erreur:',e);}
 }
 </script>
+<script>
+const _ancienAccepter=accepterDemande;
+accepterDemande=async function(id,nom,tel,cLat,cLng){
+  let km=null,tm=null;
+  if(mecaLat&&mecaLng&&cLat&&cLng){km=distKm(mecaLat,mecaLng,cLat,cLng);const v=userConnecte.transport==='velo'?15:30;tm=Math.round(km/v*60);}
+  try{
+    const res=await fetch(SB_URL+'/rest/v1/demandes?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify({statut:'accepte',mecanicien_id:userConnecte.id,mecanicien_nom:userConnecte.nom,mecanicien_tel:userConnecte.telephone,meca_lat:mecaLat,meca_lng:mecaLng,distance_km:km,temps_minutes:tm})});
+    const data=await res.json();
+    const clientId=data&&data[0]?data[0].client_id:null;
+    if(clientId){
+      const msg=userConnecte.nom+' est en route vers vous'+(km?' - '+km.toFixed(1)+' km':'');
+      envoyerNotificationClient(clientId,'🔧 Mecanicien accepte',msg);
+    }
+    chargerDemandes();
+  }catch(e){alert('Erreur');}
+};
+</script>
+<script>
+const _ancienAutoriserNotif=autoriserNotif;
+function autoriserNotif(){
+  fermerPopupNotif();
+  if('Notification' in window){
+    Notification.requestPermission().then(perm=>{
+      if(perm==='granted')activerNotificationsPush();
+    });
+  }
+}
+</script>
