@@ -1,11 +1,10 @@
-const CACHE_NAME = 'mcm-v3';
+const CACHE_NAME = 'mcm-v4';
 const ASSETS = ['/', '/index.html', '/manifest.json'];
 
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', event => {
