@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#1a73e8">
 <link rel="manifest" href="/manifest.json">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{--bleu:#1a73e8;--bleu2:#1557b0;--blanc:#ffffff;--gris:#f5f5f5;--gris2:#e8e8e8;--texte:#1a1a1a;--sous:#666;--bord:#e0e0e0;--vert:#00c853;--rouge:#f44336;--orange:#ff6600;}
@@ -405,3 +405,12 @@ if(saved){userConnecte=JSON.parse(saved);redirigerSelonRole(userConnecte);}
 </script>
 </body>
 </html>
+<script>
+function chargerLeaflet(callback){
+  if(window.L){if(callback)callback();return;}
+  const s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+  s.onload=callback;
+  document.head.appendChild(s);
+}
+</script>
