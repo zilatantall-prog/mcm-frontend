@@ -36,7 +36,7 @@ body{font-family:'Arial',sans-serif;background:var(--blanc);color:var(--texte);}
 .btn{width:100%;padding:16px;border:none;border-radius:14px;font-size:15px;font-weight:bold;color:white;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.15s,transform 0.1s;-webkit-tap-highlight-color:transparent;}
 .btn:active{opacity:0.85;transform:scale(0.98);}
 .btn-bleu{background:linear-gradient(135deg,var(--bleu),var(--bleu2));box-shadow:0 4px 15px rgba(26,115,232,0.35);}
-.btn-vert{background:linear-gradient(135deg,#00c853,#009624);}
+.btn-vert{background:linear-gradient(135deg,#00c853,#009624);box-shadow:0 4px 15px rgba(0,200,83,0.3);}
 .btn-rouge{background:linear-gradient(135deg,#f44336,#b71c1c);}
 .btn-orange{background:linear-gradient(135deg,#ff6600,#cc4400);}
 .btn-violet{background:linear-gradient(135deg,#9c27b0,#6a1b9a);}
@@ -90,7 +90,7 @@ body{font-family:'Arial',sans-serif;background:var(--blanc);color:var(--texte);}
 .divider{height:1px;background:var(--bord);margin:12px 0;}
 .pulse{animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
-.hero-map-wrap{position:relative;width:100%;height:200px;border-radius:16px;overflow:hidden;margin-bottom:14px;border:1px solid var(--bord);}
+.hero-map-wrap{position:relative;width:100%;height:200px;border-radius:16px;overflow:hidden;margin-bottom:14px;border:1px solid var(--bord);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
 .popup-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:999;display:flex;align-items:flex-end;justify-content:center;}
 .popup-sheet{background:var(--blanc);border-radius:28px 28px 0 0;padding:30px 24px 40px;width:100%;max-width:500px;animation:slideUp2 0.3s ease;}
 @keyframes slideUp2{from{transform:translateY(100%);}to{transform:translateY(0);}}
@@ -106,17 +106,14 @@ body{font-family:'Arial',sans-serif;background:var(--blanc);color:var(--texte);}
 .profil-info-txt{flex:1;}
 .profil-info-label{font-size:11px;color:var(--sous);text-transform:uppercase;letter-spacing:0.5px;}
 .profil-info-val{font-size:14px;font-weight:600;color:var(--texte);margin-top:2px;}
-.carte-plein{position:fixed;top:0;left:0;width:100%;height:100%;z-index:200;}
-.carte-plein-map{width:100%;height:100%;}
-.carte-plein-overlay{position:absolute;bottom:0;left:0;right:0;background:var(--blanc);border-radius:24px 24px 0 0;padding:20px;z-index:201;box-shadow:0 -4px 20px rgba(0,0,0,0.15);}
-.carte-plein-titre{font-size:18px;font-weight:bold;color:var(--texte);margin-bottom:4px;}
-.carte-plein-sous{font-size:13px;color:var(--sous);margin-bottom:16px;}
+.tabs{display:flex;gap:8px;margin-bottom:15px;}
+.tab{flex:1;padding:10px;border:1.5px solid var(--bleu);border-radius:10px;background:transparent;color:var(--bleu);font-size:12px;cursor:pointer;text-align:center;font-weight:bold;transition:all 0.2s;}
+.tab.actif{background:var(--bleu);color:white;}
 </style>
 </head>
 <body>
 <div id="carte-fond"></div>
 <div id="overlay-fond"></div>
-
 <div id="ecran-accueil" class="ecran actif">
   <div class="accueil-top">
     <div class="accueil-logo">MCM <span>SERVICE CI</span></div>
@@ -165,7 +162,6 @@ body{font-family:'Arial',sans-serif;background:var(--blanc);color:var(--texte);}
     <p style="text-align:center;font-size:11px;color:#aaa;">📱 Wave &nbsp;•&nbsp; 🟠 Orange Money &nbsp;•&nbsp; 💛 MTN Money</p>
   </div>
 </div>
-
 <div id="ecran-client" class="ecran ecran-app">
   <div class="topbar">
     <div class="topbar-left"><div class="topbar-logo">🚗</div><div><div class="topbar-nom" id="client-bienvenue">Client</div><div class="topbar-role">Compte client</div></div></div>
@@ -177,15 +173,13 @@ body{font-family:'Arial',sans-serif;background:var(--blanc);color:var(--texte);}
   </div>
   <nav class="bottomnav">
     <button class="nav-btn actif" onclick="afficherEcran('ecran-client')"><span class="nav-ico">🏠</span>Accueil</button>
-    <button class="nav-btn" onclick="chargerMesDemandes()"><span class="nav-ico">📋</span>Demandes</button>
+    <button class="nav-btn" onclick="chargerMesDemandes();afficherEcran('ecran-client')"><span class="nav-ico">📋</span>Demandes</button>
     <button class="nav-btn" onclick="afficherProfil()"><span class="nav-ico">👤</span>Profil</button>
   </nav>
 </div>
-
 <div id="ecran-profil" class="ecran ecran-app">
   <div class="topbar">
     <div class="topbar-left"><div class="topbar-logo">👤</div><div><div class="topbar-nom">Mon Profil</div><div class="topbar-role">Informations personnelles</div></div></div>
-    <button class="topbar-btn" onclick="afficherEcranRole()">⬅</button>
   </div>
   <div class="ecran-body">
     <div class="card" style="text-align:center;padding:24px;">
@@ -198,7 +192,6 @@ body{font-family:'Arial',sans-serif;background:var(--blanc);color:var(--texte);}
       <div class="profil-info-item"><div class="profil-info-ico">📞</div><div class="profil-info-txt"><div class="profil-info-label">WhatsApp</div><div class="profil-info-val" id="profil-tel">-</div></div></div>
       <div class="profil-info-item" id="profil-quartier-item" style="display:none"><div class="profil-info-ico">📍</div><div class="profil-info-txt"><div class="profil-info-label">Quartier</div><div class="profil-info-val" id="profil-quartier">-</div></div></div>
       <div class="profil-info-item" id="profil-specialite-item" style="display:none"><div class="profil-info-ico">🔧</div><div class="profil-info-txt"><div class="profil-info-label">Spécialité</div><div class="profil-info-val" id="profil-specialite">-</div></div></div>
-      <div class="profil-info-item" id="profil-note-item" style="display:none"><div class="profil-info-ico">⭐</div><div class="profil-info-txt"><div class="profil-info-label">Note moyenne</div><div class="profil-info-val" id="profil-note">-</div></div></div>
     </div>
     <button class="btn btn-rouge" onclick="seDeconnecter()">🚪 Se déconnecter</button>
   </div>
@@ -208,40 +201,23 @@ body{font-family:'Arial',sans-serif;background:var(--blanc);color:var(--texte);}
     <button class="nav-btn actif"><span class="nav-ico">👤</span>Profil</button>
   </nav>
 </div>
-
 <div id="ecran-meca-attente" class="ecran ecran-app">
   <div class="topbar"><div class="topbar-left"><div class="topbar-logo">⏳</div><div><div class="topbar-nom">Dossier en cours</div><div class="topbar-role">Mécanicien</div></div></div><button class="topbar-btn" onclick="seDeconnecter()">🚪</button></div>
   <div class="ecran-body"><div class="card"><div class="card-titre">⏳ Dossier en examen</div><div class="statut-bar">📋 Votre dossier est en cours de vérification. Notre équipe vous contactera sous 24-48h sur WhatsApp.</div></div></div>
 </div>
-
 <div id="ecran-mecanicien" class="ecran ecran-app">
   <div class="topbar"><div class="topbar-left"><div class="topbar-logo">🔧</div><div><div class="topbar-nom" id="meca-bienvenue">Mécanicien</div><div class="topbar-role" id="meca-info">Certifié ✅</div></div></div><button class="topbar-btn" onclick="afficherProfil()">👤</button></div>
   <div class="ecran-body">
     <div id="meca-geo" class="geo-box en-cours pulse">📍 Capture de votre position GPS...</div>
-    <button id="btn-dispo" class="btn btn-vert" onclick="toggleDisponibilite()">🟢 Disponible</button>
-    <button class="btn btn-bleu" onclick="chargerDemandes()">📋 Voir les demandes</button>
-    <button class="btn" style="background:#1557b0" onclick="chargerHistorique()">📊 Mon historique</button>
+    <button class="btn btn-bleu" onclick="chargerDemandes()">📋 Voir les demandes disponibles</button>
     <div id="liste-demandes"></div>
   </div>
   <nav class="bottomnav">
-    <button class="nav-btn actif"><span class="nav-ico">🏠</span>Accueil</button>
+    <button class="nav-btn actif" onclick="afficherEcran('ecran-mecanicien')"><span class="nav-ico">🏠</span>Accueil</button>
     <button class="nav-btn" onclick="chargerDemandes()"><span class="nav-ico">📋</span>Demandes</button>
     <button class="nav-btn" onclick="afficherProfil()"><span class="nav-ico">👤</span>Profil</button>
   </nav>
 </div>
-
-<div id="ecran-meca-intervention" class="ecran ecran-app">
-  <div class="carte-plein">
-    <div id="carte-intervention-map" class="carte-plein-map"></div>
-    <div class="carte-plein-overlay">
-      <div class="carte-plein-titre" id="intervention-client-nom">Client</div>
-      <div class="carte-plein-sous" id="intervention-infos">En route...</div>
-      <button class="btn btn-bleu" id="btn-maps" onclick="ouvrirMaps()" style="margin-bottom:8px">🗺️ Ouvrir dans Maps</button>
-      <button class="btn btn-rouge" onclick="terminerIntervention()">🏁 Terminer l'intervention</button>
-    </div>
-  </div>
-</div>
-
 <div id="ecran-superadmin" class="ecran ecran-app">
   <div class="topbar"><div class="topbar-left"><div class="topbar-logo">👑</div><div><div class="topbar-nom" id="superadmin-bienvenue">Super Admin</div><div class="topbar-role">Accès total</div></div></div><button class="topbar-btn" onclick="seDeconnecter()">🚪</button></div>
   <div class="ecran-body">
@@ -252,7 +228,6 @@ body{font-family:'Arial',sans-serif;background:var(--blanc);color:var(--texte);}
     <div id="liste-superadmin"></div>
   </div>
 </div>
-
 <div id="ecran-admin" class="ecran ecran-app">
   <div class="topbar"><div class="topbar-left"><div class="topbar-logo">🛡️</div><div><div class="topbar-nom" id="admin-bienvenue">Admin</div><div class="topbar-role">Espace admin</div></div></div><button class="topbar-btn" onclick="seDeconnecter()">🚪</button></div>
   <div class="ecran-body">
@@ -261,7 +236,6 @@ body{font-family:'Arial',sans-serif;background:var(--blanc);color:var(--texte);}
     <div id="liste-admin"></div>
   </div>
 </div>
-
 <div id="ecran-demande" class="ecran ecran-app">
   <div class="topbar"><div class="topbar-left"><div class="topbar-logo">🆘</div><div><div class="topbar-nom">Nouvelle demande</div><div class="topbar-role">Dépannage</div></div></div><button class="topbar-btn" onclick="afficherEcran('ecran-client')">✕</button></div>
   <div class="ecran-body">
@@ -279,21 +253,11 @@ body{font-family:'Arial',sans-serif;background:var(--blanc);color:var(--texte);}
     <div id="msg-demande"></div>
   </div>
 </div>
-
 <div id="popup-geo" class="popup-overlay" style="display:none">
-  <div class="popup-sheet"><span class="popup-ico">📍</span><div class="popup-titre">Activer la localisation</div><div class="popup-desc">MCM SERVICE CI a besoin de votre position GPS pour trouver les mécaniciens les plus proches.</div><button class="btn btn-bleu" onclick="autoriserGeo()">📍 Activer</button><button class="btn btn-gris" onclick="fermerPopupGeo()">Plus tard</button></div>
+  <div class="popup-sheet"><span class="popup-ico">📍</span><div class="popup-titre">Activer la localisation</div><div class="popup-desc">MCM SERVICE CI a besoin de votre position GPS pour trouver les mécaniciens les plus proches.</div><button class="btn btn-bleu" onclick="autoriserGeo()">📍 Activer la localisation</button><button class="btn btn-gris" onclick="fermerPopupGeo()">Plus tard</button></div>
 </div>
 <div id="popup-notif" class="popup-overlay" style="display:none">
   <div class="popup-sheet"><span class="popup-ico">🔔</span><div class="popup-titre">Activer les notifications</div><div class="popup-desc">Soyez alerté quand un mécanicien accepte votre demande.</div><button class="btn btn-bleu" onclick="autoriserNotif()">🔔 Activer</button><button class="btn btn-gris" onclick="fermerPopupNotif()">Plus tard</button></div>
-</div>
-<div id="popup-noter" class="popup-overlay" style="display:none">
-  <div class="popup-sheet">
-    <span class="popup-ico">⭐</span>
-    <div class="popup-titre">Noter le mécanicien</div>
-    <div class="popup-desc" id="noter-nom">Comment s'est passée l'intervention ?</div>
-    <div style="display:flex;justify-content:center;gap:12px;margin-bottom:24px;" id="noter-etoiles"></div>
-    <button class="btn btn-gris" onclick="document.getElementById('popup-noter').style.display='none'">Plus tard</button>
-  </div>
 </div>
 <div id="pwa-update-banner" style="display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--bleu);color:white;padding:14px 20px;border-radius:12px;box-shadow:0 4px 20px rgba(26,115,232,0.4);z-index:9999;font-size:14px;align-items:center;gap:12px;max-width:320px;width:90%;"><span>🔄 Nouvelle version disponible</span><button onclick="activerMiseAJour()" style="background:white;color:var(--bleu);border:none;padding:8px 14px;border-radius:8px;font-weight:bold;cursor:pointer;">Mettre à jour</button><button onclick="fermerBanniere()" style="background:transparent;color:rgba(255,255,255,0.7);border:none;cursor:pointer;font-size:18px;">✕</button></div>
 <script>
@@ -303,96 +267,75 @@ const H={'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bear
 const SUPERADMINS=['adamomaiga225m@gmail.com','camaraabou6066@gmail.com'];
 const VAPID_PUBLIC='BK7WcRlvj1FTyaaSW_LtLUAE0S8aG3aI9O130lXSbwuI5va5xDojo9XYDwXI7iyH7JkMNQdKBhiCJILvQJuDNuY';
 let userConnecte=null,clientLat=null,clientLng=null,mecaLat=null,mecaLng=null;
-let carteClient=null,carteFond=null,carteHeroClient=null,carteIntervention=null;
-let demandeEnCours=null,intervalRefresh=null;
+let carteClient=null,carteFond=null,carteHeroClient=null;
 const PRIX_BASE={'Pneu crevé':3000,'Panne moteur':8000,'Batterie':4000,'Freins':6000,'Carrosserie':5000,'Autre':4000};
-
-function toast(msg,color){color=color||'#1a73e8';const b=document.createElement('div');b.style='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:'+color+';color:white;padding:14px 24px;border-radius:12px;z-index:9999;font-weight:bold;font-size:14px;box-shadow:0 4px 15px rgba(0,0,0,0.2);text-align:center;max-width:300px;';b.textContent=msg;document.body.appendChild(b);setTimeout(()=>b.remove(),3500);}
 
 function initCarteFond(){if(carteFond)return;carteFond=L.map('carte-fond',{zoomControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,touchZoom:false,keyboard:false,attributionControl:false}).setView([5.3600,-4.0083],12);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(carteFond);}
 function initCarteHeroClient(){if(carteHeroClient)return;const el=document.getElementById('carte-hero-client');if(!el)return;carteHeroClient=L.map('carte-hero-client',{zoomControl:false,dragging:false,scrollWheelZoom:false,attributionControl:false}).setView([5.3600,-4.0083],13);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(carteHeroClient);}
 
+function afficherProfil(){
+  if(!userConnecte)return;
+  const avatars={client:'🚗',mecanicien_certifie:'🔧',admin:'🛡️',superadmin:'👑'};
+  const roles={client:'Client',mecanicien_certifie:'Mécanicien Certifié',admin:'Administrateur',superadmin:'Super Administrateur',mecanicien_en_attente:'Mécanicien en attente'};
+  document.getElementById('profil-avatar').textContent=avatars[userConnecte.role]||'👤';
+  document.getElementById('profil-nom').textContent=userConnecte.nom;
+  document.getElementById('profil-role-badge').textContent=roles[userConnecte.role]||userConnecte.role;
+  document.getElementById('profil-email').textContent=userConnecte.email;
+  document.getElementById('profil-tel').textContent=userConnecte.telephone;
+  if(userConnecte.quartier){document.getElementById('profil-quartier').textContent=userConnecte.quartier;document.getElementById('profil-quartier-item').style.display='flex';}
+  if(userConnecte.specialite){document.getElementById('profil-specialite').textContent=userConnecte.specialite;document.getElementById('profil-specialite-item').style.display='flex';}
+  afficherEcran('ecran-profil');
+}
+function afficherEcranRole(){if(!userConnecte)return;redirigerSelonRole(userConnecte);}
+
+function fermerPopupGeo(){document.getElementById('popup-geo').style.display='none';}
+function autoriserGeo(){fermerPopupGeo();if(userConnecte&&userConnecte.role==='mecanicien_certifie')capturerPositionMeca();setTimeout(()=>document.getElementById('popup-notif').style.display='flex',800);}
+function fermerPopupNotif(){document.getElementById('popup-notif').style.display='none';}
+function autoriserNotif(){fermerPopupNotif();if('Notification' in window){Notification.requestPermission().then(perm=>{if(perm==='granted')activerNotificationsPush();});}}
+function demanderPermissions(){setTimeout(()=>document.getElementById('popup-geo').style.display='flex',1000);}
+
+function urlBase64ToUint8Array(base64String){const padding='='.repeat((4-base64String.length%4)%4);const base64=(base64String+padding).replace(/-/g,'+').replace(/_/g,'/');const rawData=window.atob(base64);const outputArray=new Uint8Array(rawData.length);for(let i=0;i<rawData.length;++i)outputArray[i]=rawData.charCodeAt(i);return outputArray;}
+async function activerNotificationsPush(){if(!('serviceWorker' in navigator)||!('PushManager' in window))return;try{const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array(VAPID_PUBLIC)});await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+userConnecte.id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({push_subscription:JSON.stringify(sub)})});}catch(e){}}
+async function envoyerNotificationClient(clientId,titre,message){try{const res=await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+clientId+'&select=push_subscription',{headers:H});const data=await res.json();if(!data||!data[0]||!data[0].push_subscription)return;await fetch('/api/notify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subscription:JSON.parse(data[0].push_subscription),titre,message})});}catch(e){}}
+
+function getPrix(type){const base=PRIX_BASE[type]||4000,h=new Date().getHours();let m=1,p='journée';if(h>=6&&h<12){m=0.9;p='matin (-10%)';}else if(h>=18&&h<22){m=1.3;p='soirée (+30%)';}else if(h>=22||h<6){m=1.6;p='nuit (+60%)';}return{prix:Math.round(base*m/500)*500,periode:p};}
+function distKm(lat1,lng1,lat2,lng2){const R=6371,dL=(lat2-lat1)*Math.PI/180,dG=(lng2-lng1)*Math.PI/180;const a=Math.sin(dL/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dG/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
+function tempsStr(km,tr){const v=tr==='velo'?15:30,m=Math.round(km/v*60);return m<1?'< 1 min':m<60?m+' min':Math.floor(m/60)+'h'+String(m%60).padStart(2,'0');}
+function demarrerTimer(minutes,id){let s=minutes*60;const el=document.getElementById(id);if(!el)return;const iv=setInterval(()=>{if(s<=0){clearInterval(iv);if(el)el.textContent='Arrivé !';return;}s--;if(el)el.textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');},1000);}
+function initCarte(containerId,lat,lng,label,color){const el=document.getElementById(containerId);if(!el)return null;const carte=L.map(containerId).setView([lat,lng],14);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(carte);const icon=L.divIcon({html:'<div style="background:'+color+';width:30px;height:30px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.3)">'+label+'</div>',iconSize:[30,30],iconAnchor:[15,15],className:''});L.marker([lat,lng],{icon}).addTo(carte);return carte;}
+function calculerPrix(){const type=document.getElementById('dem-type').value;if(!type){document.getElementById('prix-estime').style.display='none';return;}const{prix,periode}=getPrix(type);document.getElementById('prix-valeur').textContent=prix.toLocaleString()+' FCFA';document.getElementById('prix-detail').textContent='Tarif '+periode;document.getElementById('prix-estime').style.display='block';}
+function capturerPosition(){const el=document.getElementById('client-geo');if(!navigator.geolocation){el.textContent='❌ GPS non disponible';el.className='geo-box erreur';return;}el.textContent='📍 Capture en cours...';el.className='geo-box en-cours pulse';navigator.geolocation.getCurrentPosition(pos=>{clientLat=pos.coords.latitude;clientLng=pos.coords.longitude;el.textContent='✅ Position GPS capturée !';el.className='geo-box';document.getElementById('carte-client').style.display='block';if(carteClient)carteClient.remove();carteClient=initCarte('carte-conteneur',clientLat,clientLng,'🚗','#1a73e8');},()=>{el.textContent='⚠️ GPS refusé';el.className='geo-box erreur';});}
+function capturerPositionMeca(){const el=document.getElementById('meca-geo');if(!navigator.geolocation){if(el){el.textContent='❌ GPS non disponible';el.className='geo-box erreur';}return;}navigator.geolocation.getCurrentPosition(pos=>{mecaLat=pos.coords.latitude;mecaLng=pos.coords.longitude;if(el){el.textContent='✅ GPS: '+mecaLat.toFixed(4)+', '+mecaLng.toFixed(4);el.className='geo-box';}fetch(SB_URL+'/rest/v1/profiles?id=eq.'+userConnecte.id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({latitude:mecaLat,longitude:mecaLng})});},()=>{if(el){el.textContent='⚠️ GPS refusé';el.className='geo-box erreur';}});}
 function afficherEcran(id){document.querySelectorAll('.ecran').forEach(e=>e.classList.remove('actif'));document.getElementById(id).classList.add('actif');window.scrollTo(0,0);if(id==='ecran-accueil')setTimeout(initCarteFond,200);if(id==='ecran-client')setTimeout(initCarteHeroClient,200);}
 function switchTab(tab,el){document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('actif'));el.classList.add('actif');document.getElementById('tab-connexion').style.display=tab==='connexion'?'block':'none';document.getElementById('tab-inscription').style.display=tab==='inscription'?'block':'none';}
 function toggleChampsMeca(){document.getElementById('champs-meca').style.display=document.getElementById('reg-role').value==='mecanicien_en_attente'?'block':'none';}
 function affMsg(id,txt,type){const el=document.getElementById(id);if(el){el.innerHTML='<div class="msg '+type+'">'+txt+'</div>';setTimeout(()=>{if(document.getElementById(id))document.getElementById(id).innerHTML=''},5000);}}
 function getBadge(r){const b={superadmin:'<span class="badge badge-superadmin">👑 Super Admin</span>',admin:'<span class="badge badge-admin">🛡️ Admin</span>',mecanicien_certifie:'<span class="badge badge-certifie">✅ Certifié</span>',mecanicien_en_attente:'<span class="badge badge-attente">⏳ En attente</span>',client:'<span class="badge badge-client">🚗 Client</span>',refuse:'<span class="badge badge-refuse">❌ Refusé</span>',suspendu:'<span class="badge badge-refuse">⛔ Suspendu</span>'};return b[r]||r;}
-
-function fermerPopupGeo(){document.getElementById('popup-geo').style.display='none';}
-function autoriserGeo(){fermerPopupGeo();if(userConnecte&&userConnecte.role==='mecanicien_certifie')capturerPositionMeca();setTimeout(()=>document.getElementById('popup-notif').style.display='flex',800);}
-function fermerPopupNotif(){document.getElementById('popup-notif').style.display='none';}
-function autoriserNotif(){fermerPopupNotif();if('Notification' in window){Notification.requestPermission().then(p=>{if(p==='granted')activerNotificationsPush();});}}
-function demanderPermissions(){setTimeout(()=>document.getElementById('popup-geo').style.display='flex',1200);}
-
-function urlBase64ToUint8Array(b){const p='='.repeat((4-b.length%4)%4);const s=(b+p).replace(/-/g,'+').replace(/_/g,'/');const r=window.atob(s);const o=new Uint8Array(r.length);for(let i=0;i<r.length;++i)o[i]=r.charCodeAt(i);return o;}
-async function activerNotificationsPush(){if(!('serviceWorker' in navigator)||!('PushManager' in window))return;try{const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array(VAPID_PUBLIC)});await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+userConnecte.id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({push_subscription:JSON.stringify(sub)})});}catch(e){}}
-async function envoyerNotifPush(clientId,titre,msg){try{const r=await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+clientId+'&select=push_subscription',{headers:H});const d=await r.json();if(!d||!d[0]||!d[0].push_subscription)return;await fetch('/api/notify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subscription:JSON.parse(d[0].push_subscription),titre,message:msg})});}catch(e){}}
-
-function getPrix(type){const base=PRIX_BASE[type]||4000,h=new Date().getHours();let m=1,p='journée';if(h>=6&&h<12){m=0.9;p='matin (-10%)';}else if(h>=18&&h<22){m=1.3;p='soirée (+30%)';}else if(h>=22||h<6){m=1.6;p='nuit (+60%)';}return{prix:Math.round(base*m/500)*500,periode:p};}
-function distKm(lat1,lng1,lat2,lng2){const R=6371,dL=(lat2-lat1)*Math.PI/180,dG=(lng2-lng1)*Math.PI/180;const a=Math.sin(dL/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dG/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
-function tempsStr(km,tr){const v=tr==='velo'?15:30,m=Math.round(km/v*60);return m<1?'< 1 min':m<60?m+' min':Math.floor(m/60)+'h'+String(m%60).padStart(2,'0');}
-function demarrerTimer(minutes,id){let s=minutes*60;const el=document.getElementById(id);if(!el)return;const iv=setInterval(()=>{if(!document.getElementById(id)){clearInterval(iv);return;}if(s<=0){clearInterval(iv);el.textContent='Arrivé !';return;}s--;el.textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');},1000);}
-
-function initCarte(id,lat,lng,label,color){const el=document.getElementById(id);if(!el)return null;const c=L.map(id).setView([lat,lng],14);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(c);const icon=L.divIcon({html:'<div style="background:'+color+';width:30px;height:30px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.3)">'+label+'</div>',iconSize:[30,30],iconAnchor:[15,15],className:''});L.marker([lat,lng],{icon}).addTo(c);return c;}
-
-function calculerPrix(){const type=document.getElementById('dem-type').value;if(!type){document.getElementById('prix-estime').style.display='none';return;}const{prix,periode}=getPrix(type);document.getElementById('prix-valeur').textContent=prix.toLocaleString()+' FCFA';document.getElementById('prix-detail').textContent='Tarif '+periode;document.getElementById('prix-estime').style.display='block';}
-
-function capturerPosition(){const el=document.getElementById('client-geo');if(!navigator.geolocation){el.textContent='❌ GPS non disponible';el.className='geo-box erreur';return;}el.textContent='📍 Capture en cours...';el.className='geo-box en-cours pulse';navigator.geolocation.getCurrentPosition(pos=>{clientLat=pos.coords.latitude;clientLng=pos.coords.longitude;el.textContent='✅ Position GPS capturée !';el.className='geo-box';document.getElementById('carte-client').style.display='block';if(carteClient)carteClient.remove();carteClient=initCarte('carte-conteneur',clientLat,clientLng,'🚗','#1a73e8');},()=>{el.textContent='⚠️ GPS refusé — continuez sans';el.className='geo-box erreur';});}
-
-function capturerPositionMeca(){const el=document.getElementById('meca-geo');if(!navigator.geolocation){if(el){el.textContent='❌ GPS non disponible';el.className='geo-box erreur';}return;}navigator.geolocation.getCurrentPosition(pos=>{mecaLat=pos.coords.latitude;mecaLng=pos.coords.longitude;if(el){el.textContent='✅ GPS: '+mecaLat.toFixed(4)+', '+mecaLng.toFixed(4);el.className='geo-box';}fetch(SB_URL+'/rest/v1/profiles?id=eq.'+userConnecte.id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({latitude:mecaLat,longitude:mecaLng})});},()=>{if(el){el.textContent='⚠️ GPS refusé';el.className='geo-box erreur';}});}
-
-async function toggleDisponibilite(){if(!userConnecte)return;const nv=!userConnecte.disponible;await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+userConnecte.id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({disponible:nv})});userConnecte.disponible=nv;localStorage.setItem('mcm_user',JSON.stringify(userConnecte));const btn=document.getElementById('btn-dispo');if(btn){btn.textContent=nv?'🟢 Disponible':'🔴 Indisponible';btn.style.background=nv?'linear-gradient(135deg,#00c853,#009624)':'linear-gradient(135deg,#f44336,#b71c1c)';}toast(nv?'🟢 Vous êtes disponible':'🔴 Vous êtes indisponible',nv?'#00695c':'#c62828');}
-
-function afficherProfil(){if(!userConnecte)return;const avatars={client:'🚗',mecanicien_certifie:'🔧',admin:'🛡️',superadmin:'👑'};const roles={client:'Client',mecanicien_certifie:'Mécanicien Certifié',admin:'Administrateur',superadmin:'Super Administrateur',mecanicien_en_attente:'En attente'};document.getElementById('profil-avatar').textContent=avatars[userConnecte.role]||'👤';document.getElementById('profil-nom').textContent=userConnecte.nom;document.getElementById('profil-role-badge').textContent=roles[userConnecte.role]||userConnecte.role;document.getElementById('profil-email').textContent=userConnecte.email;document.getElementById('profil-tel').textContent=userConnecte.telephone;if(userConnecte.quartier){document.getElementById('profil-quartier').textContent=userConnecte.quartier;document.getElementById('profil-quartier-item').style.display='flex';}if(userConnecte.specialite){document.getElementById('profil-specialite').textContent=userConnecte.specialite;document.getElementById('profil-specialite-item').style.display='flex';}if(userConnecte.note_moyenne>0){document.getElementById('profil-note').textContent=userConnecte.note_moyenne.toFixed(1)+' ⭐ ('+userConnecte.nombre_notes+' avis)';document.getElementById('profil-note-item').style.display='flex';}afficherEcran('ecran-profil');}
-function afficherEcranRole(){if(userConnecte)redirigerSelonRole(userConnecte);}
-
 async function chargerStats(){try{const r=await fetch(SB_URL+'/rest/v1/profiles?select=role',{headers:H});const d=await r.json();const s={c:0,m:0,a:0,p:0};d.forEach(u=>{if(u.role==='client')s.c++;else if(u.role==='mecanicien_certifie')s.m++;else if(u.role==='admin'||u.role==='superadmin')s.a++;else if(u.role==='mecanicien_en_attente')s.p++;});document.getElementById('stats-admin').innerHTML='<div class="stat-box"><div class="stat-num">'+s.c+'</div><div class="stat-lbl">🚗 Clients</div></div><div class="stat-box"><div class="stat-num">'+s.m+'</div><div class="stat-lbl">🔧 Mécaniciens</div></div><div class="stat-box"><div class="stat-num">'+s.p+'</div><div class="stat-lbl">⏳ En attente</div></div><div class="stat-box"><div class="stat-num">'+s.a+'</div><div class="stat-lbl">🛡️ Admins</div></div>';}catch(e){}}
-
-function demarrerRefreshClient(){if(intervalRefresh)clearInterval(intervalRefresh);intervalRefresh=setInterval(()=>{if(userConnecte&&userConnecte.role==='client')rafraichirClient();},5000);}
-function demarrerRefreshMeca(){if(intervalRefresh)clearInterval(intervalRefresh);intervalRefresh=setInterval(()=>{if(userConnecte&&userConnecte.role==='mecanicien_certifie'&&!demandeEnCours)chargerDemandes();},5000);}
-function arreterRefresh(){if(intervalRefresh){clearInterval(intervalRefresh);intervalRefresh=null;}}
-
-let ancienStatuts={};
-async function rafraichirClient(){if(!userConnecte||userConnecte.role!=='client')return;try{const res=await fetch(SB_URL+'/rest/v1/demandes?client_id=eq.'+userConnecte.id+'&order=created_at.desc',{headers:H});const data=await res.json();if(!data)return;data.forEach(d=>{if(ancienStatuts[d.id]&&ancienStatuts[d.id]!=='accepte'&&d.statut==='accepte'){toast('🔧 '+d.mecanicien_nom+' est en route !','#00695c');envoyerNotifPush(userConnecte.id,'🔧 Mécanicien accepté',d.mecanicien_nom+' est en route vers vous');}ancienStatuts[d.id]=d.statut;});chargerMesDemandes();}catch(e){}}
-
-function redirigerSelonRole(user){arreterRefresh();if(user.role==='superadmin'){document.getElementById('superadmin-bienvenue').textContent=user.nom+' 👑';afficherEcran('ecran-superadmin');chargerStats();}else if(user.role==='admin'){document.getElementById('admin-bienvenue').textContent=user.nom+' 🛡️';afficherEcran('ecran-admin');}else if(user.role==='mecanicien_certifie'){document.getElementById('meca-bienvenue').textContent=user.nom;document.getElementById('meca-info').textContent='📍 '+(user.quartier||'')+' | '+(user.specialite||'Général');const btn=document.getElementById('btn-dispo');if(btn){btn.textContent=user.disponible!==false?'🟢 Disponible':'🔴 Indisponible';btn.style.background=user.disponible!==false?'linear-gradient(135deg,#00c853,#009624)':'linear-gradient(135deg,#f44336,#b71c1c)';}afficherEcran('ecran-mecanicien');capturerPositionMeca();demanderPermissions();demarrerRefreshMeca();}else if(user.role==='mecanicien_en_attente'){afficherEcran('ecran-meca-attente');}else{document.getElementById('client-bienvenue').textContent=user.nom;afficherEcran('ecran-client');chargerMesDemandes();demanderPermissions();demarrerRefreshClient();}}
-
+function redirigerSelonRole(user){if(user.role==='superadmin'){document.getElementById('superadmin-bienvenue').textContent=user.nom+' 👑';afficherEcran('ecran-superadmin');chargerStats();}else if(user.role==='admin'){document.getElementById('admin-bienvenue').textContent=user.nom+' 🛡️';afficherEcran('ecran-admin');}else if(user.role==='mecanicien_certifie'){document.getElementById('meca-bienvenue').textContent=user.nom;document.getElementById('meca-info').textContent='📍 '+(user.quartier||'')+' | '+(user.specialite||'Général');afficherEcran('ecran-mecanicien');demanderPermissions();capturerPositionMeca();}else if(user.role==='mecanicien_en_attente'){afficherEcran('ecran-meca-attente');}else{document.getElementById('client-bienvenue').textContent=user.nom;afficherEcran('ecran-client');chargerMesDemandes();demanderPermissions();}}
 async function sInscrire(){const nom=document.getElementById('reg-nom').value.trim();const email=document.getElementById('reg-email').value.trim().toLowerCase();const mdp=document.getElementById('reg-mdp').value;const tel=document.getElementById('reg-tel').value.trim();let role=document.getElementById('reg-role').value;const quartier=document.getElementById('reg-quartier').value;const specialite=document.getElementById('reg-specialite').value;const transport=document.getElementById('reg-transport').value||'moto';if(!nom||!email||!mdp||!tel){affMsg('msg-register','❌ Remplissez tous les champs !','mauvais');return;}if(mdp.length<6){affMsg('msg-register','❌ Mot de passe minimum 6 caractères','mauvais');return;}if(SUPERADMINS.includes(email))role='superadmin';try{const res=await fetch(SB_URL+'/rest/v1/profiles',{method:'POST',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({nom,email,telephone:tel,mot_de_passe:mdp,role,quartier,specialite,transport,disponible:true})});if(res.ok||res.status===201){affMsg('msg-register',role==='mecanicien_en_attente'?'✅ Dossier envoyé !':'✅ Compte créé ! Connectez-vous.','bon');switchTab('connexion',document.querySelector('.tab-btn'));}else{const d=await res.json();affMsg('msg-register','❌ '+(d.message||d.details||'Erreur'),'mauvais');}}catch(e){affMsg('msg-register','❌ Connexion impossible','mauvais');}}
-
 async function seConnecter(){const email=document.getElementById('login-email').value.trim().toLowerCase();const mdp=document.getElementById('login-mdp').value;if(!email||!mdp){affMsg('msg-login','❌ Remplissez tous les champs !','mauvais');return;}try{const res=await fetch(SB_URL+'/rest/v1/profiles?email=eq.'+encodeURIComponent(email)+'&select=*',{headers:H});const data=await res.json();if(data&&data.length>0){const user=data[0];if(user.mot_de_passe===mdp){if(SUPERADMINS.includes(email)&&user.role!=='superadmin'){await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+user.id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'superadmin'})});user.role='superadmin';}userConnecte=user;localStorage.setItem('mcm_user',JSON.stringify(user));redirigerSelonRole(user);}else{affMsg('msg-login','❌ Mot de passe incorrect !','mauvais');}}else{affMsg('msg-login','❌ Aucun compte trouvé','mauvais');}}catch(e){affMsg('msg-login','❌ Connexion impossible','mauvais');}}
-
-async function envoyerDemande(){const quartier=document.getElementById('dem-quartier').value;const type=document.getElementById('dem-type').value;const description=document.getElementById('dem-description').value.trim();if(!quartier||!type||!description){affMsg('msg-demande','❌ Remplissez tous les champs !','mauvais');return;}const{prix}=getPrix(type);try{const res=await fetch(SB_URL+'/rest/v1/demandes',{method:'POST',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({client_nom:userConnecte.nom,client_telephone:userConnecte.telephone,client_id:userConnecte.id,quartier,type_panne:type,description,statut:'attente',mecanicien_id:'',prix_estime:prix,client_lat:clientLat,client_lng:clientLng})});if(res.ok||res.status===201){toast('✅ Demande envoyée ! '+prix.toLocaleString()+' FCFA','#00695c');setTimeout(()=>{afficherEcran('ecran-client');chargerMesDemandes();},1500);}else{affMsg('msg-demande','❌ Erreur','mauvais');}}catch(e){affMsg('msg-demande','❌ Connexion impossible','mauvais');}}
-
-async function chargerMesDemandes(){try{const res=await fetch(SB_URL+'/rest/v1/demandes?client_id=eq.'+userConnecte.id+'&order=created_at.desc',{headers:H});const data=await res.json();const el=document.getElementById('mes-demandes-client');if(data&&data.length>0){el.innerHTML='<div class="card"><div class="card-titre">📋 Mes demandes ('+data.length+')</div>'+data.map((d,i)=>{const s={'attente':'⏳ En attente...','accepte':'✅ Mécanicien en route !','termine':'🏁 Terminée'};const c={'attente':'#e65100','accepte':'#00695c','termine':'#999'};let h='<div class="demande-card"><div style="font-weight:bold;color:var(--bleu);font-size:14px">'+d.type_panne+'</div><div class="info-row">📍 '+d.quartier+' &nbsp;•&nbsp; 💰 '+(d.prix_estime||0).toLocaleString()+' FCFA</div><div style="color:var(--sous);font-size:12px;margin-top:6px">'+d.description+'</div><div style="color:'+c[d.statut]+';font-size:13px;font-weight:bold;margin-top:8px">'+s[d.statut]+'</div>';if(d.statut==='accepte'&&d.mecanicien_nom){h+='<div class="meca-accepte-box"><div style="color:#00695c;font-weight:bold;font-size:15px">🔧 '+d.mecanicien_nom+'</div><div class="info-row">📞 '+d.mecanicien_tel+'</div>';if(d.distance_km){h+='<div class="info-row" style="color:var(--bleu)">📍 '+d.distance_km.toFixed(1)+' km &nbsp;•&nbsp; ⏱️ '+tempsStr(d.distance_km,'moto')+'</div><div class="minuteur-box"><div class="minuteur-label">⏱️ Temps estimé</div><div class="minuteur-temps" id="timer-'+d.id+'">--:--</div></div>';}if(d.client_lat&&d.meca_lat){h+='<button class="btn btn-bleu" style="margin-top:8px;padding:10px" onclick="afficherCarteClient('+d.client_lat+','+d.client_lng+','+d.meca_lat+','+d.meca_lng+',\''+d.mecanicien_nom+'\')">🗺️ Voir sur la carte</button>';}h+='</div>';if(d.temps_minutes)setTimeout(()=>demarrerTimer(d.temps_minutes,'timer-'+d.id),300+i*100);}if(d.statut==='termine'&&!d.note){h+='<button class="btn btn-vert" style="margin-top:8px;padding:10px" onclick="ouvrirNotation(\''+d.id+'\',\''+d.mecanicien_id+'\',\''+d.mecanicien_nom+'\')">⭐ Noter le mécanicien</button>';}h+='</div>';return h;}).join('')+'</div>';}else{el.innerHTML='<div class="card"><p style="color:var(--sous);text-align:center;padding:15px">Aucune demande pour le moment</p></div>';}}catch(e){}}
-
-function afficherCarteClient(cLat,cLng,mLat,mLng,nom){const overlay=document.createElement('div');overlay.style='position:fixed;top:0;left:0;width:100%;height:100%;z-index:500;';overlay.innerHTML='<div id="carte-popup-map" style="width:100%;height:70%;"></div><div style="background:white;height:30%;padding:20px;"><div style="font-weight:bold;font-size:16px;margin-bottom:8px;">🔧 '+nom+' en route</div><button onclick="this.closest(\'[style*=fixed]\').remove()" style="width:100%;padding:14px;border:none;border-radius:12px;background:#f5f5f5;color:#666;font-size:15px;cursor:pointer;font-weight:bold;">Fermer</button></div>';document.body.appendChild(overlay);setTimeout(()=>{const c=L.map('carte-popup-map').setView([(cLat+mLat)/2,(cLng+mLng)/2],13);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(c);const iC=L.divIcon({html:'<div style="background:#1a73e8;width:32px;height:32px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:16px;">🚗</div>',iconSize:[32,32],iconAnchor:[16,16],className:''});const iM=L.divIcon({html:'<div style="background:#ff6600;width:32px;height:32px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:16px;">🔧</div>',iconSize:[32,32],iconAnchor:[16,16],className:''});L.marker([cLat,cLng],{icon:iC}).addTo(c).bindPopup('📍 Votre position').openPopup();L.marker([mLat,mLng],{icon:iM}).addTo(c).bindPopup('🔧 '+nom);L.polyline([[cLat,cLng],[mLat,mLng]],{color:'#1a73e8',weight:3,dashArray:'8,6'}).addTo(c);c.fitBounds([[cLat,cLng],[mLat,mLng]],{padding:[30,30]});},200);}
-
-async function chargerDemandes(){if(demandeEnCours)return;try{const res=await fetch(SB_URL+'/rest/v1/demandes?statut=eq.attente&order=created_at.desc',{headers:H});const data=await res.json();const el=document.getElementById('liste-demandes');if(data&&data.length>0){el.innerHTML=data.map(d=>{let di='';if(mecaLat&&mecaLng&&d.client_lat&&d.client_lng){const km=distKm(mecaLat,mecaLng,d.client_lat,d.client_lng);di='<div class="info-row" style="color:var(--bleu)">📍 '+km.toFixed(1)+' km &nbsp;•&nbsp; ⏱️ '+tempsStr(km,'moto')+'</div>';}return '<div class="demande-card"><div style="font-weight:bold;color:var(--bleu);font-size:14px">'+d.type_panne+'</div><div class="info-row">📍 '+d.quartier+'</div><div class="info-row">👤 '+d.client_nom+' &nbsp;•&nbsp; 📞 '+d.client_telephone+'</div><div style="color:var(--sous);font-size:12px;margin-top:6px">'+d.description+'</div><div style="color:#00695c;font-weight:bold;margin-top:5px">💰 '+(d.prix_estime||0).toLocaleString()+' FCFA</div>'+di+'<button class="btn btn-vert" style="margin-top:10px;padding:14px;font-size:16px" onclick="accepterDemande(\''+d.id+'\',\''+d.client_nom+'\',\''+d.client_telephone+'\','+(d.client_lat||'null')+','+(d.client_lng||'null')+',\''+d.client_id+'\')">✅ Accepter cette demande</button></div>';}).join('');}else{el.innerHTML='<div class="card"><p style="color:var(--sous);text-align:center;padding:15px">✅ Aucune demande en attente</p></div>';}}catch(e){}}
-
-async function accepterDemande(id,nom,tel,cLat,cLng,clientId){let km=null,tm=null;if(mecaLat&&mecaLng&&cLat&&cLng){km=distKm(mecaLat,mecaLng,cLat,cLng);const v=userConnecte.transport==='velo'?15:30;tm=Math.round(km/v*60);}try{await fetch(SB_URL+'/rest/v1/demandes?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({statut:'accepte',mecanicien_id:userConnecte.id,mecanicien_nom:userConnecte.nom,mecanicien_tel:userConnecte.telephone,meca_lat:mecaLat,meca_lng:mecaLng,distance_km:km,temps_minutes:tm})});demandeEnCours={id,nom,tel,cLat,cLng,clientId,km};arreterRefresh();if(clientId)envoyerNotifPush(clientId,'🔧 Mécanicien en route',userConnecte.nom+' arrive vers vous'+(km?' - '+km.toFixed(1)+' km':''));ouvrirEcranIntervention(nom,tel,cLat,cLng,km,tm);}catch(e){toast('❌ Erreur lors de l\'acceptation','#c62828');}}
-
-function ouvrirEcranIntervention(nom,tel,cLat,cLng,km,tm){afficherEcran('ecran-meca-intervention');document.getElementById('intervention-client-nom').textContent='🚗 '+nom+' — 📞 '+tel;document.getElementById('intervention-infos').textContent=(km?'📍 '+km.toFixed(1)+' km &nbsp;•&nbsp; ⏱️ '+tempsStr(km,'moto'):'En route vers le client');if(carteIntervention){carteIntervention.remove();carteIntervention=null;}setTimeout(()=>{if(!cLat||!cLng){return;}carteIntervention=L.map('carte-intervention-map').setView([cLat,cLng],14);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(carteIntervention);const iC=L.divIcon({html:'<div style="background:#1a73e8;width:36px;height:36px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 10px rgba(0,0,0,0.3)">🚗</div>',iconSize:[36,36],iconAnchor:[18,18],className:''});L.marker([cLat,cLng],{icon:iC}).addTo(carteIntervention).bindPopup('📍 Client: '+nom).openPopup();if(mecaLat&&mecaLng){const iM=L.divIcon({html:'<div style="background:#ff6600;width:36px;height:36px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 10px rgba(0,0,0,0.3)">🔧</div>',iconSize:[36,36],iconAnchor:[18,18],className:''});L.marker([mecaLat,mecaLng],{icon:iM}).addTo(carteIntervention);L.polyline([[mecaLat,mecaLng],[cLat,cLng]],{color:'#1a73e8',weight:4,dashArray:'10,8'}).addTo(carteIntervention);carteIntervention.fitBounds([[mecaLat,mecaLng],[cLat,cLng]],{padding:[40,40]});}},300);}
-
-function ouvrirMaps(){if(!demandeEnCours||!demandeEnCours.cLat)return;window.open('https://www.google.com/maps/dir/?api=1&destination='+demandeEnCours.cLat+','+demandeEnCours.cLng,'_blank');}
-
-async function terminerIntervention(){if(!demandeEnCours)return;try{await fetch(SB_URL+'/rest/v1/demandes?id=eq.'+demandeEnCours.id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({statut:'termine'})});toast('🏁 Intervention terminée !','#00695c');demandeEnCours=null;afficherEcran('ecran-mecanicien');chargerDemandes();demarrerRefreshMeca();}catch(e){toast('❌ Erreur','#c62828');}}
-
-function ouvrirNotation(demandeId,mecaId,mecaNom){document.getElementById('noter-nom').textContent='Comment s\'est passée l\'intervention de '+mecaNom+' ?';const el=document.getElementById('noter-etoiles');el.innerHTML=[1,2,3,4,5].map(n=>'<button onclick="noterMecanicien(\''+demandeId+'\',\''+mecaId+'\','+n+')" style="font-size:40px;background:none;border:none;cursor:pointer;padding:4px;">⭐</button>').join('');document.getElementById('popup-noter').style.display='flex';}
-async function noterMecanicien(demandeId,mecaId,note){document.getElementById('popup-noter').style.display='none';try{await fetch(SB_URL+'/rest/v1/demandes?id=eq.'+demandeId,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({note})});const r=await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+mecaId+'&select=note_moyenne,nombre_notes',{headers:H});const d=await r.json();if(d&&d[0]){const nv=((d[0].note_moyenne||0)*(d[0].nombre_notes||0)+note)/((d[0].nombre_notes||0)+1);await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+mecaId,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({note_moyenne:Math.round(nv*10)/10,nombre_notes:(d[0].nombre_notes||0)+1})});}toast('⭐ Merci pour votre note !','#1a73e8');chargerMesDemandes();}catch(e){}}
-
-async function chargerHistorique(){try{const res=await fetch(SB_URL+'/rest/v1/demandes?mecanicien_id=eq.'+userConnecte.id+'&statut=eq.termine&order=created_at.desc',{headers:H});const data=await res.json();const el=document.getElementById('liste-demandes');if(data&&data.length>0){let total=0;data.forEach(d=>total+=(d.prix_estime||0));el.innerHTML='<div class="card"><div class="card-titre">📊 Historique</div><div style="background:rgba(0,200,83,0.08);border-radius:12px;padding:12px;margin-bottom:12px;text-align:center;"><div style="font-size:11px;color:var(--sous)">TOTAL GAGNÉ</div><div style="font-size:28px;font-weight:900;color:#00695c;">'+total.toLocaleString()+' FCFA</div></div>'+data.map(d=>'<div class="demande-card"><div style="font-weight:bold;color:var(--bleu)">'+d.type_panne+'</div><div class="info-row">📍 '+d.quartier+' &nbsp;•&nbsp; 👤 '+d.client_nom+'</div><div style="color:#00695c;font-weight:bold;margin-top:5px">💰 '+(d.prix_estime||0).toLocaleString()+' FCFA</div>'+(d.note?'<div style="color:#f59e0b">'+('⭐'.repeat(d.note))+'</div>':'')+'</div>').join('')+'</div>';}else{el.innerHTML='<div class="card"><p style="color:var(--sous);text-align:center;padding:15px">Aucune intervention terminée</p></div>';}}catch(e){}}
-
+async function envoyerDemande(){const quartier=document.getElementById('dem-quartier').value;const type=document.getElementById('dem-type').value;const description=document.getElementById('dem-description').value.trim();if(!quartier||!type||!description){affMsg('msg-demande','❌ Remplissez tous les champs !','mauvais');return;}const{prix}=getPrix(type);try{const res=await fetch(SB_URL+'/rest/v1/demandes',{method:'POST',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({client_nom:userConnecte.nom,client_telephone:userConnecte.telephone,client_id:userConnecte.id,quartier,type_panne:type,description,statut:'attente',mecanicien_id:'',prix_estime:prix,client_lat:clientLat,client_lng:clientLng})});if(res.ok||res.status===201){affMsg('msg-demande','✅ Demande envoyée ! Prix: '+prix.toLocaleString()+' FCFA','bon');setTimeout(()=>{afficherEcran('ecran-client');chargerMesDemandes();},2000);}else{affMsg('msg-demande','❌ Erreur','mauvais');}}catch(e){affMsg('msg-demande','❌ Connexion impossible','mauvais');}}
+async function chargerMesDemandes(){try{const res=await fetch(SB_URL+'/rest/v1/demandes?client_id=eq.'+userConnecte.id+'&order=created_at.desc',{headers:H});const data=await res.json();const el=document.getElementById('mes-demandes-client');if(data&&data.length>0){el.innerHTML='<div class="card"><div class="card-titre">📋 Mes demandes ('+data.length+')</div>'+data.map((d,i)=>{const s={'attente':'⏳ En attente...','accepte':'✅ Mécanicien en route !','termine':'🏁 Terminée'};const c={'attente':'#e65100','accepte':'#00695c','termine':'#999'};let h='<div class="demande-card"><div style="font-weight:bold;color:var(--bleu);font-size:14px">'+d.type_panne+'</div><div class="info-row">📍 '+d.quartier+' &nbsp;•&nbsp; 💰 '+(d.prix_estime||0).toLocaleString()+' FCFA</div><div style="color:var(--sous);font-size:12px;margin-top:6px">'+d.description+'</div><div style="color:'+c[d.statut]+';font-size:13px;font-weight:bold;margin-top:8px">'+s[d.statut]+'</div>';if(d.statut==='accepte'&&d.mecanicien_nom){h+='<div class="meca-accepte-box"><div style="color:#00695c;font-weight:bold;font-size:15px">🔧 '+d.mecanicien_nom+'</div><div class="info-row">📞 '+d.mecanicien_tel+'</div>';if(d.distance_km){h+='<div class="info-row" style="color:var(--bleu)">📍 '+d.distance_km.toFixed(1)+' km &nbsp;•&nbsp; ⏱️ '+tempsStr(d.distance_km,'moto')+'</div><div class="minuteur-box"><div class="minuteur-label">⏱️ Temps estimé</div><div class="minuteur-temps" id="timer-'+d.id+'">--:--</div></div>';}if(d.client_lat&&d.meca_lat){h+='<div id="ctr-'+d.id+'" style="display:none"><div id="cmap-'+d.id+'" style="width:100%;height:200px;border-radius:12px;margin-top:8px;border:1px solid var(--bord);"></div></div><button class="btn btn-bleu" style="margin-top:8px;padding:10px" onclick="toggleCarte(\''+d.id+'\','+d.client_lat+','+d.client_lng+','+d.meca_lat+','+d.meca_lng+',\''+d.mecanicien_nom+'\')">🗺️ Voir sur la carte</button>';}h+='</div>';if(d.temps_minutes)setTimeout(()=>demarrerTimer(d.temps_minutes,'timer-'+d.id),300+i*100);}h+='</div>';return h;}).join('')+'</div>';}else{el.innerHTML='<div class="card"><p style="color:var(--sous);text-align:center;padding:15px">Aucune demande pour le moment</p></div>';}}catch(e){}}
+function toggleCarte(id,cLat,cLng,mLat,mLng,nom){const cont=document.getElementById('ctr-'+id);if(!cont)return;if(cont.style.display==='none'){cont.style.display='block';setTimeout(()=>{const c=L.map('cmap-'+id).setView([(cLat+mLat)/2,(cLng+mLng)/2],13);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(c);const iC=L.divIcon({html:'<div style="background:#1a73e8;width:30px;height:30px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;">🚗</div>',iconSize:[30,30],iconAnchor:[15,15],className:''});const iM=L.divIcon({html:'<div style="background:#ff6600;width:30px;height:30px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;">🔧</div>',iconSize:[30,30],iconAnchor:[15,15],className:''});L.marker([cLat,cLng],{icon:iC}).addTo(c);L.marker([mLat,mLng],{icon:iM}).addTo(c).bindPopup('🔧 '+nom);L.polyline([[cLat,cLng],[mLat,mLng]],{color:'#1a73e8',weight:3,dashArray:'8,6'}).addTo(c);c.fitBounds([[cLat,cLng],[mLat,mLng]],{padding:[25,25]});},100);}else{cont.style.display='none';}}
+async function chargerDemandes(){try{const res=await fetch(SB_URL+'/rest/v1/demandes?statut=eq.attente&order=created_at.desc',{headers:H});const data=await res.json();const el=document.getElementById('liste-demandes');if(data&&data.length>0){el.innerHTML=data.map(d=>{let di='';if(mecaLat&&mecaLng&&d.client_lat&&d.client_lng){const km=distKm(mecaLat,mecaLng,d.client_lat,d.client_lng);di='<div class="info-row" style="color:var(--bleu)">📍 '+km.toFixed(1)+' km &nbsp;•&nbsp; ⏱️ '+tempsStr(km,'moto')+'</div>';}return '<div class="demande-card"><div style="font-weight:bold;color:var(--bleu);font-size:14px">'+d.type_panne+'</div><div class="info-row">📍 '+d.quartier+'</div><div class="info-row">👤 '+d.client_nom+' &nbsp;•&nbsp; 📞 '+d.client_telephone+'</div><div style="color:var(--sous);font-size:12px;margin-top:6px">'+d.description+'</div><div style="color:#00695c;font-weight:bold;margin-top:5px">💰 '+(d.prix_estime||0).toLocaleString()+' FCFA</div>'+di+'<button class="btn btn-vert" style="margin-top:10px;padding:12px" onclick="accepterDemande(\''+d.id+'\',\''+d.client_nom+'\',\''+d.client_telephone+'\','+(d.client_lat||'null')+','+(d.client_lng||'null')+',\''+d.client_id+'\')">✅ Accepter</button></div>';}).join('');}else{el.innerHTML='<div class="card"><p style="color:var(--sous);text-align:center;padding:15px">✅ Aucune demande en attente</p></div>';}}catch(e){}}
+async function accepterDemande(id,nom,tel,cLat,cLng,clientId){let km=null,tm=null;if(mecaLat&&mecaLng&&cLat&&cLng){km=distKm(mecaLat,mecaLng,cLat,cLng);const v=userConnecte.transport==='velo'?15:30;tm=Math.round(km/v*60);}try{await fetch(SB_URL+'/rest/v1/demandes?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({statut:'accepte',mecanicien_id:userConnecte.id,mecanicien_nom:userConnecte.nom,mecanicien_tel:userConnecte.telephone,meca_lat:mecaLat,meca_lng:mecaLng,distance_km:km,temps_minutes:tm})});if(clientId){const msg=userConnecte.nom+' est en route'+(km?' - '+km.toFixed(1)+' km':'');envoyerNotificationClient(clientId,'🔧 Mecanicien accepte',msg);}chargerDemandes();}catch(e){alert('Erreur');}}
 async function chargerMecaniciensAttente(role){const elId=role==='superadmin'?'liste-superadmin':'liste-admin';const el=document.getElementById(elId);try{const res=await fetch(SB_URL+'/rest/v1/profiles?role=eq.mecanicien_en_attente&order=created_at.desc',{headers:H});const data=await res.json();el.innerHTML=data&&data.length>0?'<div class="card"><div class="card-titre">⏳ En attente ('+data.length+')</div>'+data.map(u=>'<div class="meca-card"><div style="font-weight:bold">'+u.nom+'</div><div class="info-row">📧 '+u.email+'</div><div class="info-row">📞 '+u.telephone+'</div><div class="info-row">📍 '+(u.quartier||'?')+' • '+(u.specialite||'?')+'</div><div style="display:flex;gap:8px;margin-top:10px"><button class="btn-sm" style="background:#00c853;flex:1" onclick="validerMeca(\''+u.id+'\',\''+u.nom+'\')">✅ Certifier</button><button class="btn-sm" style="background:#f44336;flex:1" onclick="refuserMeca(\''+u.id+'\',\''+u.nom+'\')">❌ Refuser</button></div></div>').join('')+'</div>':'<div class="card"><p style="color:var(--sous);text-align:center;padding:15px">✅ Aucun en attente</p></div>';}catch(e){}}
-async function validerMeca(id,nom){if(!confirm('Certifier '+nom+' ?'))return;await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'mecanicien_certifie'})});toast('✅ '+nom+' certifié !','#00695c');chargerMecaniciensAttente(userConnecte.role);}
-async function refuserMeca(id,nom){if(!confirm('Refuser '+nom+' ?'))return;await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'refuse'})});toast('Refusé.','#c62828');chargerMecaniciensAttente(userConnecte.role);}
+async function validerMeca(id,nom){if(!confirm('Certifier '+nom+' ?'))return;await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'mecanicien_certifie'})});alert('✅ Certifié !');chargerMecaniciensAttente(userConnecte.role);}
+async function refuserMeca(id,nom){if(!confirm('Refuser '+nom+' ?'))return;await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'refuse'})});alert('Refusé.');chargerMecaniciensAttente(userConnecte.role);}
 async function chargerTousUtilisateurs(role){const elId=role==='superadmin'?'liste-superadmin':'liste-admin';const el=document.getElementById(elId);try{const res=await fetch(SB_URL+'/rest/v1/profiles?order=created_at.desc',{headers:H});const data=await res.json();el.innerHTML='<div class="card"><div class="card-titre">👥 Utilisateurs ('+data.length+')</div>'+data.map(u=>'<div class="user-card"><div style="font-weight:bold">'+u.nom+getBadge(u.role)+'</div><div class="info-row">📧 '+u.email+'</div><div class="info-row">📞 '+u.telephone+'</div>'+(u.quartier?'<div class="info-row">📍 '+u.quartier+(u.specialite?' • '+u.specialite:'')+'</div>':'')+(u.role!=='superadmin'?'<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn-sm" style="background:#f44336" onclick="supprimerCompte(\''+u.id+'\',\''+u.nom+'\')">🗑️</button><button class="btn-sm" style="background:#ff9800" onclick="suspendreCompte(\''+u.id+'\',\''+u.nom+'\')">⛔</button>'+(u.role==='mecanicien_certifie'?'<button class="btn-sm" style="background:#1a73e8" onclick="reactiverCompte(\''+u.id+'\',\''+u.nom+'\')">✅</button>':'')+'</div>':'')+'</div>').join('')+'</div>';}catch(e){}}
-async function supprimerCompte(id,nom){if(!confirm('Supprimer '+nom+' ?'))return;await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'DELETE',headers:H});toast('✅ Supprimé.','#00695c');chargerTousUtilisateurs(userConnecte.role);}
-async function suspendreCompte(id,nom){if(!confirm('Suspendre '+nom+' ?'))return;await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'suspendu'})});toast('⛔ Suspendu.','#c62828');chargerTousUtilisateurs(userConnecte.role);}
-async function reactiverCompte(id,nom){if(!confirm('Réactiver '+nom+' ?'))return;await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'mecanicien_certifie'})});toast('✅ Réactivé.','#00695c');chargerTousUtilisateurs(userConnecte.role);}
-async function chargerAdmins(){const el=document.getElementById('liste-superadmin');try{const r=await fetch(SB_URL+'/rest/v1/profiles?role=in.(admin,superadmin)&order=created_at.desc',{headers:H});const data=await r.json();el.innerHTML='<div class="card"><div class="card-titre">🛡️ Admins ('+data.length+'/10)</div>'+data.map(u=>'<div class="user-card"><div style="font-weight:bold">'+u.nom+getBadge(u.role)+'</div><div class="info-row">📧 '+u.email+'</div>'+(u.role==='admin'?'<button class="btn-sm" style="background:#f44336;margin-top:6px" onclick="retirerAdmin(\''+u.id+'\',\''+u.nom+'\')">Retirer</button>':'')+'</div>').join('')+'</div>';if(data.length<10){const r2=await fetch(SB_URL+'/rest/v1/profiles?role=eq.mecanicien_certifie&order=nom',{headers:H});const mecs=await r2.json();if(mecs&&mecs.length>0)el.innerHTML+='<div class="card"><div class="card-titre">➕ Nommer un admin</div>'+mecs.map(u=>'<div class="meca-card"><div style="font-weight:bold">'+u.nom+'</div><div class="info-row">📧 '+u.email+'</div><button class="btn-sm" style="background:#9c27b0;margin-top:6px" onclick="nommerAdmin(\''+u.id+'\',\''+u.nom+'\')">🛡️ Nommer</button></div>').join('')+'</div>';}catch(e){}}
-async function nommerAdmin(id,nom){if(!confirm('Nommer '+nom+' admin ?'))return;await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'admin'})});toast('✅ Admin !','#00695c');chargerAdmins();}
-async function retirerAdmin(id,nom){if(!confirm('Retirer admin à '+nom+' ?'))return;await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'mecanicien_certifie'})});toast('✅ Retiré.','#00695c');chargerAdmins();}
-function seDeconnecter(){arreterRefresh();userConnecte=null;demandeEnCours=null;ancienStatuts={};localStorage.removeItem('mcm_user');afficherEcran('ecran-accueil');}
+async function supprimerCompte(id,nom){if(!confirm('Supprimer '+nom+' ?'))return;await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'DELETE',headers:H});alert('✅ Supprimé.');chargerTousUtilisateurs(userConnecte.role);}
+async function suspendreCompte(id,nom){if(!confirm('Suspendre '+nom+' ?'))return;await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'suspendu'})});alert('⛔ Suspendu.');chargerTousUtilisateurs(userConnecte.role);}
+async function reactiverCompte(id,nom){if(!confirm('Réactiver '+nom+' ?'))return;await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'mecanicien_certifie'})});alert('✅ Réactivé.');chargerTousUtilisateurs(userConnecte.role);}
+async function chargerAdmins(){const el=document.getElementById('liste-superadmin');try{const r=await fetch(SB_URL+'/rest/v1/profiles?role=in.(admin,superadmin)&order=created_at.desc',{headers:H});const data=await r.json();el.innerHTML='<div class="card"><div class="card-titre">🛡️ Admins ('+data.length+'/10)</div>'+data.map(u=>'<div class="user-card"><div style="font-weight:bold">'+u.nom+getBadge(u.role)+'</div><div class="info-row">📧 '+u.email+'</div>'+(u.role==='admin'?'<button class="btn-sm" style="background:#f44336;margin-top:6px" onclick="retirerAdmin(\''+u.id+'\',\''+u.nom+'\')">Retirer</button>':'')+'</div>').join('')+'</div>';if(data.length<10){const r2=await fetch(SB_URL+'/rest/v1/profiles?role=eq.mecanicien_certifie&order=nom',{headers:H});const mecs=await r2.json();if(mecs&&mecs.length>0)el.innerHTML+='<div class="card"><div class="card-titre">➕ Nommer un admin</div>'+mecs.map(u=>'<div class="meca-card"><div style="font-weight:bold">'+u.nom+'</div><div class="info-row">📧 '+u.email+'</div><button class="btn-sm" style="background:#9c27b0;margin-top:6px" onclick="nommerAdmin(\''+u.id+'\',\''+u.nom+'\')">🛡️ Nommer</button></div>').join('')+'</div>';}}catch(e){}}
+async function nommerAdmin(id,nom){if(!confirm('Nommer '+nom+' admin ?'))return;await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'admin'})});alert('✅ Admin !');chargerAdmins();}
+async function retirerAdmin(id,nom){if(!confirm('Retirer admin à '+nom+' ?'))return;await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({role:'mecanicien_certifie'})});alert('✅ Retiré.');chargerAdmins();}
+function seDeconnecter(){userConnecte=null;localStorage.removeItem('mcm_user');afficherEcran('ecran-accueil');}
+
+window.ancienStatut={};
+async function verifierChangements(){if(!userConnecte||userConnecte.role!=='client')return;try{const res=await fetch(SB_URL+'/rest/v1/demandes?client_id=eq.'+userConnecte.id+'&order=created_at.desc',{headers:H});const data=await res.json();if(!data||data.length===0)return;data.forEach(d=>{const ancien=window.ancienStatut[d.id];if(ancien&&ancien!=='accepte'&&d.statut==='accepte'){const b=document.createElement('div');b.style='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#00695c;color:white;padding:16px 24px;border-radius:14px;z-index:9999;font-weight:bold;font-size:16px;box-shadow:0 4px 20px rgba(0,105,92,0.4);text-align:center;';b.innerHTML='🔧 Mecanicien en route !<br><small style="font-weight:normal;font-size:12px">'+d.mecanicien_nom+' arrive bientot</small>';document.body.appendChild(b);setTimeout(()=>b.remove(),6000);}window.ancienStatut[d.id]=d.statut;});chargerMesDemandes();}catch(e){}}
+setInterval(verifierChangements,8000);
+setTimeout(()=>{if(userConnecte&&userConnecte.role==='client'){fetch(SB_URL+'/rest/v1/demandes?client_id=eq.'+userConnecte.id,{headers:H}).then(r=>r.json()).then(data=>{data.forEach(d=>{window.ancienStatut[d.id]=d.statut;});});}},1000);
 
 let nouveauSW=null;
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(reg=>{if(reg.waiting)afficherBanniere(reg.waiting);reg.addEventListener('updatefound',()=>{const sw=reg.installing;sw.addEventListener('statechange',()=>{if(sw.state==='installed'&&navigator.serviceWorker.controller)afficherBanniere(sw);});});});navigator.serviceWorker.addEventListener('controllerchange',()=>window.location.reload());}
@@ -405,3 +348,118 @@ if(saved){userConnecte=JSON.parse(saved);redirigerSelonRole(userConnecte);}
 </script>
 </body>
 </html>
+<script>
+const _oldAccepter=accepterDemande;
+accepterDemande=async function(id,nom,tel,cLat,cLng,clientId){
+  const btn=event.target;
+  if(btn){btn.textContent='⏳ En cours...';btn.disabled=true;}
+  await _oldAccepter(id,nom,tel,cLat,cLng,clientId);
+  const b=document.createElement('div');
+  b.style='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#00695c;color:white;padding:16px 24px;border-radius:14px;z-index:9999;font-weight:bold;font-size:16px;box-shadow:0 4px 20px rgba(0,105,92,0.4);';
+  b.textContent='✅ Demande acceptée - '+nom;
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(),4000);
+};
+</script>
+<script>
+// ===== FONCTIONNALITE 1 : MODE DISPO/INDISPO =====
+async function toggleDisponibilite(){
+  if(!userConnecte)return;
+  const nouveauStatut=!userConnecte.disponible;
+  await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+userConnecte.id,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({disponible:nouveauStatut})});
+  userConnecte.disponible=nouveauStatut;
+  localStorage.setItem('mcm_user',JSON.stringify(userConnecte));
+  const btn=document.getElementById('btn-dispo');
+  if(btn){btn.textContent=nouveauStatut?'🟢 Disponible':'🔴 Indisponible';btn.style.background=nouveauStatut?'#00695c':'#c62828';}
+  const b=document.createElement('div');
+  b.style='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:'+(nouveauStatut?'#00695c':'#c62828')+';color:white;padding:14px 24px;border-radius:12px;z-index:9999;font-weight:bold;';
+  b.textContent=nouveauStatut?'🟢 Vous etes maintenant disponible':'🔴 Vous etes maintenant indisponible';
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(),3000);
+}
+
+// ===== FONCTIONNALITE 2 : NOTATION =====
+async function noterMecanicien(demandeId,mecaId,note){
+  try{
+    await fetch(SB_URL+'/rest/v1/demandes?id=eq.'+demandeId,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({note,statut:'termine'})});
+    const r=await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+mecaId+'&select=note_moyenne,nombre_notes',{headers:H});
+    const data=await r.json();
+    if(data&&data[0]){
+      const ancien=data[0].note_moyenne||0;
+      const nb=data[0].nombre_notes||0;
+      const nouvelle=((ancien*nb)+note)/(nb+1);
+      await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+mecaId,{method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify({note_moyenne:Math.round(nouvelle*10)/10,nombre_notes:nb+1})});
+    }
+    const b=document.createElement('div');
+    b.style='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#1a73e8;color:white;padding:14px 24px;border-radius:12px;z-index:9999;font-weight:bold;';
+    b.textContent='⭐ Merci pour votre note !';
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(),3000);
+    chargerMesDemandes();
+  }catch(e){}
+}
+
+function afficherNotation(demandeId,mecaId,mecaNom){
+  const overlay=document.createElement('div');
+  overlay.style='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9998;display:flex;align-items:flex-end;justify-content:center;';
+  overlay.innerHTML='<div style="background:white;border-radius:28px 28px 0 0;padding:30px 24px 40px;width:100%;max-width:500px;"><div style="font-size:24px;font-weight:bold;text-align:center;margin-bottom:8px;">Noter '+mecaNom+'</div><div style="color:#666;text-align:center;margin-bottom:24px;font-size:14px;">Comment s\'est passee l\'intervention ?</div><div style="display:flex;justify-content:center;gap:12px;margin-bottom:24px;">'+[1,2,3,4,5].map(n=>'<button onclick="noterMecanicien(\''+demandeId+'\',\''+mecaId+'\','+n+');document.body.removeChild(this.closest(\'[style*=fixed]\'))" style="font-size:36px;background:none;border:none;cursor:pointer;">⭐</button>').join('')+'</div><button onclick="document.body.removeChild(this.closest(\'[style*=fixed]\'))" style="width:100%;padding:14px;border:1px solid #ddd;border-radius:12px;background:#f5f5f5;color:#666;font-size:15px;cursor:pointer;">Plus tard</button></div>';
+  document.body.appendChild(overlay);
+}
+
+// ===== FONCTIONNALITE 3 : HISTORIQUE MECANICIEN =====
+async function chargerHistorique(){
+  if(!userConnecte||userConnecte.role!=='mecanicien_certifie')return;
+  try{
+    const res=await fetch(SB_URL+'/rest/v1/demandes?mecanicien_id=eq.'+userConnecte.id+'&statut=eq.termine&order=created_at.desc',{headers:H});
+    const data=await res.json();
+    const el=document.getElementById('liste-demandes');
+    if(data&&data.length>0){
+      let total=0;
+      data.forEach(d=>total+=(d.prix_estime||0));
+      el.innerHTML='<div class="card"><div class="card-titre">📊 Historique ('+data.length+' interventions)</div><div style="background:#e8f5e9;border-radius:12px;padding:12px;margin-bottom:12px;text-align:center;"><div style="font-size:11px;color:#666;">TOTAL GAGNÉ</div><div style="font-size:28px;font-weight:900;color:#00695c;">'+total.toLocaleString()+' FCFA</div></div>'+data.map(d=>'<div class="demande-card"><div style="font-weight:bold;color:var(--bleu)">'+d.type_panne+'</div><div class="info-row">📍 '+d.quartier+' &nbsp;•&nbsp; 👤 '+d.client_nom+'</div><div style="color:#00695c;font-weight:bold;margin-top:5px">💰 '+(d.prix_estime||0).toLocaleString()+' FCFA</div>'+(d.note?'<div style="color:#f59e0b;margin-top:4px">'+('⭐'.repeat(d.note))+'</div>':'')+'</div>').join('')+'</div>';
+    }else{
+      el.innerHTML='<div class="card"><p style="color:var(--sous);text-align:center;padding:15px">Aucune intervention terminée</p></div>';
+    }
+  }catch(e){}
+}
+
+// Ajouter bouton dispo dans ecran mecanicien au chargement
+window.addEventListener('load',()=>{
+  const geo=document.getElementById('meca-geo');
+  if(geo&&!document.getElementById('btn-dispo')){
+    const btn=document.createElement('button');
+    btn.id='btn-dispo';
+    btn.className='btn';
+    btn.style.background=userConnecte&&userConnecte.disponible!==false?'#00695c':'#c62828';
+    btn.textContent=userConnecte&&userConnecte.disponible!==false?'🟢 Disponible':'🔴 Indisponible';
+    btn.onclick=toggleDisponibilite;
+    geo.parentNode.insertBefore(btn,geo.nextSibling);
+    const btnHist=document.createElement('button');
+    btnHist.className='btn btn-bleu';
+    btnHist.textContent='📊 Mon historique';
+    btnHist.onclick=chargerHistorique;
+    btn.parentNode.insertBefore(btnHist,btn.nextSibling);
+  }
+});
+
+// Modifier chargerMesDemandes pour ajouter bouton noter
+const _oldCharger=chargerMesDemandes;
+chargerMesDemandes=async function(){
+  await _oldCharger();
+  document.querySelectorAll('.demande-card').forEach(card=>{
+    const statut=card.querySelector('[style*="font-weight:bold"][style*="margin-top:8px"]');
+    if(statut&&statut.textContent.includes('en route')&&!card.querySelector('.btn-noter')){
+      const btnTerminer=document.createElement('button');
+      btnTerminer.className='btn btn-vert btn-noter';
+      btnTerminer.style='margin-top:8px;padding:10px;';
+      btnTerminer.textContent='🏁 Terminer et noter';
+      const mecaBox=card.querySelector('.meca-accepte-box');
+      if(mecaBox){
+        const demandeId=card.id||'';
+        btnTerminer.onclick=()=>afficherNotation('','','Mécanicien');
+        mecaBox.appendChild(btnTerminer);
+      }
+    }
+  });
+};
+</script>
