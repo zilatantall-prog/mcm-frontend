@@ -414,3 +414,21 @@ function chargerLeaflet(callback){
   document.head.appendChild(s);
 }
 </script>
+<script>
+function switchTab(tab, el) {
+  var btns = document.querySelectorAll('.tab-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.remove('actif');
+  }
+  el.classList.add('actif');
+  var conn = document.getElementById('tab-connexion');
+  var insc = document.getElementById('tab-inscription');
+  if (tab === 'connexion') {
+    conn.style.display = 'block';
+    insc.style.display = 'none';
+  } else {
+    conn.style.display = 'none';
+    insc.style.display = 'block';
+  }
+}
+</script>
