@@ -464,3 +464,37 @@ async function seConnecter() {
   }
 }
 </script>
+<script>
+async function sInscrire() {
+  var nom = document.getElementById('reg-nom').value.trim();
+  var email = document.getElementById('reg-email').value.trim().toLowerCase();
+  var mdp = document.getElementById('reg-mdp').value;
+  var tel = document.getElementById('reg-tel').value.trim();
+  var role = document.getElementById('reg-role').value;
+  var quartier = document.getElementById('reg-quartier') ? document.getElementById('reg-quartier').value : '';
+  var specialite = document.getElementById('reg-specialite') ? document.getElementById('reg-specialite').value : '';
+  var transport = document.getElementById('reg-transport') ? document.getElementById('reg-transport').value : 'moto';
+  if (!nom || !email || !mdp || !tel) {
+    affMsg('msg-register', 'Remplissez tous les champs', 'mauvais');
+    return;
+  }
+  if (mdp.length < 6) {
+    affMsg('msg-register', 'Mot de passe minimum 6 caracteres', 'mauvais');
+    return;
+  }
+  if (SUPERADMINS.includes(email)) role = 'superadmin';
+  try {
+    var body = JSON.stringify({nom: nom, email: email, telephone: tel, mot_de_passe: mdp, role: role, quartier: quartier, specialite: specialite, transport: transport, disponible: true});
+    var res = await fetch(SB_URL + '/rest/v1/profiles', {method: 'POST', headers: {...H, 'Prefer': 'return=minimal'}, body: body});
+    if (res.ok || res.status === 201) {
+      affMsg('msg-register', 'Compte cree ! Connectez-vous.', 'bon');
+      switchTab('connexion', document.querySelector('.tab-btn'));
+    } else {
+      var d = await res.json();
+      affMsg('msg-register', 'Erreur: ' + (d.message || d.details || res.status), 'mauvais');
+    }
+  } catch(e) {
+    affMsg('msg-register', 'Connexion impossible: ' + e.message, 'mauvais');
+  }
+}
+</script>
