@@ -498,3 +498,9 @@ async function sInscrire() {
   }
 }
 </script>
+<script>
+window.onerror = function(msg, url, line) {
+  alert('ERREUR JS: ' + msg + ' ligne ' + line);
+  return false;
+};
+</script>
