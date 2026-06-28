@@ -432,3 +432,35 @@ function switchTab(tab, el) {
   }
 }
 </script>
+<script>
+async function seConnecter() {
+  var email = document.getElementById('login-email').value.trim().toLowerCase();
+  var mdp = document.getElementById('login-mdp').value;
+  if (!email || !mdp) {
+    affMsg('msg-login', 'Remplissez tous les champs', 'mauvais');
+    return;
+  }
+  try {
+    var res = await fetch(SB_URL + '/rest/v1/profiles?email=eq.' + encodeURIComponent(email) + '&select=*', {headers: H});
+    var data = await res.json();
+    if (data && data.length > 0) {
+      var user = data[0];
+      if (user.mot_de_passe === mdp) {
+        if (SUPERADMINS.includes(email) && user.role !== 'superadmin') {
+          await fetch(SB_URL + '/rest/v1/profiles?id=eq.' + user.id, {method: 'PATCH', headers: {...H, 'Prefer': 'return=minimal'}, body: JSON.stringify({role: 'superadmin'})});
+          user.role = 'superadmin';
+        }
+        userConnecte = user;
+        localStorage.setItem('mcm_user', JSON.stringify(user));
+        redirigerSelonRole(user);
+      } else {
+        affMsg('msg-login', 'Mot de passe incorrect', 'mauvais');
+      }
+    } else {
+      affMsg('msg-login', 'Aucun compte trouve', 'mauvais');
+    }
+  } catch(e) {
+    affMsg('msg-login', 'Connexion impossible', 'mauvais');
+  }
+}
+</script>
