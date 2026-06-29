@@ -379,7 +379,7 @@ function rediriger(u){
   else if(u.role==='mecanicien_en_attente'){affPage('page-meca-attente');}
   else{
     document.getElementById('client-nom').textContent=u.nom;
-    affPage('page-client');chargerMesDemandes();demanderPermissions();
+    affPage('page-client');chargerMesDemandes();demanderPermissions();initAncStatuts();
     timer=setInterval(function(){if(user&&user.role==='client')rafraichirClient();},5000);
   }
 }
@@ -647,3 +647,36 @@ if(saved){user=JSON.parse(saved);rediriger(user);}
 </script>
 </body>
 </html>
+<script>
+async function rafraichirClient(){
+  if(!user||user.role!=='client')return;
+  try{
+    var res=await fetch(SB+'/rest/v1/demandes?client_id=eq.'+user.id+'&order=created_at.desc',{headers:H});
+    var data=await res.json();
+    if(!data)return;
+    var changed=false;
+    for(var i=0;i<data.length;i++){
+      var d=data[i];
+      if(ancStatuts[d.id]!==undefined&&ancStatuts[d.id]!==d.statut){
+        changed=true;
+        if(d.statut==='accepte'){
+          toast('🔧 '+d.mecanicien_nom+' est en route vers vous !','#2e7d32');
+        }
+        if(d.statut==='termine'){
+          toast('🏁 Intervention terminée ! Notez votre mécanicien.','#1a73e8');
+        }
+      }
+      ancStatuts[d.id]=d.statut;
+    }
+    if(changed)chargerMesDemandes();
+  }catch(e){}
+}
+function initAncStatuts(){
+  if(!user||user.role!=='client')return;
+  fetch(SB+'/rest/v1/demandes?client_id=eq.'+user.id,{headers:H})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data)for(var i=0;i<data.length;i++)ancStatuts[data[i].id]=data[i].statut;
+    });
+}
+</script>
