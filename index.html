@@ -118,6 +118,7 @@ body{font-family:Arial,sans-serif;background:#f0f4ff;color:#1a1a1a;min-height:10
         </div>
         <div class="champ"><label>Transport</label>
           <select id="reg-transport"><option value="moto">🏍️ Moto</option><option value="velo">🚲 Vélo</option></select>
+<div class="champ"><label>Photo de profil</label><input type="file" id="reg-photo" accept="image/*" capture="user"><div id="photo-preview" style="margin-top:8px;display:none;"><img id="photo-img" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #1a73e8;"></div></div>
         </div>
       </div>
       <button class="btn btn-vert" onclick="faireInscription()">✅ Créer mon compte</button>
@@ -402,6 +403,7 @@ async function faireConnexion(){
     }else{msg('msg-login','Aucun compte trouvé','mauvais');}
   }catch(e){msg('msg-login','Connexion impossible: '+e.message,'mauvais');}
 }
+async function uploadPhoto(file,userId){var ext=file.name.split('.').pop();var path='mecas/'+userId+'.'+ext;var res=await fetch('https://ddpedkjmuslcrzqjjfoi.supabase.co/storage/v1/object/photos/'+path,{method:'POST',headers:{'apikey':'sb_publishable_IiH75oXzI79hsqW3zMar8w_skKQtqIl','Authorization':'Bearer sb_publishable_IiH75oXzI79hsqW3zMar8w_skKQtqIl','Content-Type':file.type},body:file});if(res.ok)return 'https://ddpedkjmuslcrzqjjfoi.supabase.co/storage/v1/object/public/photos/'+path;return null;}
 async function faireInscription(){
   var nom=document.getElementById('reg-nom').value.trim();
   var email=document.getElementById('reg-email').value.trim().toLowerCase();
@@ -413,9 +415,9 @@ async function faireInscription(){
   var transport=document.getElementById('reg-transport').value||'moto';
   if(!nom||!email||!mdp||!tel){msg('msg-register','Remplissez tous les champs','mauvais');return;}
   if(mdp.length<6){msg('msg-register','Mot de passe minimum 6 caractères','mauvais');return;}
-  if(SA.includes(email))role='superadmin';
+  if(SA.includes(email))role='superadmin';var pInput=document.getElementById('reg-photo');var photoFile=pInput?pInput.files[0]:null;var photoUrl=null;if(photoFile){photoUrl=await uploadPhoto(photoFile,Date.now());}
   try{
-    var res=await fetch(SB+'/rest/v1/profiles',{method:'POST',headers:Object.assign({},H,{'Prefer':'return=minimal'}),body:JSON.stringify({nom:nom,email:email,telephone:tel,mot_de_passe:mdp,role:role,quartier:quartier,specialite:specialite,transport:transport,disponible:true})});
+    var res=await fetch(SB+'/rest/v1/profiles',{method:'POST',headers:Object.assign({},H,{'Prefer':'return=minimal'}),body:JSON.stringify({nom:nom,email:email,telephone:tel,mot_de_passe:mdp,role:role,quartier:quartier,specialite:specialite,transport:transport,disponible:true,photo_url:photoUrl})});
     if(res.ok||res.status===201){msg('msg-register','Compte créé ! Connectez-vous.','bon');affTab('connexion');}
     else{var d=await res.json();msg('msg-register','Erreur: '+(d.message||d.details||res.status),'mauvais');}
   }catch(e){msg('msg-register','Connexion impossible: '+e.message,'mauvais');}

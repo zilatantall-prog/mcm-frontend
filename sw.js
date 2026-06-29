@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mcm-v7';
+const CACHE_NAME = 'mcm-v8';
 const ASSETS = ['/', '/index.html', '/manifest.json'];
 
 self.addEventListener('install', event => {
