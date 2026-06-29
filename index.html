@@ -465,20 +465,6 @@ async function chargerMesDemandes(){
     }else{el.innerHTML='<div class="card"><p style="color:#888;text-align:center;padding:15px">Aucune demande pour le moment</p></div>';}
   }catch(e){}
 }
-async function rafraichirClient(){
-  try{
-    var res=await fetch(SB+'/rest/v1/demandes?client_id=eq.'+user.id+'&order=created_at.desc',{headers:H});
-    var data=await res.json();
-    if(!data)return;
-    for(var i=0;i<data.length;i++){
-      var d=data[i];
-      if(ancStatuts[d.id]&&ancStatuts[d.id]!=='accepte'&&d.statut==='accepte'){
-        toast('🔧 '+d.mecanicien_nom+' est en route !','#2e7d32');
-      }
-      ancStatuts[d.id]=d.statut;
-    }
-    chargerMesDemandes();
-  }catch(e){}
 }
 async function chargerDemandes(){
   if(demandeActuelle)return;
@@ -647,31 +633,10 @@ function majApp(){if(swNouveau)swNouveau.postMessage({type:'SKIP_WAITING'});docu
 var saved=localStorage.getItem('mcm_user');
 if(saved){user=JSON.parse(saved);rediriger(user);}
 </script>
+<script>async function rafraichirClient(){if(!user||user.role!=="client")return;try{var res=await fetch(SB+"/rest/v1/demandes?client_id=eq."+user.id+"&order=created_at.desc",{headers:H});var data=await res.json();if(!data)return;var changed=false;for(var i=0;i<data.length;i++){var d=data[i];if(ancStatuts[d.id]&&ancStatuts[d.id]!==d.statut){changed=true;if(d.statut==="accepte"){toast("🛠 " + d.mecanicien_nom + " est en route !", "#2e7d32");}if(d.statut==="termine"){toast("🏁 Intervention terminée !", "#1a73e8");}}ancStatuts[d.id]=d.statut;}if(changed)chargerMesDemandes();}catch(e){}}</script>
 </body>
 </html>
 <script>
-async function rafraichirClient(){
-  if(!user||user.role!=='client')return;
-  try{
-    var res=await fetch(SB+'/rest/v1/demandes?client_id=eq.'+user.id+'&order=created_at.desc',{headers:H});
-    var data=await res.json();
-    if(!data)return;
-    var changed=false;
-    for(var i=0;i<data.length;i++){
-      var d=data[i];
-      if(ancStatuts[d.id]!==undefined&&ancStatuts[d.id]!==d.statut){
-        changed=true;
-        if(d.statut==='accepte'){
-          toast('🔧 '+d.mecanicien_nom+' est en route vers vous !','#2e7d32');
-        }
-        if(d.statut==='termine'){
-          toast('🏁 Intervention terminée ! Notez votre mécanicien.','#1a73e8');
-        }
-      }
-      ancStatuts[d.id]=d.statut;
-    }
-    if(changed)chargerMesDemandes();
-  }catch(e){}
 }
 function initAncStatuts(){
   if(!user||user.role!=='client')return;
