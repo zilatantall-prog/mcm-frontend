@@ -62,8 +62,6 @@ body{font-family:Arial,sans-serif;background:#f0f4ff;color:#1a1a1a;min-height:10
 .geo-box.en-cours{background:#e3f2fd;border-color:#90caf9;color:#1565c0;}
 .prix-box{background:#e8f5e9;border:2px solid #a5d6a7;border-radius:14px;padding:16px;margin:12px 0;text-align:center;}
 .prix-montant{font-size:36px;font-weight:900;color:#2e7d32;}
-.minuteur-box{background:#e3f2fd;border:2px solid #90caf9;border-radius:14px;padding:16px;text-align:center;margin:10px 0;}
-.minuteur-temps{font-size:44px;font-weight:900;color:#1a73e8;font-family:monospace;}
 .meca-accepte-box{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:12px;padding:12px;margin-top:10px;}
 .divider{height:1px;background:#eee;margin:12px 0;}
 .pulse{animation:pulse 2s infinite;}
@@ -77,6 +75,7 @@ body{font-family:Arial,sans-serif;background:#f0f4ff;color:#1a1a1a;min-height:10
 .popup-titre{font-size:20px;font-weight:bold;text-align:center;margin-bottom:8px;}
 .popup-desc{font-size:13px;color:#888;text-align:center;line-height:1.6;margin-bottom:24px;}
 #carte-conteneur{width:100%;height:220px;border-radius:14px;overflow:hidden;margin:12px 0;border:1px solid #eee;}
+.photo-meca{width:60px;height:60px;border-radius:50%;object-fit:cover;border:3px solid #1a73e8;margin-right:10px;}
 </style>
 </head>
 <body>
@@ -85,7 +84,7 @@ body{font-family:Arial,sans-serif;background:#f0f4ff;color:#1a1a1a;min-height:10
     <div style="font-size:40px;font-weight:900;color:white;letter-spacing:2px;">MCM <span style="color:#90caf9;">SERVICE CI</span></div>
     <div style="font-size:14px;color:rgba(255,255,255,0.8);margin-top:8px;">🔧 Dépannage rapide à Abidjan</div>
   </div>
-  <div style="background:white;border-radius:28px 28px 0 0;padding:28px 24px 40px;flex:1;">
+  <div style="background:white;border-radius:28px 28px 0 0;padding:28px 24px 40px;flex:1;overflow-y:auto;">
     <div style="font-size:22px;font-weight:bold;margin-bottom:6px;">Bienvenue 👋</div>
     <div style="font-size:13px;color:#888;margin-bottom:24px;">Trouvez un mécanicien près de vous en quelques secondes.</div>
     <div style="display:flex;background:#f5f5f5;border-radius:12px;padding:4px;margin-bottom:20px;">
@@ -118,7 +117,12 @@ body{font-family:Arial,sans-serif;background:#f0f4ff;color:#1a1a1a;min-height:10
         </div>
         <div class="champ"><label>Transport</label>
           <select id="reg-transport"><option value="moto">🏍️ Moto</option><option value="velo">🚲 Vélo</option></select>
-<div class="champ"><label>Photo de profil</label><input type="file" id="reg-photo" accept="image/*" capture="user"><div id="photo-preview" style="margin-top:8px;display:none;"><img id="photo-img" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #1a73e8;"></div></div>
+        </div>
+        <div class="champ"><label>Photo de profil</label>
+          <input type="file" id="reg-photo" accept="image/*" capture="user" onchange="previewPhoto()">
+          <div id="photo-preview" style="margin-top:8px;display:none;text-align:center;">
+            <img id="photo-img" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #1a73e8;">
+          </div>
         </div>
       </div>
       <button class="btn btn-vert" onclick="faireInscription()">✅ Créer mon compte</button>
@@ -129,9 +133,7 @@ body{font-family:Arial,sans-serif;background:#f0f4ff;color:#1a1a1a;min-height:10
   </div>
 </div>
 <div id="page-client" class="page">
-  <div class="topbar">
-    <div class="topbar-left"><div class="topbar-logo">🚗</div><div><div class="topbar-nom" id="client-nom">Client</div><div class="topbar-role">Compte client</div></div></div>
-  </div>
+  <div class="topbar"><div class="topbar-left"><div class="topbar-logo">🚗</div><div><div class="topbar-nom" id="client-nom">Client</div><div class="topbar-role">Compte client</div></div></div></div>
   <div class="corps">
     <div style="background:#1a73e8;border-radius:16px;height:180px;margin-bottom:14px;overflow:hidden;"><div id="carte-hero" style="width:100%;height:100%;"></div></div>
     <button class="btn btn-bleu" style="font-size:17px;padding:18px;" onclick="affPage('page-demande')">🆘 Demander un mécanicien</button>
@@ -144,10 +146,7 @@ body{font-family:Arial,sans-serif;background:#f0f4ff;color:#1a1a1a;min-height:10
   </nav>
 </div>
 <div id="page-profil" class="page">
-  <div class="topbar">
-    <div class="topbar-left"><div class="topbar-logo">👤</div><div><div class="topbar-nom">Mon Profil</div><div class="topbar-role">Informations</div></div></div>
-    <button class="topbar-btn" onclick="retourAccueil()">⬅</button>
-  </div>
+  <div class="topbar"><div class="topbar-left"><div class="topbar-logo">👤</div><div><div class="topbar-nom">Mon Profil</div><div class="topbar-role">Informations</div></div></div><button class="topbar-btn" onclick="retourAccueil()">⬅</button></div>
   <div class="corps">
     <div class="card" style="text-align:center;padding:24px;">
       <div style="width:80px;height:80px;background:#1a73e8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 12px;" id="profil-ico">👤</div>
@@ -156,8 +155,7 @@ body{font-family:Arial,sans-serif;background:#f0f4ff;color:#1a1a1a;min-height:10
     </div>
     <div class="card">
       <div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #eee;"><span style="font-size:20px;">📧</span><div><div style="font-size:11px;color:#888;text-transform:uppercase;">Email</div><div style="font-weight:600;" id="profil-email2">-</div></div></div>
-      <div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #eee;"><span style="font-size:20px;">📞</span><div><div style="font-size:11px;color:#888;text-transform:uppercase;">WhatsApp</div><div style="font-weight:600;" id="profil-tel2">-</div></div></div>
-      <div style="display:flex;gap:12px;padding:12px 0;" id="profil-quartier-zone" style="display:none;"><span style="font-size:20px;">📍</span><div><div style="font-size:11px;color:#888;text-transform:uppercase;">Quartier</div><div style="font-weight:600;" id="profil-quartier2">-</div></div></div>
+      <div style="display:flex;gap:12px;padding:12px 0;"><span style="font-size:20px;">📞</span><div><div style="font-size:11px;color:#888;text-transform:uppercase;">WhatsApp</div><div style="font-weight:600;" id="profil-tel2">-</div></div></div>
     </div>
     <button class="btn btn-rouge" onclick="seDeconnecter()">🚪 Se déconnecter</button>
   </div>
@@ -193,7 +191,8 @@ body{font-family:Arial,sans-serif;background:#f0f4ff;color:#1a1a1a;min-height:10
       <div style="font-size:18px;font-weight:bold;margin-bottom:4px;" id="intervention-nom">Client</div>
       <div style="font-size:13px;color:#888;margin-bottom:16px;" id="intervention-info">En route...</div>
       <button class="btn btn-bleu" onclick="ouvrirMaps()" style="margin-bottom:8px;">🗺️ Ouvrir dans Maps</button>
-      <button class="btn btn-rouge" onclick="terminer()">🏁 Terminer l'intervention</button>
+      <button class="btn btn-orange" onclick="confirmerArrivee()" style="margin-bottom:8px;">📍 Je suis arrivé</button>
+      <button id="btn-terminer" class="btn btn-rouge" onclick="terminer()" style="display:none;">🏁 Terminer l'intervention</button>
     </div>
   </div>
 </div>
@@ -232,34 +231,267 @@ body{font-family:Arial,sans-serif;background:#f0f4ff;color:#1a1a1a;min-height:10
     <div id="msg-demande"></div>
   </div>
 </div>
-<div id="popup-geo" class="popup-fond" style="display:none;">
-  <div class="popup-contenu"><span class="popup-ico">📍</span><div class="popup-titre">Activer la localisation</div><div class="popup-desc">MCM SERVICE CI a besoin de votre GPS pour trouver les mécaniciens proches.</div><button class="btn btn-bleu" onclick="okGeo()">📍 Activer</button><button class="btn btn-gris" onclick="document.getElementById('popup-geo').style.display='none'">Plus tard</button></div>
-</div>
-<div id="popup-notif" class="popup-fond" style="display:none;">
-  <div class="popup-contenu"><span class="popup-ico">🔔</span><div class="popup-titre">Activer les notifications</div><div class="popup-desc">Soyez alerté quand un mécanicien accepte votre demande.</div><button class="btn btn-bleu" onclick="okNotif()">🔔 Activer</button><button class="btn btn-gris" onclick="document.getElementById('popup-notif').style.display='none'">Plus tard</button></div>
-</div>
-<div id="popup-noter" class="popup-fond" style="display:none;">
-  <div class="popup-contenu"><span class="popup-ico">⭐</span><div class="popup-titre">Noter le mécanicien</div><div class="popup-desc" id="noter-desc">Comment s'est passée l'intervention ?</div><div style="display:flex;justify-content:center;gap:12px;margin-bottom:24px;" id="noter-etoiles"></div><button class="btn btn-gris" onclick="document.getElementById('popup-noter').style.display='none'">Plus tard</button></div>
-</div>
+<div id="popup-geo" class="popup-fond" style="display:none;"><div class="popup-contenu"><span class="popup-ico">📍</span><div class="popup-titre">Activer la localisation</div><div class="popup-desc">MCM SERVICE CI a besoin de votre GPS pour trouver les mécaniciens proches.</div><button class="btn btn-bleu" onclick="okGeo()">📍 Activer</button><button class="btn btn-gris" onclick="document.getElementById('popup-geo').style.display='none'">Plus tard</button></div></div>
+<div id="popup-notif" class="popup-fond" style="display:none;"><div class="popup-contenu"><span class="popup-ico">🔔</span><div class="popup-titre">Activer les notifications</div><div class="popup-desc">Soyez alerté quand un mécanicien accepte votre demande.</div><button class="btn btn-bleu" onclick="okNotif()">🔔 Activer</button><button class="btn btn-gris" onclick="document.getElementById('popup-notif').style.display='none'">Plus tard</button></div></div>
+<div id="popup-noter" class="popup-fond" style="display:none;"><div class="popup-contenu"><span class="popup-ico">⭐</span><div class="popup-titre">Noter le mécanicien</div><div class="popup-desc" id="noter-desc">Comment s'est passée l'intervention ?</div><div style="display:flex;justify-content:center;gap:12px;margin-bottom:24px;" id="noter-etoiles"></div><button class="btn btn-gris" onclick="document.getElementById('popup-noter').style.display='none'">Plus tard</button></div></div>
 <div id="toast" style="display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:14px 24px;border-radius:12px;z-index:9999;font-weight:bold;font-size:14px;color:white;text-align:center;max-width:300px;box-shadow:0 4px 15px rgba(0,0,0,0.2);"></div>
-<div id="pwa-banner" style="display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a73e8;color:white;padding:14px 20px;border-radius:12px;z-index:9999;font-size:14px;display:flex;align-items:center;gap:12px;max-width:320px;width:90%;box-shadow:0 4px 20px rgba(26,115,232,0.4);"><span>🔄 Nouvelle version disponible</span><button onclick="majApp()" style="background:white;color:#1a73e8;border:none;padding:8px 14px;border-radius:8px;font-weight:bold;cursor:pointer;">Mettre à jour</button><button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:transparent;color:rgba(255,255,255,0.7);border:none;cursor:pointer;font-size:18px;">✕</button></div>
+<div id="pwa-banner" style="display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a73e8;color:white;padding:14px 20px;border-radius:12px;z-index:9999;font-size:14px;align-items:center;gap:12px;max-width:320px;width:90%;box-shadow:0 4px 20px rgba(26,115,232,0.4);"><span>🔄 Nouvelle version disponible</span><button onclick="majApp()" style="background:white;color:#1a73e8;border:none;padding:8px 14px;border-radius:8px;font-weight:bold;cursor:pointer;">Mettre à jour</button><button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:transparent;color:rgba(255,255,255,0.7);border:none;cursor:pointer;font-size:18px;">✕</button></div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MCM SERVICE CI</title>
+<meta name="theme-color" content="#1a73e8">
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Arial,sans-serif;background:#f0f4ff;color:#1a1a1a;min-height:100vh;}
+.page{display:none;min-height:100vh;flex-direction:column;}
+.page.actif{display:flex;}
+.btn{width:100%;padding:16px;border:none;border-radius:14px;font-size:15px;font-weight:bold;color:white;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-bleu{background:#1a73e8;}
+.btn-vert{background:#00c853;}
+.btn-rouge{background:#f44336;}
+.btn-gris{background:#e0e0e0;color:#666;}
+.btn-orange{background:#ff6600;}
+.btn-violet{background:#9c27b0;}
+.btn-sm{padding:7px 12px;font-size:11px;border-radius:8px;border:none;color:white;cursor:pointer;font-weight:bold;}
+.champ{margin-bottom:14px;}
+.champ label{font-size:12px;color:#666;margin-bottom:6px;display:block;font-weight:600;}
+.champ input,.champ select,.champ textarea{width:100%;padding:14px;border-radius:12px;border:1.5px solid #ddd;background:#fff;color:#1a1a1a;font-size:14px;outline:none;-webkit-appearance:none;}
+.champ input:focus,.champ select:focus{border-color:#1a73e8;}
+.champ textarea{height:80px;resize:none;}
+.msg{padding:12px;border-radius:10px;margin-bottom:12px;font-size:13px;text-align:center;font-weight:bold;}
+.msg.bon{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
+.msg.mauvais{background:#ffebee;color:#c62828;border:1px solid #ef9a9a;}
+.msg.info{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9;}
+.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid #e0e0e0;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+.card-titre{font-size:14px;font-weight:bold;color:#1a73e8;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #eee;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:#fff;border-bottom:1px solid #eee;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.topbar-logo{width:38px;height:38px;background:#1a73e8;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.topbar-nom{font-size:16px;font-weight:bold;}
+.topbar-role{font-size:11px;color:#888;}
+.topbar-btn{padding:8px 12px;background:#f5f5f5;border:none;border-radius:8px;cursor:pointer;font-size:14px;}
+.corps{flex:1;overflow-y:auto;padding:16px 16px 90px;}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;display:flex;padding:8px 0 20px;z-index:100;}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:#888;cursor:pointer;padding:6px;border:none;background:transparent;font-weight:600;}
+.nav-btn.actif{color:#1a73e8;}
+.nav-ico{font-size:22px;}
+.demande-card{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border-left:3px solid #1a73e8;box-shadow:0 2px 6px rgba(0,0,0,0.04);}
+.meca-card{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border-left:3px solid #ff6600;box-shadow:0 2px 6px rgba(0,0,0,0.04);}
+.user-card{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border-left:3px solid #9c27b0;box-shadow:0 2px 6px rgba(0,0,0,0.04);}
+.info-row{display:flex;align-items:center;gap:6px;font-size:12px;color:#888;margin-top:5px;}
+.badge{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:bold;display:inline-block;margin-left:5px;}
+.badge-certifie{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
+.badge-attente{background:#fff3e0;color:#e65100;border:1px solid #ffcc80;}
+.badge-client{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9;}
+.badge-admin{background:#f3e5f5;color:#6a1b9a;border:1px solid #ce93d8;}
+.badge-superadmin{background:#ffebee;color:#b71c1c;border:1px solid #ef9a9a;}
+.badge-refuse{background:#f5f5f5;color:#555;border:1px solid #ddd;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.stat-box{background:#fff;border-radius:14px;padding:14px;text-align:center;border:1px solid #eee;}
+.stat-num{font-size:32px;font-weight:900;color:#1a73e8;}
+.stat-lbl{font-size:11px;color:#888;margin-top:3px;}
+.geo-box{background:#e8f5e9;border:1.5px solid #a5d6a7;border-radius:12px;padding:12px;margin-bottom:12px;font-size:13px;color:#2e7d32;text-align:center;cursor:pointer;font-weight:600;}
+.geo-box.erreur{background:#ffebee;border-color:#ef9a9a;color:#c62828;}
+.geo-box.en-cours{background:#e3f2fd;border-color:#90caf9;color:#1565c0;}
+.prix-box{background:#e8f5e9;border:2px solid #a5d6a7;border-radius:14px;padding:16px;margin:12px 0;text-align:center;}
+.prix-montant{font-size:36px;font-weight:900;color:#2e7d32;}
+.meca-accepte-box{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:12px;padding:12px;margin-top:10px;}
+.divider{height:1px;background:#eee;margin:12px 0;}
+.pulse{animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
+.carte-plein{position:fixed;top:0;left:0;width:100%;height:100%;z-index:500;display:flex;flex-direction:column;}
+.carte-plein-map{flex:1;}
+.carte-plein-bas{background:#fff;padding:20px;box-shadow:0 -4px 20px rgba(0,0,0,0.1);}
+.popup-fond{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:999;display:flex;align-items:flex-end;justify-content:center;}
+.popup-contenu{background:#fff;border-radius:24px 24px 0 0;padding:28px 24px 40px;width:100%;max-width:500px;}
+.popup-ico{font-size:50px;text-align:center;display:block;margin-bottom:12px;}
+.popup-titre{font-size:20px;font-weight:bold;text-align:center;margin-bottom:8px;}
+.popup-desc{font-size:13px;color:#888;text-align:center;line-height:1.6;margin-bottom:24px;}
+#carte-conteneur{width:100%;height:220px;border-radius:14px;overflow:hidden;margin:12px 0;border:1px solid #eee;}
+.photo-meca{width:60px;height:60px;border-radius:50%;object-fit:cover;border:3px solid #1a73e8;margin-right:10px;}
+</style>
+</head>
+<body>
+<div id="page-accueil" class="page actif" style="background:linear-gradient(160deg,#1a73e8,#0d47a1);">
+  <div style="padding:60px 24px 30px;text-align:center;">
+    <div style="font-size:40px;font-weight:900;color:white;letter-spacing:2px;">MCM <span style="color:#90caf9;">SERVICE CI</span></div>
+    <div style="font-size:14px;color:rgba(255,255,255,0.8);margin-top:8px;">🔧 Dépannage rapide à Abidjan</div>
+  </div>
+  <div style="background:white;border-radius:28px 28px 0 0;padding:28px 24px 40px;flex:1;overflow-y:auto;">
+    <div style="font-size:22px;font-weight:bold;margin-bottom:6px;">Bienvenue 👋</div>
+    <div style="font-size:13px;color:#888;margin-bottom:24px;">Trouvez un mécanicien près de vous en quelques secondes.</div>
+    <div style="display:flex;background:#f5f5f5;border-radius:12px;padding:4px;margin-bottom:20px;">
+      <button id="tab-conn-btn" onclick="affTab('connexion')" style="flex:1;padding:10px;border:none;border-radius:9px;background:#1a73e8;color:white;font-size:13px;font-weight:bold;cursor:pointer;">🔑 Connexion</button>
+      <button id="tab-insc-btn" onclick="affTab('inscription')" style="flex:1;padding:10px;border:none;border-radius:9px;background:transparent;color:#888;font-size:13px;font-weight:bold;cursor:pointer;">✍️ Inscription</button>
+    </div>
+    <div id="zone-connexion">
+      <div class="champ"><label>Email</label><input type="email" id="login-email" placeholder="votre@email.com"></div>
+      <div class="champ"><label>Mot de passe</label><input type="password" id="login-mdp" placeholder="••••••••"></div>
+      <button class="btn btn-bleu" onclick="faireConnexion()">🔑 Se connecter</button>
+      <div id="msg-login"></div>
+    </div>
+    <div id="zone-inscription" style="display:none;">
+      <div class="champ"><label>Nom complet</label><input type="text" id="reg-nom" placeholder="Votre nom complet"></div>
+      <div class="champ"><label>Email</label><input type="email" id="reg-email" placeholder="votre@email.com"></div>
+      <div class="champ"><label>Mot de passe</label><input type="password" id="reg-mdp" placeholder="Minimum 6 caractères"></div>
+      <div class="champ"><label>WhatsApp</label><input type="tel" id="reg-tel" placeholder="07XXXXXXXX"></div>
+      <div class="champ"><label>Je suis</label>
+        <select id="reg-role" onchange="toggleMeca()">
+          <option value="client">🚗 Un Client</option>
+          <option value="mecanicien_en_attente">🔧 Un Mécanicien</option>
+        </select>
+      </div>
+      <div id="champs-meca" style="display:none;">
+        <div class="champ"><label>Quartier</label>
+          <select id="reg-quartier"><option value="">Choisir...</option><option>Yopougon</option><option>Cocody</option><option>Abobo</option><option>Adjamé</option><option>Plateau</option><option>Marcory</option><option>Koumassi</option><option>Port-Bouët</option><option>Treichville</option><option>Attécoubé</option></select>
+        </div>
+        <div class="champ"><label>Spécialité</label>
+          <select id="reg-specialite"><option value="">Choisir...</option><option>Panne moteur</option><option>Pneus et roues</option><option>Batterie et électricité</option><option>Freins</option><option>Carrosserie</option><option>Mécanique générale</option></select>
+        </div>
+        <div class="champ"><label>Transport</label>
+          <select id="reg-transport"><option value="moto">🏍️ Moto</option><option value="velo">🚲 Vélo</option></select>
+        </div>
+        <div class="champ"><label>Photo de profil</label>
+          <input type="file" id="reg-photo" accept="image/*" capture="user" onchange="previewPhoto()">
+          <div id="photo-preview" style="margin-top:8px;display:none;text-align:center;">
+            <img id="photo-img" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #1a73e8;">
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-vert" onclick="faireInscription()">✅ Créer mon compte</button>
+      <div id="msg-register"></div>
+    </div>
+    <div class="divider"></div>
+    <p style="text-align:center;font-size:11px;color:#aaa;">📱 Wave &nbsp;•&nbsp; 🟠 Orange Money &nbsp;•&nbsp; 💛 MTN Money</p>
+  </div>
+</div>
+<div id="page-client" class="page">
+  <div class="topbar"><div class="topbar-left"><div class="topbar-logo">🚗</div><div><div class="topbar-nom" id="client-nom">Client</div><div class="topbar-role">Compte client</div></div></div></div>
+  <div class="corps">
+    <div style="background:#1a73e8;border-radius:16px;height:180px;margin-bottom:14px;overflow:hidden;"><div id="carte-hero" style="width:100%;height:100%;"></div></div>
+    <button class="btn btn-bleu" style="font-size:17px;padding:18px;" onclick="affPage('page-demande')">🆘 Demander un mécanicien</button>
+    <div id="mes-demandes"></div>
+  </div>
+  <nav class="bottomnav">
+    <button class="nav-btn actif" onclick="affPage('page-client')"><span class="nav-ico">🏠</span>Accueil</button>
+    <button class="nav-btn" onclick="chargerMesDemandes()"><span class="nav-ico">📋</span>Demandes</button>
+    <button class="nav-btn" onclick="affProfil()"><span class="nav-ico">👤</span>Profil</button>
+  </nav>
+</div>
+<div id="page-profil" class="page">
+  <div class="topbar"><div class="topbar-left"><div class="topbar-logo">👤</div><div><div class="topbar-nom">Mon Profil</div><div class="topbar-role">Informations</div></div></div><button class="topbar-btn" onclick="retourAccueil()">⬅</button></div>
+  <div class="corps">
+    <div class="card" style="text-align:center;padding:24px;">
+      <div style="width:80px;height:80px;background:#1a73e8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 12px;" id="profil-ico">👤</div>
+      <div style="font-size:20px;font-weight:bold;" id="profil-nom2">-</div>
+      <div style="font-size:13px;color:#888;margin-top:4px;" id="profil-role2">-</div>
+    </div>
+    <div class="card">
+      <div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #eee;"><span style="font-size:20px;">📧</span><div><div style="font-size:11px;color:#888;text-transform:uppercase;">Email</div><div style="font-weight:600;" id="profil-email2">-</div></div></div>
+      <div style="display:flex;gap:12px;padding:12px 0;"><span style="font-size:20px;">📞</span><div><div style="font-size:11px;color:#888;text-transform:uppercase;">WhatsApp</div><div style="font-weight:600;" id="profil-tel2">-</div></div></div>
+    </div>
+    <button class="btn btn-rouge" onclick="seDeconnecter()">🚪 Se déconnecter</button>
+  </div>
+  <nav class="bottomnav">
+    <button class="nav-btn" onclick="retourAccueil()"><span class="nav-ico">🏠</span>Accueil</button>
+    <button class="nav-btn" onclick="chargerMesDemandes();affPage('page-client')"><span class="nav-ico">📋</span>Demandes</button>
+    <button class="nav-btn actif"><span class="nav-ico">👤</span>Profil</button>
+  </nav>
+</div>
+<div id="page-meca-attente" class="page">
+  <div class="topbar"><div class="topbar-left"><div class="topbar-logo">⏳</div><div><div class="topbar-nom">Dossier en cours</div><div class="topbar-role">Mécanicien</div></div></div><button class="topbar-btn" onclick="seDeconnecter()">🚪</button></div>
+  <div class="corps"><div class="card"><div class="card-titre">⏳ Dossier en examen</div><p style="color:#666;font-size:13px;line-height:1.6;">Votre dossier est en cours de vérification. Notre équipe vous contactera sous 24-48h sur WhatsApp.</p></div></div>
+</div>
+<div id="page-mecanicien" class="page">
+  <div class="topbar"><div class="topbar-left"><div class="topbar-logo">🔧</div><div><div class="topbar-nom" id="meca-nom">Mécanicien</div><div class="topbar-role" id="meca-info">Certifié ✅</div></div></div><button class="topbar-btn" onclick="affProfil()">👤</button></div>
+  <div class="corps">
+    <div id="meca-geo" class="geo-box en-cours pulse">📍 Capture de votre position GPS...</div>
+    <button id="btn-dispo" class="btn btn-vert" onclick="toggleDispo()">🟢 Disponible</button>
+    <button class="btn btn-bleu" onclick="chargerDemandes()">📋 Voir les demandes</button>
+    <button class="btn" style="background:#1557b0;color:white;" onclick="chargerHistorique()">📊 Mon historique</button>
+    <div id="liste-demandes"></div>
+  </div>
+  <nav class="bottomnav">
+    <button class="nav-btn actif"><span class="nav-ico">🏠</span>Accueil</button>
+    <button class="nav-btn" onclick="chargerDemandes()"><span class="nav-ico">📋</span>Demandes</button>
+    <button class="nav-btn" onclick="affProfil()"><span class="nav-ico">👤</span>Profil</button>
+  </nav>
+</div>
+<div id="page-intervention" class="page">
+  <div class="carte-plein">
+    <div id="carte-intervention" class="carte-plein-map"></div>
+    <div class="carte-plein-bas">
+      <div style="font-size:18px;font-weight:bold;margin-bottom:4px;" id="intervention-nom">Client</div>
+      <div style="font-size:13px;color:#888;margin-bottom:16px;" id="intervention-info">En route...</div>
+      <button class="btn btn-bleu" onclick="ouvrirMaps()" style="margin-bottom:8px;">🗺️ Ouvrir dans Maps</button>
+      <button class="btn btn-orange" onclick="confirmerArrivee()" style="margin-bottom:8px;">📍 Je suis arrivé</button>
+      <button id="btn-terminer" class="btn btn-rouge" onclick="terminer()" style="display:none;">🏁 Terminer l'intervention</button>
+    </div>
+  </div>
+</div>
+<div id="page-superadmin" class="page">
+  <div class="topbar"><div class="topbar-left"><div class="topbar-logo">👑</div><div><div class="topbar-nom" id="sa-nom">Super Admin</div><div class="topbar-role">Accès total</div></div></div><button class="topbar-btn" onclick="seDeconnecter()">🚪</button></div>
+  <div class="corps">
+    <div id="stats-admin" class="stat-grid"></div>
+    <button class="btn btn-violet" onclick="chargerMecasAttente('sa')">⏳ Mécaniciens en attente</button>
+    <button class="btn btn-bleu" onclick="chargerUtilisateurs('sa')">👥 Tous les utilisateurs</button>
+    <button class="btn btn-orange" onclick="chargerAdmins()">🛡️ Gérer les admins</button>
+    <div id="liste-sa"></div>
+  </div>
+</div>
+<div id="page-admin" class="page">
+  <div class="topbar"><div class="topbar-left"><div class="topbar-logo">🛡️</div><div><div class="topbar-nom" id="adm-nom">Admin</div><div class="topbar-role">Espace admin</div></div></div><button class="topbar-btn" onclick="seDeconnecter()">🚪</button></div>
+  <div class="corps">
+    <button class="btn btn-violet" onclick="chargerMecasAttente('adm')">⏳ Mécaniciens en attente</button>
+    <button class="btn btn-bleu" onclick="chargerUtilisateurs('adm')">👥 Tous les utilisateurs</button>
+    <div id="liste-adm"></div>
+  </div>
+</div>
+<div id="page-demande" class="page">
+  <div class="topbar"><div class="topbar-left"><div class="topbar-logo">🆘</div><div><div class="topbar-nom">Nouvelle demande</div><div class="topbar-role">Dépannage</div></div></div><button class="topbar-btn" onclick="affPage('page-client')">✕</button></div>
+  <div class="corps">
+    <div id="client-geo" class="geo-box" onclick="capturerGPS()">📍 Appuyez ici pour capturer votre position GPS</div>
+    <div id="carte-client-zone" style="display:none;"><div id="carte-conteneur"></div></div>
+    <div class="champ"><label>Votre quartier</label>
+      <select id="dem-quartier"><option value="">Choisir...</option><option>Yopougon</option><option>Cocody</option><option>Abobo</option><option>Adjamé</option><option>Plateau</option><option>Marcory</option><option>Koumassi</option><option>Port-Bouët</option><option>Treichville</option><option>Attécoubé</option></select>
+    </div>
+    <div class="champ"><label>Type de panne</label>
+      <select id="dem-type" onchange="calcPrix()"><option value="">Choisir...</option><option value="Pneu crevé">🔧 Pneu crevé</option><option value="Panne moteur">⚙️ Panne moteur</option><option value="Batterie">🔋 Batterie</option><option value="Freins">🛑 Freins</option><option value="Carrosserie">🚗 Carrosserie</option><option value="Autre">❓ Autre</option></select>
+    </div>
+    <div id="prix-zone" style="display:none;"><div class="prix-box"><div class="prix-montant" id="prix-val">0 FCFA</div><div style="font-size:11px;color:#888;margin-top:4px;" id="prix-det">Prix estimé</div></div></div>
+    <div class="champ"><label>Description</label><textarea id="dem-desc" placeholder="Décrivez votre panne..."></textarea></div>
+    <button class="btn btn-vert" onclick="envoyerDemande()">📤 Envoyer la demande</button>
+    <div id="msg-demande"></div>
+  </div>
+</div>
+<div id="popup-geo" class="popup-fond" style="display:none;"><div class="popup-contenu"><span class="popup-ico">📍</span><div class="popup-titre">Activer la localisation</div><div class="popup-desc">MCM SERVICE CI a besoin de votre GPS pour trouver les mécaniciens proches.</div><button class="btn btn-bleu" onclick="okGeo()">📍 Activer</button><button class="btn btn-gris" onclick="document.getElementById('popup-geo').style.display='none'">Plus tard</button></div></div>
+<div id="popup-notif" class="popup-fond" style="display:none;"><div class="popup-contenu"><span class="popup-ico">🔔</span><div class="popup-titre">Activer les notifications</div><div class="popup-desc">Soyez alerté quand un mécanicien accepte votre demande.</div><button class="btn btn-bleu" onclick="okNotif()">🔔 Activer</button><button class="btn btn-gris" onclick="document.getElementById('popup-notif').style.display='none'">Plus tard</button></div></div>
+<div id="popup-noter" class="popup-fond" style="display:none;"><div class="popup-contenu"><span class="popup-ico">⭐</span><div class="popup-titre">Noter le mécanicien</div><div class="popup-desc" id="noter-desc">Comment s'est passée l'intervention ?</div><div style="display:flex;justify-content:center;gap:12px;margin-bottom:24px;" id="noter-etoiles"></div><button class="btn btn-gris" onclick="document.getElementById('popup-noter').style.display='none'">Plus tard</button></div></div>
+<div id="toast" style="display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:14px 24px;border-radius:12px;z-index:9999;font-weight:bold;font-size:14px;color:white;text-align:center;max-width:300px;box-shadow:0 4px 15px rgba(0,0,0,0.2);"></div>
+<div id="pwa-banner" style="display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a73e8;color:white;padding:14px 20px;border-radius:12px;z-index:9999;font-size:14px;align-items:center;gap:12px;max-width:320px;width:90%;box-shadow:0 4px 20px rgba(26,115,232,0.4);"><span>🔄 Nouvelle version disponible</span><button onclick="majApp()" style="background:white;color:#1a73e8;border:none;padding:8px 14px;border-radius:8px;font-weight:bold;cursor:pointer;">Mettre à jour</button><button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:transparent;color:rgba(255,255,255,0.7);border:none;cursor:pointer;font-size:18px;">✕</button></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 var SB='https://ddpedkjmuslcrzqjjfoi.supabase.co';
 var KEY='sb_publishable_IiH75oXzI79hsqW3zMar8w_skKQtqIl';
 var H={'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+KEY};
 var SA=['adamomaiga225m@gmail.com','camaraabou6066@gmail.com'];
+var VAPID='BK7WcRlvj1FTyaaSW_LtLUAE0S8aG3aI9O130lXSbwuI5va5xDojo9XYDwXI7iyH7JkMNQdKBhiCJILvQJuDNuY';
 var user=null,cLat=null,cLng=null,mLat=null,mLng=null;
-var carteHero=null,carteClient=null,carteIntv=null,demandeActuelle=null,timer=null;
-var PRIX={'Pneu crevé':3000,'Panne moteur':8000,'Batterie':4000,'Freins':6000,'Carrosserie':5000,'Autre':4000};
+var carteHero=null,carteClient=null,carteIntv=null,demandeActuelle=null,timerRefresh=null;
 var ancStatuts={};
+var PRIX={'Pneu crevé':3000,'Panne moteur':8000,'Batterie':4000,'Freins':6000,'Carrosserie':5000,'Autre':4000};
 
 function toast(msg,bg){
   var t=document.getElementById('toast');
   t.textContent=msg;t.style.background=bg||'#1a73e8';t.style.display='block';
-  setTimeout(function(){t.style.display='none';},3500);
+  setTimeout(function(){t.style.display='none';},4000);
 }
-function msg(id,txt,type){
+function aff(id,txt,type){
   var el=document.getElementById(id);
   if(el){el.innerHTML='<div class="msg '+type+'">'+txt+'</div>';setTimeout(function(){if(document.getElementById(id))document.getElementById(id).innerHTML='';},5000);}
 }
@@ -279,11 +511,18 @@ function affTab(tab){
   document.getElementById('tab-insc-btn').style.color=tab==='inscription'?'white':'#888';
 }
 function toggleMeca(){
-  var r=document.getElementById('reg-role').value;
-  document.getElementById('champs-meca').style.display=r==='mecanicien_en_attente'?'block':'none';
+  document.getElementById('champs-meca').style.display=document.getElementById('reg-role').value==='mecanicien_en_attente'?'block':'none';
+}
+function previewPhoto(){
+  var f=document.getElementById('reg-photo').files[0];
+  if(f){
+    var r=new FileReader();
+    r.onload=function(e){document.getElementById('photo-img').src=e.target.result;document.getElementById('photo-preview').style.display='block';};
+    r.readAsDataURL(f);
+  }
 }
 function getBadge(r){
-  var b={superadmin:'<span class="badge badge-superadmin">👑 Super Admin</span>',admin:'<span class="badge badge-admin">🛡️ Admin</span>',mecanicien_certifie:'<span class="badge badge-certifie">✅ Certifié</span>',mecanicien_en_attente:'<span class="badge badge-attente">⏳ En attente</span>',client:'<span class="badge badge-client">🚗 Client</span>',refuse:'<span class="badge badge-refuse">❌ Refusé</span>',suspendu:'<span class="badge badge-refuse">⛔ Suspendu</span>'};
+  var b={superadmin:'<span class="badge badge-superadmin">👑</span>',admin:'<span class="badge badge-admin">🛡️</span>',mecanicien_certifie:'<span class="badge badge-certifie">✅</span>',mecanicien_en_attente:'<span class="badge badge-attente">⏳</span>',client:'<span class="badge badge-client">🚗</span>',refuse:'<span class="badge badge-refuse">❌</span>',suspendu:'<span class="badge badge-refuse">⛔</span>'};
   return b[r]||r;
 }
 function getPrix(type){
@@ -348,7 +587,9 @@ function okGeo(){
 }
 function okNotif(){
   document.getElementById('popup-notif').style.display='none';
-  if('Notification' in window)Notification.requestPermission();
+  if('Notification' in window){
+    Notification.requestPermission().then(function(p){if(p==='granted')activerPush();});
+  }
 }
 function demanderPermissions(){setTimeout(function(){document.getElementById('popup-geo').style.display='flex';},1200);}
 function retourAccueil(){if(user)rediriger(user);}
@@ -361,11 +602,14 @@ function affProfil(){
   document.getElementById('profil-role2').textContent=roles[user.role]||user.role;
   document.getElementById('profil-email2').textContent=user.email;
   document.getElementById('profil-tel2').textContent=user.telephone;
-  if(user.quartier){document.getElementById('profil-quartier2').textContent=user.quartier;document.getElementById('profil-quartier-zone').style.display='flex';}
   affPage('page-profil');
 }
+function initAncStatuts(){
+  if(!user||user.role!=='client')return;
+  fetch(SB+'/rest/v1/demandes?client_id=eq.'+user.id,{headers:H}).then(function(r){return r.json();}).then(function(data){if(data)for(var i=0;i<data.length;i++)ancStatuts[data[i].id]=data[i].statut;});
+}
 function rediriger(u){
-  if(timer)clearInterval(timer);
+  if(timerRefresh)clearInterval(timerRefresh);
   if(u.role==='superadmin'){document.getElementById('sa-nom').textContent=u.nom+' 👑';affPage('page-superadmin');chargerStats();}
   else if(u.role==='admin'){document.getElementById('adm-nom').textContent=u.nom+' 🛡️';affPage('page-admin');}
   else if(u.role==='mecanicien_certifie'){
@@ -375,19 +619,27 @@ function rediriger(u){
     btn.textContent=u.disponible!==false?'🟢 Disponible':'🔴 Indisponible';
     btn.style.background=u.disponible!==false?'#00c853':'#f44336';
     affPage('page-mecanicien');capturerGPSMeca();demanderPermissions();
-    timer=setInterval(function(){if(user&&user.role==='mecanicien_certifie'&&!demandeActuelle)chargerDemandes();},5000);
+    timerRefresh=setInterval(function(){if(user&&user.role==='mecanicien_certifie'&&!demandeActuelle)chargerDemandes();},5000);
   }
   else if(u.role==='mecanicien_en_attente'){affPage('page-meca-attente');}
   else{
     document.getElementById('client-nom').textContent=u.nom;
-    affPage('page-client');chargerMesDemandes();demanderPermissions();initAncStatuts();
-    timer=setInterval(function(){if(user&&user.role==='client')rafraichirClient();},5000);
+    affPage('page-client');chargerMesDemandes();demanderPermissions();
+    initAncStatuts();
+    timerRefresh=setInterval(function(){if(user&&user.role==='client')rafraichirClient();},5000);
   }
+}
+async function uploadPhoto(file,userId){
+  var ext=file.name.split('.').pop()||'jpg';
+  var path='mecas/'+userId+'.'+ext;
+  var res=await fetch(SB+'/storage/v1/object/photos/'+path,{method:'POST',headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':file.type,'x-upsert':'true'},body:file});
+  if(res.ok)return SB+'/storage/v1/object/public/photos/'+path;
+  return null;
 }
 async function faireConnexion(){
   var email=document.getElementById('login-email').value.trim().toLowerCase();
   var mdp=document.getElementById('login-mdp').value;
-  if(!email||!mdp){msg('msg-login','Remplissez tous les champs','mauvais');return;}
+  if(!email||!mdp){aff('msg-login','Remplissez tous les champs','mauvais');return;}
   try{
     var res=await fetch(SB+'/rest/v1/profiles?email=eq.'+encodeURIComponent(email)+'&select=*',{headers:H});
     var data=await res.json();
@@ -399,11 +651,10 @@ async function faireConnexion(){
           u.role='superadmin';
         }
         user=u;localStorage.setItem('mcm_user',JSON.stringify(u));rediriger(u);
-      }else{msg('msg-login','Mot de passe incorrect','mauvais');}
-    }else{msg('msg-login','Aucun compte trouvé','mauvais');}
-  }catch(e){msg('msg-login','Connexion impossible: '+e.message,'mauvais');}
+      }else{aff('msg-login','Mot de passe incorrect','mauvais');}
+    }else{aff('msg-login','Aucun compte trouvé','mauvais');}
+  }catch(e){aff('msg-login','Connexion impossible: '+e.message,'mauvais');}
 }
-async function uploadPhoto(file,userId){var ext=file.name.split('.').pop();var path='mecas/'+userId+'.'+ext;var res=await fetch('https://ddpedkjmuslcrzqjjfoi.supabase.co/storage/v1/object/photos/'+path,{method:'POST',headers:{'apikey':'sb_publishable_IiH75oXzI79hsqW3zMar8w_skKQtqIl','Authorization':'Bearer sb_publishable_IiH75oXzI79hsqW3zMar8w_skKQtqIl','Content-Type':file.type},body:file});if(res.ok)return 'https://ddpedkjmuslcrzqjjfoi.supabase.co/storage/v1/object/public/photos/'+path;return null;}
 async function faireInscription(){
   var nom=document.getElementById('reg-nom').value.trim();
   var email=document.getElementById('reg-email').value.trim().toLowerCase();
@@ -413,26 +664,55 @@ async function faireInscription(){
   var quartier=document.getElementById('reg-quartier').value;
   var specialite=document.getElementById('reg-specialite').value;
   var transport=document.getElementById('reg-transport').value||'moto';
-  if(!nom||!email||!mdp||!tel){msg('msg-register','Remplissez tous les champs','mauvais');return;}
-  if(mdp.length<6){msg('msg-register','Mot de passe minimum 6 caractères','mauvais');return;}
-  if(SA.includes(email))role='superadmin';var pInput=document.getElementById('reg-photo');var photoFile=pInput?pInput.files[0]:null;var photoUrl=null;if(photoFile){photoUrl=await uploadPhoto(photoFile,Date.now());}
+  if(!nom||!email||!mdp||!tel){aff('msg-register','Remplissez tous les champs','mauvais');return;}
+  if(mdp.length<6){aff('msg-register','Mot de passe minimum 6 caractères','mauvais');return;}
+  if(SA.includes(email))role='superadmin';
   try{
-    var res=await fetch(SB+'/rest/v1/profiles',{method:'POST',headers:Object.assign({},H,{'Prefer':'return=minimal'}),body:JSON.stringify({nom:nom,email:email,telephone:tel,mot_de_passe:mdp,role:role,quartier:quartier,specialite:specialite,transport:transport,disponible:true,photo_url:photoUrl})});
-    if(res.ok||res.status===201){msg('msg-register','Compte créé ! Connectez-vous.','bon');affTab('connexion');}
-    else{var d=await res.json();msg('msg-register','Erreur: '+(d.message||d.details||res.status),'mauvais');}
-  }catch(e){msg('msg-register','Connexion impossible: '+e.message,'mauvais');}
+    var body={nom:nom,email:email,telephone:tel,mot_de_passe:mdp,role:role,quartier:quartier,specialite:specialite,transport:transport,disponible:true};
+    var res=await fetch(SB+'/rest/v1/profiles',{method:'POST',headers:Object.assign({},H,{'Prefer':'return=representation'}),body:JSON.stringify(body)});
+    if(res.ok||res.status===201){
+      var created=await res.json();
+      var newId=created&&created[0]?created[0].id:null;
+      var photoFile=document.getElementById('reg-photo').files[0];
+      if(photoFile&&newId){
+        var url=await uploadPhoto(photoFile,newId);
+        if(url)await fetch(SB+'/rest/v1/profiles?id=eq.'+newId,{method:'PATCH',headers:Object.assign({},H,{'Prefer':'return=minimal'}),body:JSON.stringify({photo_url:url})});
+      }
+      aff('msg-register',role==='mecanicien_en_attente'?'✅ Dossier envoyé !':'✅ Compte créé ! Connectez-vous.','bon');
+      affTab('connexion');
+    }else{var d=await res.json();aff('msg-register','Erreur: '+(d.message||d.details||res.status),'mauvais');}
+  }catch(e){aff('msg-register','Connexion impossible: '+e.message,'mauvais');}
 }
 async function envoyerDemande(){
   var quartier=document.getElementById('dem-quartier').value;
   var type=document.getElementById('dem-type').value;
   var desc=document.getElementById('dem-desc').value.trim();
-  if(!quartier||!type||!desc){msg('msg-demande','Remplissez tous les champs','mauvais');return;}
+  if(!quartier||!type||!desc){aff('msg-demande','Remplissez tous les champs','mauvais');return;}
   var r=getPrix(type);
   try{
     var res=await fetch(SB+'/rest/v1/demandes',{method:'POST',headers:Object.assign({},H,{'Prefer':'return=minimal'}),body:JSON.stringify({client_nom:user.nom,client_telephone:user.telephone,client_id:user.id,quartier:quartier,type_panne:type,description:desc,statut:'attente',mecanicien_id:'',prix_estime:r.prix,client_lat:cLat,client_lng:cLng})});
     if(res.ok||res.status===201){toast('✅ Demande envoyée ! '+r.prix.toLocaleString()+' FCFA','#2e7d32');setTimeout(function(){affPage('page-client');chargerMesDemandes();},1500);}
-    else{msg('msg-demande','Erreur envoi','mauvais');}
-  }catch(e){msg('msg-demande','Connexion impossible','mauvais');}
+    else{aff('msg-demande','Erreur envoi','mauvais');}
+  }catch(e){aff('msg-demande','Connexion impossible','mauvais');}
+}
+async function rafraichirClient(){
+  if(!user||user.role!=='client')return;
+  try{
+    var res=await fetch(SB+'/rest/v1/demandes?client_id=eq.'+user.id+'&order=created_at.desc',{headers:H});
+    var data=await res.json();
+    if(!data)return;
+    var changed=false;
+    for(var i=0;i<data.length;i++){
+      var d=data[i];
+      if(ancStatuts[d.id]!==undefined&&ancStatuts[d.id]!==d.statut){
+        changed=true;
+        if(d.statut==='accepte')toast('🔧 '+d.mecanicien_nom+' est en route vers vous !','#2e7d32');
+        if(d.statut==='termine')toast('🏁 Intervention terminée ! Notez votre mécanicien.','#1a73e8');
+      }
+      ancStatuts[d.id]=d.statut;
+    }
+    if(changed)chargerMesDemandes();
+  }catch(e){}
 }
 async function chargerMesDemandes(){
   try{
@@ -450,13 +730,15 @@ async function chargerMesDemandes(){
         html+='<div style="color:#888;font-size:12px;margin-top:6px">'+d.description+'</div>';
         html+='<div style="color:'+c[d.statut]+';font-size:13px;font-weight:bold;margin-top:8px">'+(s[d.statut]||d.statut)+'</div>';
         if(d.statut==='accepte'&&d.mecanicien_nom){
-          html+='<div class="meca-accepte-box"><div style="color:#2e7d32;font-weight:bold;font-size:15px">🔧 '+d.mecanicien_nom+'</div>';
+          html+='<div class="meca-accepte-box">';
+          if(d.mecanicien_photo){html+='<img src="'+d.mecanicien_photo+'" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:3px solid #1a73e8;float:left;margin-right:10px;">';}
+          html+='<div style="color:#2e7d32;font-weight:bold;font-size:15px">🔧 '+d.mecanicien_nom+'</div>';
           html+='<div class="info-row">📞 '+d.mecanicien_tel+'</div>';
           if(d.distance_km){html+='<div class="info-row" style="color:#1a73e8">📍 '+d.distance_km.toFixed(1)+' km &nbsp;•&nbsp; ⏱️ '+tempsStr(d.distance_km,'moto')+'</div>';}
-          html+='</div>';
+          html+='<div style="clear:both;"></div></div>';
         }
         if(d.statut==='termine'&&!d.note){
-          html+='<button class="btn btn-vert" style="margin-top:8px;padding:10px;" onclick="ouvrirNotation(\''+d.id+'\',\''+d.mecanicien_id+'\',\''+d.mecanicien_nom+'\')">⭐ Noter</button>';
+          html+='<button class="btn btn-vert" style="margin-top:8px;padding:10px;" onclick="ouvrirNotation(\''+d.id+'\',\''+d.mecanicien_id+'\',\''+d.mecanicien_nom+'\')">⭐ Noter le mécanicien</button>';
         }
         html+='</div>';
       }
@@ -464,7 +746,6 @@ async function chargerMesDemandes(){
       el.innerHTML=html;
     }else{el.innerHTML='<div class="card"><p style="color:#888;text-align:center;padding:15px">Aucune demande pour le moment</p></div>';}
   }catch(e){}
-}
 }
 async function chargerDemandes(){
   if(demandeActuelle)return;
@@ -493,17 +774,19 @@ async function chargerDemandes(){
 async function accepter(id,nom,tel,clt_lat,clt_lng,clientId){
   var km=null,tm=null;
   if(mLat&&mLng&&clt_lat&&clt_lng){km=distKm(mLat,mLng,clt_lat,clt_lng);var v=user.transport==='velo'?15:30;tm=Math.round(km/v*60);}
+  var photoMeca=user.photo_url||null;
   try{
-    await fetch(SB+'/rest/v1/demandes?id=eq.'+id,{method:'PATCH',headers:Object.assign({},H,{'Prefer':'return=minimal'}),body:JSON.stringify({statut:'accepte',mecanicien_id:user.id,mecanicien_nom:user.nom,mecanicien_tel:user.telephone,meca_lat:mLat,meca_lng:mLng,distance_km:km,temps_minutes:tm})});
+    await fetch(SB+'/rest/v1/demandes?id=eq.'+id,{method:'PATCH',headers:Object.assign({},H,{'Prefer':'return=minimal'}),body:JSON.stringify({statut:'accepte',mecanicien_id:user.id,mecanicien_nom:user.nom,mecanicien_tel:user.telephone,meca_lat:mLat,meca_lng:mLng,distance_km:km,temps_minutes:tm,mecanicien_photo:photoMeca})});
     demandeActuelle={id:id,nom:nom,tel:tel,lat:clt_lat,lng:clt_lng,clientId:clientId,km:km};
     toast('✅ Demande acceptée - '+nom,'#2e7d32');
-    ouvrirIntervention(nom,tel,clt_lat,clt_lng,km,tm);
+    ouvrirIntervention(nom,tel,clt_lat,clt_lng,km);
   }catch(e){toast('❌ Erreur','#c62828');}
 }
-function ouvrirIntervention(nom,tel,lat,lng,km,tm){
+function ouvrirIntervention(nom,tel,lat,lng,km){
   affPage('page-intervention');
   document.getElementById('intervention-nom').textContent='🚗 '+nom+' — 📞 '+tel;
-  document.getElementById('intervention-info').textContent=km?'📍 '+km.toFixed(1)+' km &nbsp;•&nbsp; ⏱️ '+tempsStr(km,'moto'):'En route vers le client';
+  document.getElementById('intervention-info').textContent=km?'📍 '+km.toFixed(1)+' km — En route...':'En route vers le client';
+  document.getElementById('btn-terminer').style.display='none';
   if(carteIntv){carteIntv.remove();carteIntv=null;}
   setTimeout(function(){
     if(!lat||!lng)return;
@@ -523,8 +806,14 @@ function ouvrirMaps(){
   if(!demandeActuelle||!demandeActuelle.lat)return;
   window.open('https://www.google.com/maps/dir/?api=1&destination='+demandeActuelle.lat+','+demandeActuelle.lng,'_blank');
 }
+function confirmerArrivee(){
+  document.getElementById('intervention-info').textContent='✅ Vous êtes arrivé ! Effectuez la réparation.';
+  document.getElementById('btn-terminer').style.display='flex';
+  toast('📍 Arrivée confirmée !','#2e7d32');
+}
 async function terminer(){
   if(!demandeActuelle)return;
+  if(!confirm('Confirmer la fin de l\'intervention ?'))return;
   try{
     await fetch(SB+'/rest/v1/demandes?id=eq.'+demandeActuelle.id,{method:'PATCH',headers:Object.assign({},H,{'Prefer':'return=minimal'}),body:JSON.stringify({statut:'termine'})});
     toast('🏁 Intervention terminée !','#2e7d32');
@@ -550,21 +839,18 @@ async function chargerHistorique(){
     if(data&&data.length>0){
       var total=0;for(var i=0;i<data.length;i++)total+=(data[i].prix_estime||0);
       var html='<div class="card"><div class="card-titre">📊 Historique</div><div style="background:#e8f5e9;border-radius:12px;padding:12px;margin-bottom:12px;text-align:center;"><div style="font-size:11px;color:#888;">TOTAL GAGNÉ</div><div style="font-size:28px;font-weight:900;color:#2e7d32;">'+total.toLocaleString()+' FCFA</div></div>';
-      for(var i=0;i<data.length;i++){var d=data[i];html+='<div class="demande-card"><div style="font-weight:bold;color:#1a73e8">'+d.type_panne+'</div><div class="info-row">📍 '+d.quartier+' &nbsp;•&nbsp; 👤 '+d.client_nom+'</div><div style="color:#2e7d32;font-weight:bold;margin-top:5px">💰 '+(d.prix_estime||0).toLocaleString()+' FCFA</div>'+(d.note?'<div style="color:#f59e0b">'+('⭐'.repeat(d.note))+'</div>':'')+'</div>';}
+      for(var i=0;i<data.length;i++){var d=data[i];html+='<div class="demande-card"><div style="font-weight:bold;color:#1a73e8">'+d.type_panne+'</div><div class="info-row">📍 '+d.quartier+' &nbsp;•&nbsp; 👤 '+d.client_nom+'</div><div style="color:#2e7d32;font-weight:bold;margin-top:5px">💰 '+(d.prix_estime||0).toLocaleString()+' FCFA</div>'+(d.note?'<div>'+('⭐'.repeat(d.note))+'</div>':'')+'</div>';}
       el.innerHTML=html+'</div>';
     }else{el.innerHTML='<div class="card"><p style="color:#888;text-align:center;padding:15px">Aucune intervention terminée</p></div>';}
   }catch(e){}
 }
 function ouvrirNotation(dId,mId,mNom){
   document.getElementById('noter-desc').textContent='Comment s\'est passée l\'intervention de '+mNom+' ?';
-  var el=document.getElementById('noter-etoiles');
-  el.innerHTML='';
+  var el=document.getElementById('noter-etoiles');el.innerHTML='';
   for(var n=1;n<=5;n++){
     var btn=document.createElement('button');
     btn.textContent='⭐';btn.style.cssText='font-size:40px;background:none;border:none;cursor:pointer;padding:4px;';
-    btn.setAttribute('data-n',n);
-    btn.setAttribute('data-did',dId);
-    btn.setAttribute('data-mid',mId);
+    btn.setAttribute('data-n',n);btn.setAttribute('data-did',dId);btn.setAttribute('data-mid',mId);
     btn.onclick=function(){noter(this.getAttribute('data-did'),this.getAttribute('data-mid'),parseInt(this.getAttribute('data-n')));};
     el.appendChild(btn);
   }
@@ -592,7 +878,7 @@ async function chargerMecasAttente(who){
   var elId=who==='sa'?'liste-sa':'liste-adm';var el=document.getElementById(elId);
   try{
     var res=await fetch(SB+'/rest/v1/profiles?role=eq.mecanicien_en_attente&order=created_at.desc',{headers:H});var data=await res.json();
-    if(data&&data.length>0){el.innerHTML='<div class="card"><div class="card-titre">⏳ En attente ('+data.length+')</div>'+data.map(function(u){return'<div class="meca-card"><div style="font-weight:bold">'+u.nom+'</div><div class="info-row">📧 '+u.email+'</div><div class="info-row">📞 '+u.telephone+'</div><div class="info-row">📍 '+(u.quartier||'?')+' • '+(u.specialite||'?')+'</div><div style="display:flex;gap:8px;margin-top:10px;"><button class="btn-sm" style="background:#00c853;flex:1;" onclick="validerMeca(\''+u.id+'\',\''+u.nom+'\')">✅ Certifier</button><button class="btn-sm" style="background:#f44336;flex:1;" onclick="refuserMeca(\''+u.id+'\',\''+u.nom+'\')">❌ Refuser</button></div></div>';}).join('')+'</div>';}
+    if(data&&data.length>0){el.innerHTML='<div class="card"><div class="card-titre">⏳ En attente ('+data.length+')</div>'+data.map(function(u){return'<div class="meca-card">'+(u.photo_url?'<img src="'+u.photo_url+'" style="width:50px;height:50px;border-radius:50%;object-fit:cover;float:left;margin-right:10px;border:2px solid #1a73e8;">':'')+'<div style="font-weight:bold">'+u.nom+'</div><div class="info-row">📧 '+u.email+'</div><div class="info-row">📍 '+(u.quartier||'?')+' • '+(u.specialite||'?')+'</div><div style="clear:both;display:flex;gap:8px;margin-top:10px;"><button class="btn-sm" style="background:#00c853;flex:1;" onclick="validerMeca(\''+u.id+'\',\''+u.nom+'\')">✅ Certifier</button><button class="btn-sm" style="background:#f44336;flex:1;" onclick="refuserMeca(\''+u.id+'\',\''+u.nom+'\')">❌ Refuser</button></div></div>';}).join('')+'</div>';}
     else{el.innerHTML='<div class="card"><p style="color:#888;text-align:center;padding:15px">✅ Aucun en attente</p></div>';}
   }catch(e){}
 }
@@ -602,7 +888,7 @@ async function chargerUtilisateurs(who){
   var elId=who==='sa'?'liste-sa':'liste-adm';var el=document.getElementById(elId);
   try{
     var res=await fetch(SB+'/rest/v1/profiles?order=created_at.desc',{headers:H});var data=await res.json();
-    el.innerHTML='<div class="card"><div class="card-titre">👥 Utilisateurs ('+data.length+')</div>'+data.map(function(u){return'<div class="user-card"><div style="font-weight:bold">'+u.nom+getBadge(u.role)+'</div><div class="info-row">📧 '+u.email+'</div><div class="info-row">📞 '+u.telephone+'</div>'+(u.quartier?'<div class="info-row">📍 '+u.quartier+(u.specialite?' • '+u.specialite:'')+'</div>':'')+(u.role!=='superadmin'?'<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;"><button class="btn-sm" style="background:#f44336;" onclick="supprimerU(\''+u.id+'\',\''+u.nom+'\')">🗑️</button><button class="btn-sm" style="background:#ff9800;" onclick="suspendreU(\''+u.id+'\',\''+u.nom+'\')">⛔</button></div>':'')+'</div>';}).join('')+'</div>';
+    el.innerHTML='<div class="card"><div class="card-titre">👥 Utilisateurs ('+data.length+')</div>'+data.map(function(u){return'<div class="user-card"><div style="font-weight:bold">'+u.nom+' '+getBadge(u.role)+'</div><div class="info-row">📧 '+u.email+'</div><div class="info-row">📞 '+u.telephone+'</div>'+(u.role!=='superadmin'?'<div style="display:flex;gap:8px;margin-top:8px;"><button class="btn-sm" style="background:#f44336;" onclick="supprimerU(\''+u.id+'\',\''+u.nom+'\')">🗑️</button><button class="btn-sm" style="background:#ff9800;" onclick="suspendreU(\''+u.id+'\',\''+u.nom+'\')">⛔</button></div>':'')+'</div>';}).join('')+'</div>';
   }catch(e){}
 }
 async function supprimerU(id,nom){if(!confirm('Supprimer '+nom+' ?'))return;await fetch(SB+'/rest/v1/profiles?id=eq.'+id,{method:'DELETE',headers:H});toast('✅ Supprimé.','#2e7d32');chargerUtilisateurs(user.role==='superadmin'?'sa':'adm');}
@@ -611,14 +897,22 @@ async function chargerAdmins(){
   var el=document.getElementById('liste-sa');
   try{
     var r=await fetch(SB+'/rest/v1/profiles?role=in.(admin,superadmin)&order=created_at.desc',{headers:H});var data=await r.json();
-    el.innerHTML='<div class="card"><div class="card-titre">🛡️ Admins ('+data.length+'/10)</div>'+data.map(function(u){return'<div class="user-card"><div style="font-weight:bold">'+u.nom+getBadge(u.role)+'</div><div class="info-row">📧 '+u.email+'</div>'+(u.role==='admin'?'<button class="btn-sm" style="background:#f44336;margin-top:6px;" onclick="retirerAdmin(\''+u.id+'\',\''+u.nom+'\')">Retirer</button>':'')+'</div>';}).join('')+'</div>';
+    el.innerHTML='<div class="card"><div class="card-titre">🛡️ Admins</div>'+data.map(function(u){return'<div class="user-card"><div style="font-weight:bold">'+u.nom+' '+getBadge(u.role)+'</div><div class="info-row">📧 '+u.email+'</div>'+(u.role==='admin'?'<button class="btn-sm" style="background:#f44336;margin-top:6px;" onclick="retirerAdmin(\''+u.id+'\',\''+u.nom+'\')">Retirer</button>':'')+'</div>';}).join('')+'</div>';
     if(data.length<10){var r2=await fetch(SB+'/rest/v1/profiles?role=eq.mecanicien_certifie&order=nom',{headers:H});var mecs=await r2.json();if(mecs&&mecs.length>0)el.innerHTML+='<div class="card"><div class="card-titre">➕ Nommer un admin</div>'+mecs.map(function(u){return'<div class="meca-card"><div style="font-weight:bold">'+u.nom+'</div><div class="info-row">📧 '+u.email+'</div><button class="btn-sm" style="background:#9c27b0;margin-top:6px;" onclick="nommerAdmin(\''+u.id+'\',\''+u.nom+'\')">🛡️ Nommer</button></div>';}).join('')+'</div>';}
   }catch(e){}
 }
 async function nommerAdmin(id,nom){if(!confirm('Nommer '+nom+' admin ?'))return;await fetch(SB+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:Object.assign({},H,{'Prefer':'return=minimal'}),body:JSON.stringify({role:'admin'})});toast('✅ Admin !','#2e7d32');chargerAdmins();}
 async function retirerAdmin(id,nom){if(!confirm('Retirer admin à '+nom+' ?'))return;await fetch(SB+'/rest/v1/profiles?id=eq.'+id,{method:'PATCH',headers:Object.assign({},H,{'Prefer':'return=minimal'}),body:JSON.stringify({role:'mecanicien_certifie'})});toast('✅ Retiré.','#2e7d32');chargerAdmins();}
-function seDeconnecter(){if(timer)clearInterval(timer);user=null;demandeActuelle=null;ancStatuts={};localStorage.removeItem('mcm_user');affPage('page-accueil');}
-
+function activerPush(){
+  if(!('serviceWorker' in navigator)||!('PushManager' in window))return;
+  navigator.serviceWorker.ready.then(function(reg){
+    reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlB64(VAPID)}).then(function(sub){
+      fetch(SB+'/rest/v1/profiles?id=eq.'+user.id,{method:'PATCH',headers:Object.assign({},H,{'Prefer':'return=minimal'}),body:JSON.stringify({push_subscription:JSON.stringify(sub)})});
+    });
+  });
+}
+function urlB64(b){var p='='.repeat((4-b.length%4)%4);var s=(b+p).replace(/-/g,'+').replace(/_/g,'/');var r=window.atob(s);var o=new Uint8Array(r.length);for(var i=0;i<r.length;i++)o[i]=r.charCodeAt(i);return o;}
+function seDeconnecter(){if(timerRefresh)clearInterval(timerRefresh);user=null;demandeActuelle=null;ancStatuts={};localStorage.removeItem('mcm_user');affPage('page-accueil');}
 var swNouveau=null;
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('/sw.js').then(function(reg){
@@ -629,21 +923,8 @@ if('serviceWorker' in navigator){
 }
 function afficherBanner(sw){swNouveau=sw;document.getElementById('pwa-banner').style.display='flex';}
 function majApp(){if(swNouveau)swNouveau.postMessage({type:'SKIP_WAITING'});document.getElementById('pwa-banner').style.display='none';}
-
 var saved=localStorage.getItem('mcm_user');
 if(saved){user=JSON.parse(saved);rediriger(user);}
 </script>
-<script>async function rafraichirClient(){if(!user||user.role!=="client")return;try{var res=await fetch(SB+"/rest/v1/demandes?client_id=eq."+user.id+"&order=created_at.desc",{headers:H});var data=await res.json();if(!data)return;var changed=false;for(var i=0;i<data.length;i++){var d=data[i];if(ancStatuts[d.id]&&ancStatuts[d.id]!==d.statut){changed=true;if(d.statut==="accepte"){toast("🛠 " + d.mecanicien_nom + " est en route !", "#2e7d32");}if(d.statut==="termine"){toast("🏁 Intervention terminée !", "#1a73e8");}}ancStatuts[d.id]=d.statut;}if(changed)chargerMesDemandes();}catch(e){}}</script>
 </body>
 </html>
-<script>
-}
-function initAncStatuts(){
-  if(!user||user.role!=='client')return;
-  fetch(SB+'/rest/v1/demandes?client_id=eq.'+user.id,{headers:H})
-    .then(function(r){return r.json();})
-    .then(function(data){
-      if(data)for(var i=0;i<data.length;i++)ancStatuts[data[i].id]=data[i].statut;
-    });
-}
-</script>
