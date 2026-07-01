@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mcm-v8';
+const CACHE_NAME = 'mcm-v9';
 const ASSETS = ['/', '/index.html', '/manifest.json'];
 
 self.addEventListener('install', event => {
@@ -32,4 +32,29 @@ self.addEventListener('message', event => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
+});
+
+self.addEventListener('push', event => {
+  let data = {};
+  try { data = event.data.json(); } catch(e) {}
+  const title = data.title || 'MCM SERVICE CI';
+  const options = {
+    body: data.body || 'Nouveau message',
+    icon: data.icon || '/icon-192.png',
+    badge: data.badge || '/icon-192.png',
+    vibrate: [200, 100, 200]
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({type: 'window'}).then(clientList => {
+      for (const c of clientList) {
+        if ('focus' in c) return c.focus();
+      }
+      if (clients.openWindow) return clients.openWindow('/');
+    })
+  );
 });
